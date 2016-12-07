@@ -1,0 +1,462 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>PhoneGap</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
+	
+	<link rel="stylesheet" href="jquery/openmobster.css" />
+	
+	<!-- PhoneGap/OpenMobster Javascript code -->
+	<script type="text/javascript" charset="utf-8" src="cordova-1.5.0.js"></script>
+	<script type="text/javascript" charset="utf-8" src="openmobster-sync-2.2.js"></script>
+	
+	<!-- JQuery integration -->
+	<link rel="stylesheet" href="jquery/jquery.mobile-1.0.1.min.css" />
+	<script src="jquery/jquery-1.6.4.min.js"></script>
+	<script src="jquery/jquery.mobile-1.0.1.min.js"></script>
+	
+	<script type="text/javascript">
+	
+	<!-- The sync channel to be used for this App -->
+	var channel = 'plugin_jquery_channel';
+	
+	$(document).ready(function(){ initialize(); });
+	function initialize()
+	{
+	}
+	
+	<!-- Back Button customization. Pressing back button on the main page exits the App -->
+	document.addEventListener("backbutton", function(e){
+	    if($.mobile.activePage.is('#tickets'))
+	    {
+	        e.preventDefault();
+	        navigator.app.exitApp();
+	    }
+	    else 
+	    {
+	        navigator.app.backHistory();
+	    }
+	}, false);
+	
+	<!-- Load the main page with tickets stored in the sync channel -->
+    document.addEventListener("deviceready", loadTickets, false);
+    function loadTickets()
+    {		    
+		var html = '<ul data-role="listview" data-theme="g">';
+	  	
+	  	if(window.plugins.sync !== undefined)
+	  	{
+	  		//read the oids of the tickets stored in the sync channel
+	  		window.plugins.sync.readall(channel,
+				function(oids)
+				{
+					if(oids == '0')
+					{
+						alert('Synchronization is still in progress. You can quit the App and re-launch to load fresh data');
+						return;
+					}
+					
+					oids = JSON.parse(oids);
+					var length = oids.length;
+					for(var i=0; i<length; i++)
+					{
+					   var oid = oids[i];
+					   
+					   //read the value of the 'title' property of the synchronized bean
+					   window.plugins.sync.value(channel,oid,'title',
+						   function(value)
+						   {
+						   		var encodedOid = encodeURIComponent(oid);
+		   		
+		   						//create a list item corresponding to the ticket in question
+		   						html += '<li><a href="#read_ticket?oid='+encodedOid+'" data-rel="dialog">'+value+'</a></li>';
+						   },
+						   function(error)
+						   {
+						   }
+					   );
+					}
+				},
+				function(error)
+				{
+					alert('Sync Plugin:'+error);
+				}
+			);
+	  	}
+	  
+	    html += '</ul>';
+	  	//update the DOM
+	  	$("#tickets_content").html(html);
+	  	$("#tickets_content ul").listview();
+    }
+</script>
+</head>
+<body>
+	<div data-role="page" data-transition="slide" id="tickets">
+			<script>
+				$('#tickets').live('pageshow',loadTickets);
+				
+				var transition = function(event,ui){
+					var dataUrl = ui.nextPage.attr("data-url");
+					if(dataUrl.indexOf("?oid") != -1)
+					{
+						//this is for reading a ticket, now extract the oid
+						var index = dataUrl.indexOf('=');
+						var oid = dataUrl.substring(index+1);
+						
+						//decode this oid
+						oid = decodeURIComponent(oid);
+						
+						//update the hidden field on the 'read' ticket page
+						$('#read_ticket_oid').val(oid);
+					} 
+				};
+				$('#tickets').live('pagehide',transition);
+			</script>
+            <div class="ui-header" data-role="header" data-theme="b" data-position="fixed"> 
+            	<h1>Tickets</h1> 
+            	<nav data-role="navbar">
+            		<ul>
+            			<li><a href="#new_ticket" data-transition="slide">New Ticket</a></li>
+            		</ul>
+            	</nav>
+            </div>
+             
+            <div data-role="content" id="tickets_content">
+            </div>
+            
+            <div data-role="footer" data-theme="b" data-position="fixed">	
+            </div>
+      </div>
+      
+      <!-- New Ticket -->
+      <div data-role="page" data-transition="slide" id="new_ticket">
+            <script>
+	      		var loadNewTicket = function(){
+	      			$('#new_ticket_title').val(''); 
+	      			$('#new_ticket_customer').val('0');
+	      			$('#new_ticket_customer').selectmenu('refresh',true);
+	      			$('#new_ticket_specialist').val('0');
+	      			$('#new_ticket_specialist').selectmenu('refresh',true);
+	      			$('#new_ticket_comments').val('');
+				};
+				$('#new_ticket').live('pageshow',loadNewTicket);
+				
+				function submitNewTicket()
+				{
+					var title = $('#new_ticket_title').val();
+					var customer = $('#new_ticket_customer').val();
+					var specialist = $('#new_ticket_specialist').val();
+					var comments = $('#new_ticket_comments').val();
+					
+					var payload = {};
+                    payload.title = title;
+                    payload.customer = customer;
+                    payload.specialist = specialist;
+                    payload.comments = comments;
+                    
+                    var json = JSON.stringify(payload);
+					
+					window.plugins.sync.addNewBean(channel,json,
+					function(newoid)
+					{
+					},
+					function(error)
+					{
+						alert("Sync Plugin:"+error);
+					});
+					
+					//Commit here
+					window.plugins.sync.commit(function(success)
+					{
+						alert("Ticket was successfully added");
+					},
+					function(error){
+						alert("Ticket Add Error:"+error);
+					});
+					
+					$.mobile.changePage('#tickets','slide',true,false);
+				}
+			</script>
+      		<div class="ui-header" data-role="header" data-theme="b" data-position="fixed"> 
+            	<h1>New Ticket</h1> 
+            	<nav data-role="navbar">
+            		<ul>
+            			<li id="new_ticket_save"><a href="javascript:submitNewTicket();" data-transition="slide">Save</a></li>
+            			<li id="new_ticket_cancel"><a href="/" data-rel="back" data-transition="slide">Cancel</a></li>
+            		</ul>
+            	</nav>
+            </div>
+            
+            <div data-role="content" id="new_ticket_content">
+            	<form>
+            		<label>Title:</label>
+            		<input type="text" name="title" id="new_ticket_title"/><br/>
+            		<label>Customer:</label>
+            		<select name="customer" id="new_ticket_customer">
+            			<option value="0">----Select----</option>
+            			<option value="microsoft">Microsoft</option>
+            			<option value="google">Google</option>
+            			<option value="oracle">Oracle</option>
+            			<option value="apple">Apple</option>
+            		</select>
+            		<label>Specialist:</label>
+            		<select name="specialist" id="new_ticket_specialist">
+            			<option value="0">----Select----</option>
+            			<option value="steve_b">Steve Ballmer</option>
+            			<option value="eric_s">Eric Schmidt</option>
+            			<option value="larry_e">Larry Ellison</option>
+            			<option value="steve_j">Steve Jobs</option>
+            		</select>
+            		<label>Comments:</label>
+            		<input type="text" name="comments" id="new_ticket_comments"/><br/>
+            	</form>
+            </div>
+            
+            <div data-role="footer" data-theme="b" data-position="fixed">
+            </div>
+      </div>
+      
+      <!-- read ticket -->
+      <div data-role="page" data-transition="slide" id="read_ticket">
+            <script>
+	      		var loadReadTicket = function(event,ui)
+	      		{
+	      			var oid = $('#read_ticket_oid').val();
+	      			
+	      			//read the value of the 'title' property on the ticket bean
+	      			window.plugins.sync.value(channel,oid,'title',
+						function(value)
+						{
+							$("label[for='read_ticket_title']").html('Title: '+value);
+						},
+						function(error)
+						{
+							$("label[for='read_ticket_title']").html('Title: ');
+						}
+					);
+					
+					//read the value of the 'customer' property on the ticket bean
+					window.plugins.sync.value(channel,oid,'customer',
+						function(value)
+						{
+							$("label[for='read_ticket_customer']").html('Customer: '+value);
+						},
+						function(error)
+						{
+							$("label[for='read_ticket_customer']").html('Customer: ');
+						}
+					);
+					
+					//read the value of the 'specialist' property on the ticket bean
+					window.plugins.sync.value(channel,oid,'specialist',
+						function(value)
+						{
+							$("label[for='read_ticket_specialist']").html('Specialist: '+value);
+						},
+						function(error)
+						{
+							$("label[for='read_ticket_specialist']").html('Specialist: ');
+						}
+					);
+					
+					//read the value of the 'comments' property on the ticket bean
+					window.plugins.sync.value(channel,oid,'comments',
+						function(value)
+						{
+							$("label[for='read_ticket_comments']").html('Comments: '+value);
+						},
+						function(error)
+						{
+							$("label[for='read_ticket_comments']").html('Comments: ');
+						}
+					);
+				};
+				$('#read_ticket').live('pageshow',loadReadTicket);
+				
+				function deleteTicket()
+				{
+					var oid = $('#read_ticket_oid').val();
+					
+					//delete this bean
+					window.plugins.sync.deleteBean(channel,oid,
+						function(success)
+						{
+							//commit
+						    window.plugins.sync.commit(function(success)
+							{
+								alert("The Ticket was successfully deleted");
+							},
+							function(error){alert("Ticket Delete Failed: "+error);});
+						},
+						function(error)
+						{
+							alert("Ticket Delete Failed: "+error);
+						}
+					);
+					$.mobile.changePage('#tickets','slide',true,false);
+				}
+				
+				function updateTicket()
+				{
+					var oid = $('#read_ticket_oid').val();
+					$('#update_ticket_oid').val(oid);
+					$.mobile.changePage('#update_ticket','slide',true,false);
+				}
+			</script>
+      		<div class="ui-header" data-role="header" data-theme="b" data-position="fixed"> 
+            	<h1>Ticket</h1> 
+            </div>
+            
+            <div data-role="content" id="read_ticket_content">
+            	<form>
+            		<input type="hidden" id="read_ticket_oid"/>
+            		<label for="read_ticket_title"></label><br/>
+            		<label for="read_ticket_customer"></label><br/>
+            		<label for="read_ticket_specialist"></label><br/>
+            		<label for="read_ticket_comments"></label>
+            	</form>
+            </div>
+            
+            <div data-role="footer" data-theme="b" data-position="fixed">
+            	<nav data-role="navbar">
+            		<ul>
+            			<li id="read_ticket_ok"><a href="/" data-rel="back" data-transition="slide">OK</a></li>
+            			<li id="read_ticket_update"><a href="javascript:updateTicket();" data-transition="slide">Update</a></li>
+            			<li id="read_ticket_delete"><a href="javascript:deleteTicket();" data-transition="slide">Delete</a></li>
+            		</ul>
+            	</nav>
+            </div>
+      </div>
+      
+      <!-- Update ticket -->
+      <div data-role="page" data-transition="slide" id="update_ticket">
+            <script>
+	      		var loadTicket = function(){ 
+	      			var oid = $('#update_ticket_oid').val();
+	      			
+	      			window.plugins.sync.value(channel,oid,'title',
+						function(value)
+						{
+							$('#update_ticket_title').val(value);
+						},
+						function(error)
+						{
+							$('#update_ticket_title').val('');
+						}
+					);
+					
+					window.plugins.sync.value(channel,oid,'customer',
+						function(value)
+						{
+							$('#update_ticket_customer').val(value);
+							$('#update_ticket_customer').selectmenu('refresh',true);
+						},
+						function(error)
+						{
+							$('#update_ticket_customer').val('0');
+						}
+					);
+					
+					window.plugins.sync.value(channel,oid,'specialist',
+						function(value)
+						{
+							$('#update_ticket_specialist').val(value);
+							$('#update_ticket_specialist').selectmenu('refresh',true);
+						},
+						function(error)
+						{
+							$('#update_ticket_specialist').val('0');
+						}
+					);
+					
+					window.plugins.sync.value(channel,oid,'comments',
+						function(value)
+						{
+							$('#update_ticket_comments').val(value);
+						},
+						function(error)
+						{
+							$('#update_ticket_comments').val('');
+						}
+					);
+				};
+				$('#update_ticket').live('pageshow',loadTicket);
+				
+				function submitTicket()
+				{
+					var title = $('#update_ticket_title').val();
+					var customer = $('#update_ticket_customer').val();
+					var specialist = $('#update_ticket_specialist').val();
+					var comments = $('#update_ticket_comments').val();
+					var oid = $('#update_ticket_oid').val();
+					
+					var payload = {};
+                    payload.title = title;
+                    payload.customer = customer;
+                    payload.specialist = specialist;
+                    payload.comments = comments;
+                    
+                    var json = JSON.stringify(payload);
+					
+					//update the 'title' property on the ticket bean
+					window.plugins.sync.updateBean(channel,oid,json,
+					function(success)
+					{
+                        //commit
+                        window.plugins.sync.commit(function(success)
+                        {
+                            alert("The Ticket was successfully saved");
+                        },
+                        function(error){
+                            alert('Ticket Update Failed: '+error);
+                        });
+					},
+					function(error)
+					{
+					});
+					
+					$.mobile.changePage('#tickets','slide',true,false);
+				}
+			</script>
+      		<div class="ui-header" data-role="header" data-theme="b" data-position="fixed"> 
+            	<h1>Update Ticket</h1> 
+            	<nav data-role="navbar">
+            		<ul>
+            			<li id="update_ticket_save"><a href="javascript:submitTicket();" data-transition="slide">Save</a></li>
+            			<li id="update_ticket_cancel"><a href="/" data-rel="back" data-transition="slide">Cancel</a></li>
+            		</ul>
+            	</nav>
+            </div>
+            
+            <div data-role="content" id="update_ticket_content">
+            	<form>
+            		<input type="hidden" id="update_ticket_oid"/>
+            		<label>Title:</label>
+            		<input type="text" name="title" id="update_ticket_title"/><br/>
+            		<label>Customer:</label>
+            		<select name="customer" id="update_ticket_customer">
+            			<option value="0">----Select----</option>
+            			<option value="microsoft">Microsoft</option>
+            			<option value="google">Google</option>
+            			<option value="oracle">Oracle</option>
+            			<option value="apple">Apple</option>
+            		</select>
+            		<label>Specialist:</label>
+            		<select name="specialist" id="update_ticket_specialist">
+            			<option value="0">----Select----</option>
+            			<option value="steve_b">Steve Ballmer</option>
+            			<option value="eric_s">Eric Schmidt</option>
+            			<option value="larry_e">Larry Ellison</option>
+            			<option value="steve_j">Steve Jobs</option>
+            		</select>
+            		<label>Comments:</label>
+            		<input type="text" name="comments" id="update_ticket_comments"/><br/>
+            	</form>
+            </div>
+            
+            <div data-role="footer" data-theme="b" data-position="fixed">
+            </div>
+      </div>
+</body>
+</html>

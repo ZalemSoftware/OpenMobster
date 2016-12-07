@@ -1,0 +1,181 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<parent>
+		<groupId>org.openmobster.core</groupId>
+		<artifactId>core</artifactId>
+		<version>2.4-M3.1</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+	
+	<modelVersion>4.0.0</modelVersion>	
+	<name>device-agent-simulator</name>	
+	<artifactId>device-agent-simulator</artifactId>	
+	<packaging>jar</packaging>
+	
+	<dependencies>
+		<dependency>
+			<groupId>org.openmobster.core</groupId>
+			<artifactId>common</artifactId>				
+		</dependency>
+	    <dependency>	    
+	    	<groupId>org.openmobster.core</groupId>
+	    	<artifactId>synchronizer</artifactId>	    	
+	    </dependency>	
+	    <dependency>
+			<groupId>org.openmobster.core</groupId>
+			<artifactId>dataService</artifactId>			
+		</dependency>    							    
+		<dependency>
+			<groupId>org.openmobster.core</groupId>
+			<artifactId>services</artifactId>			
+		</dependency>
+		<dependency>
+			<groupId>org.openmobster.core</groupId>
+			<artifactId>device-agent-frameworks</artifactId>			
+		</dependency>
+		<dependency>
+			<groupId>org.openmobster.core</groupId>
+			<artifactId>security</artifactId>			
+		</dependency>	
+		<dependency>
+			<groupId>org.openmobster.core</groupId>
+			<artifactId>console-server</artifactId>			
+		</dependency>					
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.openmobster.core</groupId>
+			<artifactId>api-cloudConnector</artifactId>				
+		</dependency>
+		<dependency>
+			<groupId>org.openmobster.core</groupId>
+			<artifactId>d2d</artifactId>				
+		</dependency>
+		
+		<!-- test dependencies -->														
+		<dependency>
+			<groupId>org.openmobster.core</groupId>
+			<artifactId>agent-provisioning</artifactId>
+			<scope>test</scope>									
+		</dependency>
+													
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<scope>test</scope>
+		</dependency>				
+	    <dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-jdk14</artifactId>
+			<scope>test</scope>
+		</dependency>	
+	</dependencies>
+	
+	<!-- build configuration -->
+	<build>		
+		<plugins>			     		  		       		  
+     		<plugin>
+	          <groupId>org.apache.maven.plugins</groupId>
+	          <artifactId>maven-surefire-plugin</artifactId>
+	          <configuration>           
+	          		<includes>	          		    	          		             		  		          		    	          		         		    	          		             		    	          		             		    	          		    	          		            		          		          		   	          		    		          		    	          		    
+	          			<include>**/TestTwoWaySync.java</include>		          			                    				
+	          			<include>**/TestSlowSync.java</include>	          				
+	          			<include>**/TestOneWayServerSync.java</include>	          				          				
+	          			<include>**/TestOneWayDeviceSync.java</include>	      				          				
+	          			<include>**/TestTwoWaySyncMapping.java</include>	          				          				
+	          			<include>**/TestSlowSyncMapping.java</include>
+	          			<include>**/TestOneWayServerSyncMapping.java</include>
+	          			<include>**/TestOneWayDeviceSyncMapping.java</include>
+	          			<include>**/TestBootSync.java</include>          				          				          				          				          					          			         			         					          				          				          			
+	          			<include>**/TestObjectStreaming.java</include>          				          				          				          				          					          			         			         					          				          			
+	          			<include>**/TestDeviceErrorHandling.java</include>  
+	          			<include>**/TestConflictResolution.java</include>        				          				          				          				          					          			         			         					          				          				          			
+	          			<include>**/TestMapSupportErrorHandling.java</include>
+	          			<!--
+	          			    the unit test framework is not suitable for multi-device support. Port perf-framework to add this here  	          				          			          				          				          				          			
+	          			<include>**/TestMultiDeviceTwoWaySync.java</include>	          				          				          				          				          				          				          			
+						-->
+						<include>**/TestMultiDeviceConflictResolution.java</include>
+						<include>**/TestSyncEventPropagation</include>
+													          			                    		          				          			
+	          			<include>**/TestDatabase.java</include>	 
+	          			<include>**/TestSyncDataSource.java</include>	          			
+	          				          				          				          			
+	          			<include>**/**LifeCycle**.java</include>
+	          			
+                        <include>**/TestAppDataReset.java</include>
+                        <include>**/TestSimpleActivation.java</include>
+                        <include>**/TestSyncAnchorReset.java</include>                        
+                        <include>**/TestReActivation.java</include>	    
+                        <include>**/TestInActiveAccountScenarios.java</include>
+                        
+                        <!-- IPhone Push related usecases -->
+                        <include>**/TestIPhonePushCallback.java</include>	        				          				          				         			          					          			         			          				          							          				          				          				          				          				          				          				          				          			
+	          		</includes>	          			          			          		
+	          </configuration>
+	        </plugin> 
+	        
+	        <plugin>
+	          <groupId>org.apache.maven.plugins</groupId>
+	          <artifactId>maven-antrun-plugin</artifactId>
+	          <executions>
+		          <execution>
+		          	  <id>Test Harness Cleanup</id>
+		          	  <phase>validate</phase>
+		          	  <goals>
+		          	  		<goal>run</goal>
+		          	  </goals>		          	  
+			          <configuration>
+			          		<tasks>			          		    
+			          			<delete dir="openmobster" />			          						          						          			
+			          		</tasks>
+			          </configuration>			          
+		          </execution>	          
+	          </executions>	          
+	        </plugin>	        	          				   			    								   			    					        			
+		</plugins>					
+	 </build>
+	 
+	 <profiles>
+	 	<profile>
+	 		<id>runTestCloud</id>
+	 		<build>		
+				<plugins>			     				     		  
+		     		<plugin>
+			          <groupId>org.apache.maven.plugins</groupId>
+			          <artifactId>maven-surefire-plugin</artifactId>
+			          <configuration>              			          		 		          					          					          						            	            				                                                    	 	                       		            	            	            	                     	            	            	               
+			            	<includes>		                         	              
+			              		<include>**/RunServer.java</include>
+			            	</includes>
+			            	
+			            	<!-- toggle to activate debugger -->  			            			            	            	              
+			            		<forkMode>none</forkMode>            				            								   	
+			          		<!--  <debugForkedProcess>true</debugForkedProcess> -->          		          		            	            	          	    	          			          		          				          		
+			          </configuration>
+			        </plugin> 			        
+			        <plugin>
+			          <groupId>org.apache.maven.plugins</groupId>
+			          <artifactId>maven-antrun-plugin</artifactId>
+			          <executions>
+				          <execution>
+				          	  <id>Test Harness Cleanup</id>
+				          	  <phase>validate</phase>
+				          	  <goals>
+				          	  		<goal>run</goal>
+				          	  </goals>		          	  
+					          <configuration>
+					          		<tasks>			          		    
+					          			<delete dir="openmobster" />			          						          						          			
+					          		</tasks>
+					          </configuration>			          
+				          </execution>	          
+			          </executions>			          
+			        </plugin>	        	          				   			    								   			    					        			
+				</plugins>					
+			 </build>
+	 	</profile>	 		 	
+	 </profiles>
+</project>

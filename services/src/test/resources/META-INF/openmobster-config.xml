@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<deployment xmlns="urn:jboss:bean-deployer:2.0">  
+   <bean name="test://HibernateManager" class="org.openmobster.core.common.database.HibernateManager">
+   	  <property name="config">hibernate.test.cfg.xml</property>
+   </bean>
+        
+   <bean name="test://services/mobileObject/MockConnector" class="test.openmobster.core.services.mobileObject.MockConnector">   	 
+   		<depends>services://MobileObjectMonitor</depends>
+   		<depends>services://MobileServiceMonitor</depends>
+   </bean>
+   
+   <bean name="test://services/twitterChannel" class="org.openmobster.core.services.TwitterChannel">   	 
+   		<depends>services://MobileObjectMonitor</depends>
+   		<depends>services://MobileServiceMonitor</depends>
+   </bean>
+   
+   <bean name="test://services/mockChannelEventListener" 
+   class="org.openmobster.core.services.event.MockChannelEventListener">       
+   </bean>
+   
+   <bean name="test://services/mockNetworkEventListener" 
+   class="org.openmobster.core.services.event.MockNetworkEventListener">       
+   </bean>
+   
+   <bean name="test://services/validationChannel" class="org.openmobster.core.services.ValidationChannel">   	 
+   		<depends>services://MobileObjectMonitor</depends>
+   		<depends>services://MobileServiceMonitor</depends>
+   </bean>
+</deployment>

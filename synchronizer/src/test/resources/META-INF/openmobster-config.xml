@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<deployment xmlns="urn:jboss:bean-deployer:2.0">                              
+   <!-- beans used in the ClientInitSync test case -->
+   <bean name="InitSyncMessage" class="org.openmobster.core.synchronizer.model.SyncMessage">
+   	  <property name="messageId">1</property>
+      <property name="maxClientSize">5000</property>  
+      <property name="clientInitiated">true</property>          
+      <property name="final">true</property>                    
+   </bean>   
+   <bean name="InitItem" class="org.openmobster.core.synchronizer.model.Item">
+   	  <property name="source">blackberry.email.database</property>
+      <property name="target">blahblah@gmail.com</property>                       
+      <property name="meta">
+      	<![CDATA[
+      		<Anchor xmlns='syncml:metinf'><Last>1</Last><Next>2</Next></Anchor>
+      	]]>
+      </property>                       
+   </bean>
+   <bean name="InitStatusItem" class="org.openmobster.core.synchronizer.model.Item">         
+      <property name="data">
+        <![CDATA[
+      		<Anchor xmlns='syncml:metinf'><Next>276</Next></Anchor>
+      	]]>
+      </property> 
+      <property name="moreData">true</property>           
+   </bean>
+   <bean name="InitAlert" class="org.openmobster.core.synchronizer.model.Alert">
+   	  <property name="cmdId">050505</property>
+      <property name="data">200</property>                
+      <property name="items">
+      	<list>
+      		<inject bean="InitItem"/>
+      	</list>
+      </property>
+   </bean>    
+   <bean name="InitStatus" class="org.openmobster.core.synchronizer.model.Status">
+   	  <property name="cmdId">060606</property>
+      <property name="data">200</property>            
+      <property name="msgRef">1</property>            
+      <property name="cmdRef">050505</property>            
+      <property name="cmd">Alert</property>
+      <property name="targetRefs">
+      	<list class="java.util.ArrayList" elementClass="java.lang.String">
+      		<value>blahblah@gmail.com</value>
+      	</list>      	
+      </property>
+      <property name="sourceRefs">
+      	<list class="java.util.ArrayList" elementClass="java.lang.String">
+      		<value>blackberry.email.database</value>
+      	</list>      	      	
+      </property>                               
+      <property name="items">
+      	<list>
+      		<inject bean="InitStatusItem"/>
+      	</list>
+      </property> 
+   </bean>
+      
+   <!-- beans used in the ClientSync test case -->
+   <bean name="SyncMessage" class="org.openmobster.core.synchronizer.model.SyncMessage">
+   	  <property name="messageId">2</property>  
+      <property name="clientInitiated">true</property>          
+      <property name="final">true</property>                    
+   </bean> 
+   
+   <bean name="SyncCommand" class="org.openmobster.core.synchronizer.model.SyncCommand">
+   	  <property name="cmdId">2</property>        
+   	  <property name="source">blackberry.email.database</property>
+      <property name="target">blahblah@gmail.com</property>                                    
+      <property name="numberOfChanges">50</property>                                     
+      <property name="meta">
+      	<![CDATA[
+      		SyncCommand Meta Data
+      	]]>
+      </property>                      
+   </bean> 
+     
+   <bean name="SyncAddItem" class="org.openmobster.core.synchronizer.model.Item">
+   	  <property name="source">Add/EmailMesssageID</property>                      
+      <property name="data">
+      	<![CDATA[
+      		From: bezman@openbez.com
+      	]]>
+      </property>                       
+   </bean>
+   <bean name="SyncReplaceItem" class="org.openmobster.core.synchronizer.model.Item">
+   	  <property name="source">Replace/EmailMesssageID</property>                      
+      <property name="data">
+      	<![CDATA[
+      		From: bezman@openbez.com
+      	]]>
+      </property>                       
+   </bean>
+   
+   <bean name="SyncDeleteItem" class="org.openmobster.core.synchronizer.model.Item">
+   	  <property name="source">Delete/EmailMesssageID</property>                      
+      <property name="data">
+      	<![CDATA[
+      		From: bezman@openbez.com
+      	]]>
+      </property>                       
+   </bean>
+   
+   <bean name="SyncAdd" class="org.openmobster.core.synchronizer.model.Add">
+   	  <property name="cmdId">5</property>                                         
+      <property name="meta">
+      	<![CDATA[
+      		text/x-vcard
+      	]]>
+      </property>   
+      <property name="items">
+      	<list>
+      		<inject bean="SyncAddItem"/>
+      	</list>
+      </property>                    
+   </bean>
+   
+   <bean name="SyncReplace" class="org.openmobster.core.synchronizer.model.Replace">
+   	  <property name="cmdId">6</property>                                         
+      <property name="meta">
+      	<![CDATA[
+      		text/x-vcard
+      	]]>
+      </property>   
+      <property name="items">
+      	<list>
+      		<inject bean="SyncReplaceItem"/>
+      	</list>
+      </property>                    
+   </bean>
+   
+   <bean name="SyncDelete" class="org.openmobster.core.synchronizer.model.Delete">
+   	  <property name="cmdId">7</property>                                         
+      <property name="meta">
+      	<![CDATA[
+      		text/x-vcard
+      	]]>
+      </property>   
+      <property name="items">
+      	<list>
+      		<inject bean="SyncDeleteItem"/>
+      	</list>
+      </property> 
+      <property name="archive">true</property>                   
+      <property name="softDelete">true</property>                   
+   </bean>
+   
+   <bean name="SyncStatusItem" class="org.openmobster.core.synchronizer.model.Item">         
+      <property name="data">
+        <![CDATA[
+      		<Anchor xmlns='syncml:metinf'><Next>276</Next></Anchor>
+      	]]>
+      </property> 
+      <property name="moreData">true</property>           
+   </bean>       
+   <bean name="SyncStatus" class="org.openmobster.core.synchronizer.model.Status">
+   	  <property name="cmdId">060606</property>
+      <property name="data">200</property>            
+      <property name="msgRef">1</property>            
+      <property name="cmdRef">050505</property>            
+      <property name="cmd">Alert</property>
+      <property name="targetRefs">
+      	<list class="java.util.ArrayList" elementClass="java.lang.String">
+      		<value>blahblah@gmail.com</value>
+      	</list>      	
+      </property>
+      <property name="sourceRefs">
+      	<list class="java.util.ArrayList" elementClass="java.lang.String">
+      		<value>blackberry.email.database</value>
+      	</list>      	      	
+      </property>                               
+      <property name="items">
+      	<list>
+      		<inject bean="SyncStatusItem"/>
+      	</list>
+      </property> 
+   </bean>
+   
+   <bean name="MapItemOne" class="org.openmobster.core.synchronizer.model.MapItem">         
+      <property name="source">123</property> 
+      <property name="target">123456789</property>           
+   </bean>
+   <bean name="MapItemTwo" class="org.openmobster.core.synchronizer.model.MapItem">         
+      <property name="source">456</property> 
+      <property name="target">7890678789</property>           
+   </bean>
+   <bean name="SyncRecordMap" class="org.openmobster.core.synchronizer.model.RecordMap">
+   	  <property name="cmdId">060606</property>
+      <property name="source">blackberry.email.database</property>            
+      <property name="target">blahblah@gmail.com</property>            
+      <property name="meta">Size=5000</property>  
+      <property name="mapItems">
+            <list>
+      			<inject bean="MapItemOne"/>
+      			<inject bean="MapItemTwo"/>
+      		</list>
+      </property>                 
+   </bean>              
+</deployment>

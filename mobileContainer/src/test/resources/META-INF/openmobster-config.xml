@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<deployment xmlns="urn:jboss:bean-deployer:2.0">           
+   <!-- Deploy the IdentityConnector -->
+   <bean name="test://mobileContainer/IdentityConnector" class="test.openmobster.core.mobileContainer.IdentityConnector">
+   		<depends>services://MobileObjectMonitor</depends>
+   		<depends>services://MobileServiceMonitor</depends>
+   </bean>
+   
+   <!-- Deploy the MockMobileService -->
+   <bean name="test://mobileContainer/MockMobileService" class="test.openmobster.core.mobileContainer.MockMobileBeanService">
+   		<depends>services://MobileObjectMonitor</depends>
+   		<depends>services://MobileServiceMonitor</depends>
+   </bean>   
+   
+   <!-- Deploy the MockCloudCameraCommand -->
+   <bean name="test://camera/MockCloudCameraCommand" class="test.openmobster.core.mobileContainer.MockCloudCameraCommand">
+   		<depends>services://CloudCameraService</depends>
+   </bean>                     
+</deployment>

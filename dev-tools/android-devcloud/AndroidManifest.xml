@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      package="org.openmobster.core.mobileCloud"
+      android:versionCode="1"
+      android:versionName="1.0">
+    <application android:label="@string/app_name" android:icon="@drawable/icon">
+        <activity android:name="org.openmobster.core.dev.tools.android.DevCloudApp"
+                  android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        
+        <!-- BusService -->
+        <service android:name="org.openmobster.core.mobileCloud.android.module.bus.rpc.BusService"
+        android:exported="true">
+        </service>
+        
+        <!-- central Bus Service storage for all the Buses on the device -->
+        <provider android:name="org.openmobster.core.mobileCloud.android.provider.BusRegistrationContentProvider"
+          android:authorities="org.openmobster.core.mobileCloud.android.module.bus.provider" 
+        />
+        
+        <!-- central container status provider -->
+        <provider android:name="org.openmobster.core.mobileCloud.android.provider.ContainerContentProvider"
+          android:authorities="org.openmobster.core.mobileCloud.android.provider.container" 
+        />
+        
+        <!-- central configuration provider -->
+        <provider android:name="org.openmobster.core.mobileCloud.android.provider.ConfigurationProvider"
+          android:authorities="org.openmobster.core.mobileCloud.android.provider.configuration" 
+        />
+        
+        <!-- central provider for mobile channels -->
+        <provider android:name="org.openmobster.core.mobileCloud.android.provider.MobileChannelProvider"
+          android:authorities="org.openmobster.core.mobileCloud.android.provider.mobile.channels" 
+        />
+        
+        <!-- central provider for System Errors -->
+        <provider android:name="org.openmobster.core.mobileCloud.android.provider.SystemErrorsProvider"
+          android:authorities="org.openmobster.core.mobileCloud.android.provider.mobile.system.errors" 
+        />
+        
+         <!-- central provider for cryptography -->
+        <provider android:name="org.openmobster.core.mobileCloud.android.provider.CryptoSecretKeyProvider"
+          android:authorities="org.openmobster.core.mobileCloud.android.provider.crypto.secret.key" 
+        />
+    </application>
+    <uses-permission android:name="android.permission.INTERNET" />
+</manifest> 

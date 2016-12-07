@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<deployment xmlns="urn:jboss:bean-deployer:2.0">
+   <bean name="mobileObject://HibernateManager" class="org.openmobster.core.common.database.HibernateManager">
+   	  <property name="config">hibernate-mobileObject.cfg.xml</property>
+   </bean>
+   
+   <bean name="mobileObject://StorageMonitor" class="org.openmobster.device.agent.frameworks.mobileObject.StorageMonitor">
+   	  <incallback method="notify"/>   	  
+   </bean> 
+   
+   <bean name="mobileObject://MobileObjectDatabase" class="org.openmobster.device.agent.frameworks.mobileObject.MobileObjectDatabase">
+   	  <property name="hibernateManager">
+   			<inject bean="mobileObject://HibernateManager"/>
+   	  </property>
+   	  <property name="storageMonitor">
+   			<inject bean="mobileObject://StorageMonitor"/>
+   	  </property>   		
+   </bean>                       
+</deployment>

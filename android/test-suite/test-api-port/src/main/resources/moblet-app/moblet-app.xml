@@ -1,0 +1,16 @@
+<moblet-app>
+	<bootstrap>
+		<screen>org.openmobster.core.mobileCloud.api.HomeScreen</screen>
+	</bootstrap>
+		    	
+	<commands>
+		<command id="runtestsuite">org.openmobster.core.mobileCloud.android.testsuite.IntegrationTestSuiteCommand</command>
+		<command id="/test/start/pushrpc">org.openmobster.core.mobileCloud.api.InvokePushRPC</command>
+		<command id="/test/start/push">org.openmobster.core.mobileCloud.api.InvokePush</command>
+		<command id="/check/transactions">org.openmobster.core.mobileCloud.api.CheckTransactions</command>
+	</commands>
+	
+	<push-commands>
+		<command id="/handle/rpc/push">org.openmobster.core.mobileCloud.api.HandleRPCPush</command>
+	</push-commands>
+</moblet-app>

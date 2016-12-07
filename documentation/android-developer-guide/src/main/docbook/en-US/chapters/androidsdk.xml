@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="androidsdk">
+   <chapterinfo>
+      <author>
+         <firstname>openmobster</firstname>
+         <surname>at gmail.com</surname>
+         <email>openmobster@gmail.com</email>
+      </author>
+   </chapterinfo>
+   <title>Installation</title>
+   <sect1>
+   		<title>Android SDK</title>
+   		<itemizedlist>
+   			<listitem><ulink url='http://developer.android.com/sdk/index.html'>Quick Installation</ulink></listitem>
+   			<listitem><ulink url='http://developer.android.com/sdk/installing.html'>Detailed Installation</ulink></listitem>
+   		</itemizedlist>
+   		
+   		<sect2>
+   			<title>Useful SDK Commands</title>
+   			<itemizedlist>
+   				<listitem>
+   					Create a virtual device for the emulator
+   					<programlisting><![CDATA[				android create avd --name droid --target android-5]]></programlisting>
+   					Creates a virtual device named droid with an Android platform API version 5 compliance
+   				</listitem>
+   				
+   				<listitem>
+   					Emulate a SDCARD
+   					<programlisting><![CDATA[				mksdcard -l openmobster 1024M /Users/openmobster/.android/avd/openmobster]]></programlisting>
+   					Creates a sdcard of size 1024M at the specified location on the filesystem
+   				</listitem>
+   				
+   				<listitem>
+   					Start the emulator
+   					<programlisting><![CDATA[				emulator -avd droid -sdcard .android/avd/openmobster]]></programlisting>
+   				</listitem>
+   				
+   				<listitem>
+   					Start the ddms daemon used for installing apps into the emulator from the commandline. <ulink url='http://developer.android.com/guide/developing/tools/ddms.html'>Details</ulink>
+   					<programlisting><![CDATA[				ddms]]></programlisting>
+   				</listitem>
+   			</itemizedlist>
+   		</sect2>
+   </sect1>
+</chapter>

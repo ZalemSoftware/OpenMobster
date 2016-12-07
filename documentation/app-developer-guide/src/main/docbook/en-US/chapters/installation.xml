@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="installation">
+	<chapterinfo>
+		<author>
+			<firstname>openmobster</firstname>
+			<surname>at gmail.com</surname>
+			<email>openmobster@gmail.com</email>
+		</author>
+	</chapterinfo>
+	<title>Production Mode Installation</title>
+	<sect1 id='/installation/jboss'>
+		<title>Cloud-Side: Installation</title>
+		<sect2>
+			<title>Install Cloud Server</title>
+			<para>
+				<itemizedlist>
+					<listitem>
+						<emphasis role="bold">Step 1:</emphasis>
+						Download and install JBoss-5.1.0.GA from
+						<ulink url="http://www.jboss.org/jbossas/downloads/">here</ulink>
+					</listitem>
+					<listitem>
+						<emphasis role="bold">Step 2:</emphasis>
+						Copy
+						<emphasis>openmobster</emphasis>
+						to the JBoss AS
+						<emphasis>server</emphasis>
+						directory.
+						<emphasis>openmobster</emphasis>
+						is a pre-configured/optimized instance for the OpenMobster Cloud
+						Server
+					</listitem>
+					<listitem>
+						<emphasis role="bold">Step 3:</emphasis>
+						In the case of using MySQL5 as the database, modify
+						openmobster-ds.xml according to your own MySql5 instance
+					</listitem>
+					<listitem>
+						<emphasis role="bold">Step 4:</emphasis>
+						Start the JBoss AS instance with the OpenMobster binary installed
+						using: run -c openmobster -b "a real IP address"
+						<para>
+							<emphasis>Note:</emphasis>
+							A real IP address like "192.168.0.1" or something like that is
+							needed for the mobile device to be able to connect to
+							the server.
+							Even in the case of a simulation environment, the device's
+							browser does not connect to a loopback address like
+							"localhost" or
+							"127.0.0.1"
+						</para>
+					</listitem>
+					<listitem>
+						<emphasis role="bold">Step 5:</emphasis>
+						Verify the Cloud Server installation by typing in:
+						http://{cloudserverIp}:{port}/o
+					</listitem>
+				</itemizedlist>
+			</para>
+		</sect2>
+	</sect1>
+	<sect1>
+		<title>Device-Side: Installation</title>
+		<para>
+			Starting with OpenMobster 2.4, there is no requirement to install the <emphasis role='bold'>CloudManager App</emphasis>
+			on the device. All you need to do is install your App and it will automatically take care of the <emphasis role='bold'>Activation</emphasis> process.
+			The <emphasis role='bold'>CloudManager App</emphasis> does still serve a purpose. The main purpose is to activate device management features such as: <emphasis role='bold'>Remote Wipe</emphasis> and <emphasis role='bold'>Remote Lock</emphasis>.
+			You also get access to the <emphasis role='bold'>Corporate App Store</emphasis> functionality which makes it easy to download/install apps from the OpenMobster App Store.
+		</para>
+		<sect2>
+			<title>CloudManager App Installation</title>
+			<para>
+					If you have a
+					<emphasis>Cloud Server</emphasis>
+					running and accessible from the Internet, you can simply download
+					CloudManager App from the built-in browser
+					of the device.
+			</para>
+			<para>
+					Download the following and follow the instructions provided by the
+					device:
+					<itemizedlist>
+						<listitem>
+							http://{cloudServer IP}:{cloudServer
+							port}/o/android/cloudmanager
+						</listitem>
+					</itemizedlist>
+			</para>
+			<sect3>
+				<title>Installing the Sample Offline App</title>
+				<para>
+					Using your
+					<emphasis>CloudManager App</emphasis>
+					, install the deployed Apps using the
+					<emphasis>Corporate App Store</emphasis>
+					option
+				</para>
+			</sect3>
+		</sect2>
+	</sect1>
+</chapter>

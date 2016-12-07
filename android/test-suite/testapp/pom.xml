@@ -1,0 +1,181 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<!-- User Provided -->
+	<groupId>org.testapp</groupId>
+	<name>testapp-parent</name>
+	<artifactId>testapp</artifactId>
+	<version>1.0</version>
+	<url>http://openmobster.googlecode.com</url>	
+	
+	<properties>
+	<openmobster.version>2.4-M3.1</openmobster.version>
+	<version.android.api>11</version.android.api>
+</properties>
+
+	<packaging>pom</packaging>
+
+	<modules>
+	<module>cloud</module>
+	<module>app-android</module>
+</modules>
+	
+<profiles>
+	<profile>
+		<id>android</id>
+		<modules>
+			<module>cloud</module>
+			<module>app-android</module>
+		</modules>
+	</profile>
+		
+	<profile>
+		<id>android-release</id>
+		<modules>
+			<module>cloud</module>
+			<module>app-android</module>
+		</modules>
+	</profile>
+</profiles>	
+
+
+	<dependencyManagement>
+		<dependencies>
+			<!--
+				DO NOT MODIFY: Required by the OpenMobster Mobile Cloud Platform
+			-->
+			<dependency>
+				<groupId>org.openmobster.core.mobileCloud.rimos
+				</groupId>
+				<artifactId>device-sdk</artifactId>
+				<version>${openmobster.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openmobster.core.mobileCloud.rimos
+				</groupId>
+				<artifactId>device-sdk</artifactId>
+				<version>${openmobster.version}</version>
+				<classifier>full</classifier>
+			</dependency>
+			<dependency>
+				<groupId>org.openmobster.core.mobileCloud.rimos
+				</groupId>
+				<artifactId>mobileCloud</artifactId>
+				<version>${openmobster.version}</version>
+				<classifier>bin</classifier>
+			</dependency>
+			<dependency>
+				<groupId>org.openmobster.core</groupId>
+				<artifactId>cloud-sdk</artifactId>
+				<version>${openmobster.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openmobster.core.dev.tools
+				</groupId>
+				<artifactId>dev-cloudServer
+				</artifactId>
+				<version>${openmobster.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openmobster.core.dev.tools
+				</groupId>
+				<artifactId>rimos-devcloud
+				</artifactId>
+				<version>${openmobster.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.openmobster.core</groupId>
+				<artifactId>device-agent-simulator
+				</artifactId>
+				<version>${openmobster.version}</version>
+				<scope>test</scope>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.openmobster.core.mobileCloud.android.2_0</groupId>
+				<artifactId>device-sdk</artifactId>
+				<version>${openmobster.version}</version>
+				<classifier>full</classifier>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.openmobster.core.mobileCloud.android.2_0</groupId>
+				<artifactId>device-sdk</artifactId>
+				<version>${openmobster.version}</version>
+			</dependency>
+			
+						<!--  Android Dependencies -->
+			<dependency>
+				<groupId>android</groupId>
+				<artifactId>android</artifactId>
+				<version>2.0</version>
+				<scope>system</scope>
+				<systemPath>${env.ANDROID_HOME}/platforms/android-${version.android.api}/android.jar
+				</systemPath>
+			</dependency>
+
+			<!--
+					More Dependencies can be added here  
+			 -->
+		</dependencies>
+	</dependencyManagement>
+
+	<repositories>
+		<!--
+			DO NOT MODIFY: Required by the OpenMobster Mobile Cloud Platform
+		-->
+		<repository>
+			<id>openmobster-maven</id>
+			<url>http://openmobster.googlecode.com/svn/maven2
+			</url>
+		</repository>
+
+		<repository>
+			<id>jboss</id>
+			<url>http://anonsvn.jboss.org/repos/repository.jboss.org/maven2
+			</url>
+		</repository>
+
+		<repository>
+			<id>maven-codehaus</id>
+			<name>Public online CodeHaus Maven Repository</name>
+			<url>http://repository.codehaus.org
+			</url>
+		</repository>
+
+		<repository>
+			<id>maven2-repository.dev.java.net</id>
+			<name>Java.net Repository for Maven</name>
+			<url>http://download.java.net/maven/2/
+			</url>
+		</repository>
+
+		<!-- 
+			More repositories can be added here 
+		-->
+	</repositories>
+	
+	<build>
+		<plugins>
+			<plugin>
+			    <groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>2.5</version>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+		</plugins>
+		
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+					<artifactId>android-maven-plugin</artifactId>
+					<version>3.8.0</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>	
+	</build>
+</project>

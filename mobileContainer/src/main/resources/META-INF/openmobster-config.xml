@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<deployment xmlns="urn:jboss:bean-deployer:2.0">           
+   <bean name="mobileContainer://MobileContainer" class="org.openmobster.core.mobileContainer.MobileContainer">     		
+   		<incallback method="register"/>
+   		<depends>services://MobileObjectMonitor</depends>
+   		<depends>services://MobileServiceMonitor</depends>
+   </bean> 
+   
+   <bean name="mobileContainer://GetAllMobileBeans" class="org.openmobster.core.mobileContainer.GetAllMobileBeans">     		
+   		<property name="id">/bean/all</property>
+   		<property name="monitor"><inject bean="services://MobileObjectMonitor"/></property> 
+   		<depends>mobileContainer://MobileContainer</depends>
+   </bean>
+   
+   <bean name="mobileContainer://GetMobileBean" class="org.openmobster.core.mobileContainer.GetMobileBean">     		
+   		<property name="id">/bean/id</property>
+   		<property name="monitor"><inject bean="services://MobileObjectMonitor"/></property>
+   		<depends>mobileContainer://MobileContainer</depends>
+   </bean> 
+   
+   <bean name="mobileContainer://SaveMobileBean" class="org.openmobster.core.mobileContainer.SaveMobileBean">     		
+   		<property name="id">/bean/save</property>
+   		<property name="monitor"><inject bean="services://MobileObjectMonitor"/></property>
+   		<property name="serializer"><inject bean="mobileObject://MobileObjectSerializer"/></property>
+   		<property name="eventManager"><inject bean="common://EventManager"/></property>
+   		<depends>mobileContainer://MobileContainer</depends>
+   </bean>  
+   
+   <bean name="mobileContainer://DeleteMobileBean" class="org.openmobster.core.mobileContainer.DeleteMobileBean">     		
+   		<property name="id">/bean/delete</property>
+   		<property name="monitor"><inject bean="services://MobileObjectMonitor"/></property>
+   		<property name="eventManager"><inject bean="common://EventManager"/></property>
+   		<depends>mobileContainer://MobileContainer</depends>
+   </bean>
+   
+   <bean name="mobileContainer://InvokeMobileService" class="org.openmobster.core.mobileContainer.InvokeMobileService">     		
+   		<property name="id">/service/invoke</property>
+   		<property name="monitor"><inject bean="services://MobileServiceMonitor"/></property>
+   		<depends>mobileContainer://MobileContainer</depends>
+   </bean> 
+   
+   <bean name="services://CloudCameraService" class="org.openmobster.core.mobileContainer.CloudCameraService">
+        <incallback method="register"/>
+   		<depends>services://MobileObjectMonitor</depends>
+   		<depends>services://MobileServiceMonitor</depends>
+   		<depends>mobileContainer://InvokeMobileService</depends>
+   </bean>
+   
+   <bean name="org.openmobster.core.mobileContainer.LocationInvocationService" 
+   class="org.openmobster.core.mobileContainer.LocationInvocationService">     		
+   		<property name="id">/service/location/invoke</property>
+   		<property name="locationServiceMonitor"><inject bean="org.openmobster.core.services.LocationServiceMonitor"/></property>
+   		<property name="geocoder"><inject bean="GeoCoder"/></property>
+   		<property name="placeProvider"><inject bean="Places"/></property>
+   		<depends>mobileContainer://MobileContainer</depends>
+   </bean>
+   
+   <bean name="placeDetails" 
+   class="org.openmobster.core.mobileContainer.GetPlaceDetails">
+   		<property name="placeProvider"><inject bean="Places"/></property>
+   		<depends>services://MobileObjectMonitor</depends>
+   		<depends>services://MobileServiceMonitor</depends>
+   		<depends>org.openmobster.core.services.LocationServiceMonitor</depends>
+   </bean>                    
+</deployment>

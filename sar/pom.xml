@@ -1,0 +1,167 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<parent>
+		<groupId>org.openmobster.core</groupId>
+		<artifactId>core</artifactId>
+		<version>2.4-M3.1</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+	
+	<modelVersion>4.0.0</modelVersion>	
+	<name>openmobster-sar</name>	
+	<artifactId>openmobster-sar</artifactId>	
+	<packaging>jar</packaging>
+	
+	<dependencies>		    		
+		<dependency>
+			<groupId>org.openmobster.core</groupId>
+			<artifactId>common</artifactId>				
+		</dependency>
+	</dependencies>
+	
+	<!-- build configuration -->		
+	<profiles>		
+			<profile>
+				<id>android-release</id>
+				<build>
+					<plugins>			      		
+			     		<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-antrun-plugin</artifactId>
+							<executions>									    										
+								<execution>
+									<phase>package</phase>
+									<configuration>
+										<tasks>	
+										    <delete dir="target/mysql5/${project.name}-${project.version}-exploded.sar" />							    
+											<copy todir="target/mysql5/${project.name}-${project.version}-exploded.sar" overwrite="true">
+											    <fileset dir="${basedir}/src/main/config">
+											    	<include name="**/META-INF/**" />											    	
+											    </fileset>
+											    <fileset dir="${basedir}/src/main/config/mysql5">
+											    	<exclude name="**/openmobster-ds.xml" />											    	
+											    </fileset>
+											    
+											    
+											    <!-- OpenMobster Components -->
+											    <fileset file="target/${project.name}-${project.version}.jar" />
+												<fileset file="${settings.localRepository}/org/openmobster/core/common/${project.version}/common-${project.version}.jar" />
+												<fileset file="${settings.localRepository}/org/openmobster/core/api/${project.version}/api-${project.version}.jar" />
+												<fileset file="${settings.localRepository}/org/openmobster/core/services/${project.version}/services-${project.version}.jar" />
+												<fileset file="${settings.localRepository}/org/openmobster/core/mobileObject/${project.version}/mobileObject-${project.version}.jar" />
+												<fileset file="${settings.localRepository}/org/openmobster/core/mobileContainer/${project.version}/mobileContainer-${project.version}.jar" />
+												<fileset file="${settings.localRepository}/org/openmobster/core/synchronizer/${project.version}/synchronizer-${project.version}.jar" />
+												<fileset file="${settings.localRepository}/org/openmobster/core/dataService/${project.version}/dataService-${project.version}.jar" />									
+												<fileset file="${settings.localRepository}/org/openmobster/core/deviceService/${project.version}/deviceService-${project.version}.jar" />
+												<fileset file="${settings.localRepository}/org/openmobster/core/security/${project.version}/security-${project.version}.jar" />
+												<fileset file="${settings.localRepository}/org/openmobster/core/agent-provisioning/${project.version}/agent-provisioning-${project.version}.jar" />
+												<fileset file="${settings.localRepository}/org/openmobster/core/agent-provisioning/${project.version}/o.war" />
+												<fileset file="${settings.localRepository}/org/openmobster/core/moblet-management/${project.version}/moblet-management-${project.version}.jar" />
+												<fileset file="${settings.localRepository}/org/openmobster/core/console-server/${project.version}/console-server-${project.version}.jar" />
+												<fileset file="${settings.localRepository}/org/openmobster/core/push-apn/${project.version}/push-apn-${project.version}.jar" />
+												<fileset file="${settings.localRepository}/org/openmobster/core/location/${project.version}/location-${project.version}.jar" />
+												<fileset file="${settings.localRepository}/org/openmobster/core/d2d/${project.version}/d2d-${project.version}.jar" />
+												<fileset file="${settings.localRepository}/org/openmobster/core/clustering/${project.version}/clustering-${project.version}.jar" />
+																				
+								                <!-- Thirdparty Components -->	
+												<fileset file="${settings.localRepository}/org/jboss/jboss-common-core/${version.jboss.common.core}/jboss-common-core-${version.jboss.common.core}.jar" />
+												<fileset file="${settings.localRepository}/org/apache/mina/mina-core/${version.org.apache.mina}/mina-core-${version.org.apache.mina}.jar" />
+												<fileset file="${settings.localRepository}/org/slf4j/slf4j-api/${version.org.slf4j}/slf4j-api-${version.org.slf4j}.jar" />
+												<fileset file="${settings.localRepository}/org/slf4j/slf4j-jdk14/${version.org.slf4j}/slf4j-jdk14-${version.org.slf4j}.jar" />
+												<fileset file="${settings.localRepository}/org/jbpm/jbpm3/jbpm-jpdl/${version.jbpm.jpdl}/jbpm-jpdl-${version.jbpm.jpdl}.jar" />									
+												<fileset file="${settings.localRepository}/commons-codec/commons-codec/${version.commons-codec.commons-codec}/commons-codec-${version.commons-codec.commons-codec}.jar" />																		
+												<fileset file="${settings.localRepository}/com/thoughtworks/xstream/xstream/${version.xstream}/xstream-${version.xstream}.jar" />									
+												<fileset file="${settings.localRepository}/xpp3/xpp3_min/${version.xpp3}/xpp3_min-${version.xpp3}.jar" />
+												<fileset file="${settings.localRepository}/commons-beanutils/commons-beanutils/${version.beanutils.beanutils}/commons-beanutils-${version.beanutils.beanutils}.jar" />												
+												<fileset file="${settings.localRepository}/commons-validator/commons-validator/${version.commons-validator}/commons-validator-${version.commons-validator}.jar" />									
+												<fileset file="${settings.localRepository}/commons-digester/commons-digester/${version.commons-digester}/commons-digester-${version.commons-digester}.jar" />
+												<fileset file="${settings.localRepository}/oro/oro/${version.oro}/oro-${version.oro}.jar" />
+												<fileset file="${settings.localRepository}/org/hornetq/hornetq-core/${version.org.hornetq}/hornetq-core-${version.org.hornetq}.jar" />
+												<fileset file="${settings.localRepository}/org/hornetq/hornetq-core-client/${version.org.hornetq}/hornetq-core-client-${version.org.hornetq}.jar" />
+												<fileset file="${settings.localRepository}/org/apache/commons/commons-lang/${version.commons.lang}/commons-lang-${version.commons.lang}.jar" />
+												<fileset file="${settings.localRepository}/org/apache/commons/commons-io/${version.commons.io}/commons-io-${version.commons.io}.jar" />
+												<fileset file="${settings.localRepository}/bouncycastle/bcprov-jdk16/${version.bouncycastle}/bcprov-jdk16-${version.bouncycastle}.jar" />
+												<fileset file="${settings.localRepository}/javapns/javapns-jdk15/${version.javapns}/javapns-jdk15-${version.javapns}.jar" />
+												<fileset file="${settings.localRepository}/commons-logging/commons-logging/${version.commons.logging}/commons-logging-${version.commons.logging}.jar" />
+												<fileset file="${settings.localRepository}/org/apache/httpcomponents/httpcore/${version.httpcore}/httpcore-${version.httpcore}.jar" />
+												<fileset file="${settings.localRepository}/org/apache/httpcomponents/httpclient/${version.httpclient}/httpclient-${version.httpclient}.jar" />
+												<fileset file="${settings.localRepository}/com/googlecode/json-simple/json-simple/${version.json-simple}/json-simple-${version.json-simple}.jar" />
+												<fileset file="${settings.localRepository}/net/sf/ehcache/ehcache/${version.ehcache}/ehcache-${version.ehcache}.jar" />
+												<fileset file="${settings.localRepository}/org/jgroups/jgroups/${version.jgroups}/jgroups-${version.jgroups}.jar" />
+												<fileset file="${settings.localRepository}/io/netty/netty/${version.netty}/netty-${version.netty}.jar" />
+											</copy>
+											
+											<copy tofile="target/mysql5/openmobster-ds.xml" file="${basedir}/src/main/config/mysql5/openmobster-ds.xml" overwrite="true" />
+											
+											<!--  HSQLDB Binary -->
+											<delete dir="target/hsqldb/${project.name}-${project.version}-exploded.sar" />							    
+											<copy todir="target/hsqldb/${project.name}-${project.version}-exploded.sar" overwrite="true">
+											    <fileset dir="${basedir}/src/main/config">
+											    	<include name="**/META-INF/**" />											    	
+											    </fileset>
+											    <fileset dir="${basedir}/src/main/config/hsqldb">
+											    	<exclude name="**/openmobster-ds.xml" />											    	
+											    </fileset>
+											    
+											  
+											    <!-- OpenMobster Components -->
+											    <fileset file="target/${project.name}-${project.version}.jar" />
+												<fileset file="${settings.localRepository}/org/openmobster/core/common/${project.version}/common-${project.version}.jar" />
+												<fileset file="${settings.localRepository}/org/openmobster/core/api/${project.version}/api-${project.version}.jar" />
+												<fileset file="${settings.localRepository}/org/openmobster/core/services/${project.version}/services-${project.version}.jar" />
+												<fileset file="${settings.localRepository}/org/openmobster/core/mobileObject/${project.version}/mobileObject-${project.version}.jar" />
+												<fileset file="${settings.localRepository}/org/openmobster/core/mobileContainer/${project.version}/mobileContainer-${project.version}.jar" />
+												<fileset file="${settings.localRepository}/org/openmobster/core/synchronizer/${project.version}/synchronizer-${project.version}.jar" />
+												<fileset file="${settings.localRepository}/org/openmobster/core/dataService/${project.version}/dataService-${project.version}.jar" />									
+												<fileset file="${settings.localRepository}/org/openmobster/core/deviceService/${project.version}/deviceService-${project.version}.jar" />
+												<fileset file="${settings.localRepository}/org/openmobster/core/security/${project.version}/security-${project.version}.jar" />
+												<fileset file="${settings.localRepository}/org/openmobster/core/agent-provisioning/${project.version}/agent-provisioning-${project.version}.jar" />
+												<fileset file="${settings.localRepository}/org/openmobster/core/agent-provisioning/${project.version}/o.war" />
+												<fileset file="${settings.localRepository}/org/openmobster/core/moblet-management/${project.version}/moblet-management-${project.version}.jar" />
+												<fileset file="${settings.localRepository}/org/openmobster/core/console-server/${project.version}/console-server-${project.version}.jar" />
+												<fileset file="${settings.localRepository}/org/openmobster/core/push-apn/${project.version}/push-apn-${project.version}.jar" />
+												<fileset file="${settings.localRepository}/org/openmobster/core/location/${project.version}/location-${project.version}.jar" />
+												<fileset file="${settings.localRepository}/org/openmobster/core/d2d/${project.version}/d2d-${project.version}.jar" />
+												<fileset file="${settings.localRepository}/org/openmobster/core/clustering/${project.version}/clustering-${project.version}.jar" />
+																				
+								                <!-- Thirdparty Components -->	
+												<fileset file="${settings.localRepository}/org/jboss/jboss-common-core/${version.jboss.common.core}/jboss-common-core-${version.jboss.common.core}.jar" />
+												<fileset file="${settings.localRepository}/org/apache/mina/mina-core/${version.org.apache.mina}/mina-core-${version.org.apache.mina}.jar" />
+												<fileset file="${settings.localRepository}/org/slf4j/slf4j-api/${version.org.slf4j}/slf4j-api-${version.org.slf4j}.jar" />
+												<fileset file="${settings.localRepository}/org/slf4j/slf4j-jdk14/${version.org.slf4j}/slf4j-jdk14-${version.org.slf4j}.jar" />
+												<fileset file="${settings.localRepository}/org/jbpm/jbpm3/jbpm-jpdl/${version.jbpm.jpdl}/jbpm-jpdl-${version.jbpm.jpdl}.jar" />									
+												<fileset file="${settings.localRepository}/commons-codec/commons-codec/${version.commons-codec.commons-codec}/commons-codec-${version.commons-codec.commons-codec}.jar" />																		
+												<fileset file="${settings.localRepository}/com/thoughtworks/xstream/xstream/${version.xstream}/xstream-${version.xstream}.jar" />									
+												<fileset file="${settings.localRepository}/xpp3/xpp3_min/${version.xpp3}/xpp3_min-${version.xpp3}.jar" />
+												<fileset file="${settings.localRepository}/commons-beanutils/commons-beanutils/${version.beanutils.beanutils}/commons-beanutils-${version.beanutils.beanutils}.jar" />
+												<fileset file="${settings.localRepository}/commons-validator/commons-validator/${version.commons-validator}/commons-validator-${version.commons-validator}.jar" />																				
+												<fileset file="${settings.localRepository}/commons-digester/commons-digester/${version.commons-digester}/commons-digester-${version.commons-digester}.jar" />
+												<fileset file="${settings.localRepository}/oro/oro/${version.oro}/oro-${version.oro}.jar" />							
+												<fileset file="${settings.localRepository}/org/hornetq/hornetq-core/${version.org.hornetq}/hornetq-core-${version.org.hornetq}.jar" />
+												<fileset file="${settings.localRepository}/org/hornetq/hornetq-core-client/${version.org.hornetq}/hornetq-core-client-${version.org.hornetq}.jar" />
+												<fileset file="${settings.localRepository}/org/apache/commons/commons-lang/${version.commons.lang}/commons-lang-${version.commons.lang}.jar" />
+												<fileset file="${settings.localRepository}/org/apache/commons/commons-io/${version.commons.io}/commons-io-${version.commons.io}.jar" />
+												<fileset file="${settings.localRepository}/bouncycastle/bcprov-jdk16/${version.bouncycastle}/bcprov-jdk16-${version.bouncycastle}.jar" />
+												<fileset file="${settings.localRepository}/javapns/javapns-jdk15/${version.javapns}/javapns-jdk15-${version.javapns}.jar" />
+												<fileset file="${settings.localRepository}/commons-logging/commons-logging/${version.commons.logging}/commons-logging-${version.commons.logging}.jar" />
+												<fileset file="${settings.localRepository}/org/apache/httpcomponents/httpcore/${version.httpcore}/httpcore-${version.httpcore}.jar" />
+												<fileset file="${settings.localRepository}/org/apache/httpcomponents/httpclient/${version.httpclient}/httpclient-${version.httpclient}.jar" />
+												<fileset file="${settings.localRepository}/com/googlecode/json-simple/json-simple/${version.json-simple}/json-simple-${version.json-simple}.jar" />
+												<fileset file="${settings.localRepository}/net/sf/ehcache/ehcache/${version.ehcache}/ehcache-${version.ehcache}.jar" />
+												<fileset file="${settings.localRepository}/org/jgroups/jgroups/${version.jgroups}/jgroups-${version.jgroups}.jar" />
+												<fileset file="${settings.localRepository}/io/netty/netty/${version.netty}/netty-${version.netty}.jar" />
+											</copy>
+											
+											<copy tofile="target/hsqldb/openmobster-ds.xml" file="${basedir}/src/main/config/hsqldb/openmobster-ds.xml" overwrite="true" />																																															       																							
+										</tasks>
+									</configuration>
+									<goals>
+										<goal>run</goal>
+									</goals>
+								</execution>
+							</executions>				
+						</plugin>  				   			    						
+					</plugins>							
+				  </build>
+			</profile>		    					    						
+	</profiles>
+</project>

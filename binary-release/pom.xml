@@ -1,0 +1,477 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<parent>
+		<groupId>org.openmobster.core</groupId>
+		<artifactId>core</artifactId>
+		<version>2.4-M3.1</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<modelVersion>4.0.0</modelVersion>
+	<name>binary-release</name>
+	<artifactId>binary-release</artifactId>
+	<packaging>pom</packaging>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.openmobster.core</groupId>
+			<artifactId>openmobster-sar</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.openmobster.core</groupId>
+			<artifactId>console</artifactId>
+		</dependency>
+	</dependencies>
+
+	<profiles>
+		<profile>
+			<id>android-release</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins
+						</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>Start CloudServer Binary release</id>
+								<phase>package</phase>
+								<configuration>
+									<tasks>
+										<echo>Starting the CloudServer Binary release.......
+										</echo>
+
+										<!-- Cleanup -->
+										<delete dir="target/openmobster-${project.version}" />
+
+										<!--  copy assemblies -->
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android" overwrite="true">
+											<fileset dir="src/main/assembly">
+												<exclude name="**/jboss/**" />
+											</fileset>
+										</copy>
+
+										<!-- documentation -->
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/docs/apidocs" overwrite="true">
+											<fileset dir="${basedir}/../target/site/apidocs">
+											</fileset>
+										</copy>
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/docs/app-developer-guide/en-US" overwrite="true">
+											<fileset dir="${basedir}/../documentation/app-developer-guide/target/docbook/publish/en-US">
+											</fileset>
+										</copy>
+										
+										
+										<!--  source code -->
+										<!--  
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/src" overwrite="true">
+											<fileset file="${basedir}/../.classpath">
+											</fileset>
+											<fileset file="${basedir}/../.project">
+											</fileset>
+											<fileset file="${basedir}/../*.txt">
+											</fileset>
+											<fileset file="${basedir}/../*.xml">
+											</fileset>
+										</copy>
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/src/.settings" overwrite="true">
+											<fileset dir="${basedir}/../.settings">
+											</fileset>
+										</copy>
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/src/api" overwrite="true">
+											<fileset dir="${basedir}/../api">
+												<exclude name="**/target/**" />
+											</fileset>
+										</copy>
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/src/api-cloudConnector" overwrite="true">
+											<fileset dir="${basedir}/../api-cloudConnector">
+												<exclude name="**/target/**" />
+											</fileset>
+										</copy>
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/src/common" overwrite="true">
+											<fileset dir="${basedir}/../common">
+												<exclude name="**/target/**" />
+											</fileset>
+										</copy>
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/src/services" overwrite="true">
+											<fileset dir="${basedir}/../services">
+												<exclude name="**/target/**" />
+											</fileset>
+										</copy>
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/src/synchronizer" overwrite="true">
+											<fileset dir="${basedir}/../synchronizer">
+												<exclude name="**/target/**" />
+											</fileset>
+										</copy>
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/src/dataService" overwrite="true">
+											<fileset dir="${basedir}/../dataService">
+												<exclude name="**/target/**" />
+											</fileset>
+										</copy>
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/src/mobileObject" overwrite="true">
+											<fileset dir="${basedir}/../mobileObject">
+												<exclude name="**/target/**" />
+											</fileset>
+										</copy>
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/src/mobileContainer" overwrite="true">
+											<fileset dir="${basedir}/../mobileContainer">
+												<exclude name="**/target/**" />
+											</fileset>
+										</copy>
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/src/deviceService" overwrite="true">
+											<fileset dir="${basedir}/../deviceService">
+												<exclude name="**/target/**" />
+											</fileset>
+										</copy>
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/src/security" overwrite="true">
+											<fileset dir="${basedir}/../security">
+												<exclude name="**/target/**" />
+											</fileset>
+										</copy>
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/src/agent-provisioning" overwrite="true">
+											<fileset dir="${basedir}/../agent-provisioning">
+												<exclude name="**/target/**" />
+											</fileset>
+										</copy>
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/src/moblet-management" overwrite="true">
+											<fileset dir="${basedir}/../moblet-management">
+												<exclude name="**/target/**" />
+											</fileset>
+										</copy>
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/src/console" overwrite="true">
+											<fileset dir="${basedir}/../console">
+												<exclude name="**/target/**" />
+											</fileset>
+										</copy>
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/src/console-server" overwrite="true">
+											<fileset dir="${basedir}/../console-server">
+												<exclude name="**/target/**" />
+											</fileset>
+										</copy>
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/src/sar" overwrite="true">
+											<fileset dir="${basedir}/../sar">
+												<exclude name="**/target/**" />
+											</fileset>
+										</copy>
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/src/device-agent-simulator" overwrite="true">
+											<fileset dir="${basedir}/../device-agent-simulator">
+												<exclude name="**/target/**" />
+											</fileset>
+										</copy>
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/src/device-agent-frameworks" overwrite="true">
+											<fileset dir="${basedir}/../device-agent-frameworks">
+												<exclude name="**/target/**" />
+											</fileset>
+										</copy>
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/src/server-testsuite" overwrite="true">
+											<fileset dir="${basedir}/../server-testsuite">
+												<exclude name="**/target/**" />
+											</fileset>
+										</copy>
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/src/binary-release" overwrite="true">
+											<fileset dir="${basedir}/../binary-release">
+												<exclude name="**/target/**" />
+											</fileset>
+										</copy>
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/src/licensing" overwrite="true">
+											<fileset dir="${basedir}/../licensing">
+												<exclude name="**/target/**" />
+											</fileset>
+										</copy>
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/src/documentation" overwrite="true">
+											<fileset dir="${basedir}/../documentation">
+												<exclude name="**/target/**" />
+											</fileset>
+										</copy>
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/src/cloud-sdk" overwrite="true">
+											<fileset dir="${basedir}/../cloud-sdk">
+												<exclude name="**/target/**" />
+											</fileset>
+										</copy>
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/src/dev-tools" overwrite="true">
+											<fileset dir="${basedir}/../dev-tools">
+												<exclude name="**/target/**" />
+												<exclude name="**/build/**" />
+											</fileset>
+										</copy>
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/src/testdrive-server" overwrite="true">
+											<fileset dir="${basedir}/../testdrive-server">
+												<exclude name="**/target/**" />
+											</fileset>
+										</copy>
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/src/perf-framework" overwrite="true">
+											<fileset dir="${basedir}/../perf-framework">
+												<exclude name="**/target/**" />
+											</fileset>
+										</copy>
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/src/push-apn" overwrite="true">
+											<fileset dir="${basedir}/../push-apn">
+												<exclude name="**/target/**" />
+											</fileset>
+										</copy>
+										
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/src/android" overwrite="true">
+											<fileset dir="${basedir}/../android">
+												<exclude name="**/target/**" />
+											</fileset>
+										</copy>
+										-->
+
+										<!--  Management Console -->
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/console" overwrite="true">
+											<fileset file="${basedir}/../../console/console-client/console.war">
+											</fileset>
+										</copy>
+										
+										
+
+										<!--  AppCreator -->
+										<copy tofile="target/openmobster-${project.version}/openmobster-${project.version}-android/AppCreator/appCreator.jar" overwrite="true" file="${basedir}/../dev-tools/appCreator/target/appCreator-${project.version}.jar" />
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/AppCreator/sampleApps" overwrite="true">
+											<fileset dir="${basedir}/../dev-tools/sampleApps">
+												<exclude name="**/target/**" />
+												<exclude name="**/build/**" />
+											</fileset>
+										</copy>
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/Samples" overwrite="true">
+											<fileset dir="${basedir}/../dev-tools/sampleApps">
+												<exclude name="**/target/**" />
+												<exclude name="**/build/**" />
+											</fileset>
+										</copy>
+										
+										<!-- Package the APKs under the Samples Directory -->
+										<copy tofile="target/openmobster-${project.version}/openmobster-${project.version}-android/Samples/CRUD.apk" overwrite="true" file="${basedir}/../dev-tools/sampleApps/crud/app-android/target/crud-1.0.apk" />
+										<copy tofile="target/openmobster-${project.version}/openmobster-${project.version}-android/Samples/AsyncService.apk" overwrite="true" file="${basedir}/../dev-tools/sampleApps/asyncserviceapp/app-android/target/asyncserviceapp-1.0.apk" />
+										<copy tofile="target/openmobster-${project.version}/openmobster-${project.version}-android/Samples/I-Cloud.apk" overwrite="true" file="${basedir}/../dev-tools/sampleApps/i-cloud/app-android/target/i-cloud-1.0.apk" />
+
+										<!--  Cloud Server -->
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/cloudServer/mysql5" overwrite="true">
+											<fileset dir="src/main/assembly/jboss">
+											</fileset>
+										</copy>
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/cloudServer/hsqldb" overwrite="true">
+											<fileset dir="src/main/assembly/jboss">
+											</fileset>
+										</copy>
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/cloudServer/mysql5/openmobster/deploy/openmobster.last" overwrite="true">
+											<fileset dir="${basedir}/../sar/target/mysql5/openmobster-sar-${project.version}-exploded.sar">
+											</fileset>
+										</copy>
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/cloudServer/mysql5/openmobster/deploy" overwrite="true">
+											<fileset file="${basedir}/../sar/target/mysql5/openmobster-ds.xml">
+											</fileset>
+										</copy>
+
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/cloudServer/hsqldb/openmobster/deploy/openmobster.last" overwrite="true">
+											<fileset dir="${basedir}/../sar/target/hsqldb/openmobster-sar-${project.version}-exploded.sar">
+											</fileset>
+										</copy>
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/cloudServer/hsqldb/openmobster/deploy" overwrite="true">
+											<fileset file="${basedir}/../sar/target/hsqldb/openmobster-ds.xml">
+											</fileset>
+										</copy>
+
+										<!--  
+											  Android (2.0) binaries..
+											  Should work with API level 5 devices...
+											  Maybe even lower but cannot guarantee 
+										-->
+										<copy toFile="target/openmobster-${project.version}/openmobster-${project.version}-android/Android/core-runtime/CloudManager.apk" overwrite="true" file="${basedir}/../android/cloudManager/target/cloudManager-${project.version}-zipped.apk" />
+										
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/Android/developer-library" overwrite="true">
+											<fileset file="${basedir}/../android/device-sdk/target/device-sdk-${project.version}-full.jar">
+											</fileset>
+										</copy>
+										
+
+										<!-- Pre-Installed Sample Apps -->
+										<unjar src="${basedir}/../dev-tools/sampleApps/crud/moblet/target/crud-1.0-moblet.jar" dest="target/openmobster-${project.version}/openmobster-${project.version}-android/SampleApps/crud" overwrite="true">
+										</unjar>
+										<unjar src="${basedir}/../dev-tools/sampleApps/asyncserviceapp/moblet/target/asyncserviceapp-1.0-moblet.jar" dest="target/openmobster-${project.version}/openmobster-${project.version}-android/SampleApps/asyncserviceapp" overwrite="true">
+										</unjar>
+										<unjar src="${basedir}/../dev-tools/sampleApps/i-cloud/moblet/target/i-cloud-1.0-moblet.jar" dest="target/openmobster-${project.version}/openmobster-${project.version}-android/SampleApps/i-cloud" overwrite="true">
+										</unjar>
+										
+										<!--  Copy CloudManager binaries to the App Server (HSQLDB version) -->
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/cloudServer/hsqldb/openmobster/deploy/openmobster.last/moblets.jar/android/20" overwrite="true">
+											<fileset dir="target/openmobster-${project.version}/openmobster-${project.version}-android/Android/core-runtime">
+												<include name="**/*.apk" />
+											</fileset>
+										</copy>
+										
+										<!--  Copy CloudManager binaries to the App Server (MySQL5 version) -->
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/cloudServer/mysql5/openmobster/deploy/openmobster.last/moblets.jar/android/20" overwrite="true">
+											<fileset dir="target/openmobster-${project.version}/openmobster-${project.version}-android/Android/core-runtime">
+												<include name="**/*.apk" />
+											</fileset>
+										</copy>
+
+										<!--  Deploying the SampleApps into the App Server -->
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/cloudServer/hsqldb/openmobster/deploy/crud.jar" overwrite="true">
+											<fileset dir="target/openmobster-${project.version}/openmobster-${project.version}-android/SampleApps/crud">
+											</fileset>
+										</copy>
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/cloudServer/mysql5/openmobster/deploy/crud.jar" overwrite="true">
+											<fileset dir="target/openmobster-${project.version}/openmobster-${project.version}-android/SampleApps/crud">
+											</fileset>
+										</copy>
+										
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/cloudServer/hsqldb/openmobster/deploy/asyncserviceapp.jar" overwrite="true">
+											<fileset dir="target/openmobster-${project.version}/openmobster-${project.version}-android/SampleApps/asyncserviceapp">
+											</fileset>
+										</copy>
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/cloudServer/mysql5/openmobster/deploy/asyncserviceapp.jar" overwrite="true">
+											<fileset dir="target/openmobster-${project.version}/openmobster-${project.version}-android/SampleApps/asyncserviceapp">
+											</fileset>
+										</copy>
+										
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/cloudServer/hsqldb/openmobster/deploy/i-cloud.jar" overwrite="true">
+											<fileset dir="target/openmobster-${project.version}/openmobster-${project.version}-android/SampleApps/i-cloud">
+											</fileset>
+										</copy>
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/cloudServer/mysql5/openmobster/deploy/i-cloud.jar" overwrite="true">
+											<fileset dir="target/openmobster-${project.version}/openmobster-${project.version}-android/SampleApps/i-cloud">
+											</fileset>
+										</copy>
+										
+										<!--  Copy Console binaries to the App Server (HSQLDB version) -->
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/cloudServer/hsqldb/openmobster/deploy/openmobster.last" overwrite="true">
+											<fileset file="target/openmobster-${project.version}/openmobster-${project.version}-android/console/console.war">
+											</fileset>
+										</copy>
+										
+										<!--  Copy CloudManager binaries to the App Server (MySQL5 version) -->
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/cloudServer/mysql5/openmobster/deploy/openmobster.last" overwrite="true">
+											<fileset file="target/openmobster-${project.version}/openmobster-${project.version}-android/console/console.war">
+											</fileset>
+										</copy>
+										
+										<!-- iphone packaging -->
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/iPhone" overwrite="true">
+											<fileset dir="../../iphone">
+												<exclude name="**/build/**" />
+											</fileset>
+										</copy>
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/iPhone/showcase" overwrite="true">
+											<fileset dir="${basedir}/../dev-tools/sampleApps/showcase">
+												<exclude name="**/target/**" />
+											</fileset>
+										</copy>
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/iPhone/docs" overwrite="true">
+											<fileset dir="../../iphone/mobilecloudlib/docs">
+											</fileset>
+										</copy>
+										
+										<!-- Titanium Packaging: Deprecated -->
+										<!--  
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/Titanium/titanium_module_android" overwrite="true">
+											<fileset dir="../../titanium_module_android">
+												<exclude name="**/build/**" />
+											</fileset>
+										</copy>
+										<copy tofile="target/openmobster-${project.version}/openmobster-${project.version}-android/Titanium/org.openmobster.cloud-android-0.1.zip" file="target/openmobster-${project.version}/openmobster-${project.version}-android/Titanium/titanium_module_android/dist/org.openmobster.cloud-android-0.1.zip" overwrite="true">
+										</copy>
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/Titanium/titanium_module_ios" overwrite="true">
+											<fileset dir="../../titanium_module_ios">
+												<exclude name="**/build/**" />
+											</fileset>
+										</copy>  
+										<copy tofile="target/openmobster-${project.version}/openmobster-${project.version}-android/Titanium/org.openmobster.cloud-iphone-0.1.zip" overwrite="true" file="target/openmobster-${project.version}/openmobster-${project.version}-android/Titanium/titanium_module_ios/org.openmobster.cloud-iphone-0.1.zip">
+										</copy>
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/Titanium/crud" overwrite="true">
+											<fileset dir="${basedir}/../dev-tools/sampleApps/crud">
+												<exclude name="**/target/**" />
+												<exclude name="**/build/**" />
+											</fileset>
+										</copy>
+										-->
+										<!--  Packaging PhoneGap for Android -->
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/PhoneGap-1.5.0/Android/src" overwrite="true">
+											<fileset dir="../phonegap">
+												<exclude name="**/target/**" />
+											</fileset>
+										</copy>
+										<copy tofile="target/openmobster-${project.version}/openmobster-${project.version}-android/PhoneGap-1.5.0/Android/bin/plugin.jar" overwrite="true">
+											<fileset file="../phonegap/plugin/target/plugin-${project.version}.jar">
+											</fileset>
+										</copy>
+										<copy tofile="target/openmobster-${project.version}/openmobster-${project.version}-android/PhoneGap-1.5.0/Android/bin/openmobster-sync-2.2.js" overwrite="true">
+											<fileset file="../phonegap/plugin-jquery/assets/www/openmobster-sync-2.2.js">
+											</fileset>
+										</copy>
+										<copy tofile="target/openmobster-${project.version}/openmobster-${project.version}-android/PhoneGap-1.5.0/Android/bin/plugin.xml" overwrite="true">
+											<fileset file="../phonegap/plugin-jquery/res/xml/plugins.xml">
+											</fileset>
+										</copy>
+										<copy tofile="target/openmobster-${project.version}/openmobster-${project.version}-android/PhoneGap-1.5.0/Android/Samples/JQueryOfflineApp.apk" overwrite="true">
+											<fileset file="../phonegap/plugin-jquery/target/plugin-jquery-${project.version}-zipped.apk">
+											</fileset>
+										</copy>
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/PhoneGap-1.5.0/Android/Samples/plugin-jquery-cloud" overwrite="true">
+											<fileset dir="../phonegap/plugin-jquery-cloud">
+												<exclude name="**/target/**" />
+											</fileset>
+										</copy>
+										
+										<!-- Packaging PhoneGap for iOS -->
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/PhoneGap-1.5.0/iOS/src/PhoneGapSyncApp" overwrite="true">
+											<fileset dir="../../iphone/PhoneGapSyncApp">
+												<exclude name="**/build/**" />
+											</fileset>
+										</copy>
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/PhoneGap-1.5.0/iOS/src/PhoneGapSyncPlugin" overwrite="true">
+											<fileset dir="../../iphone/PhoneGapSyncPlugin">
+												<exclude name="**/build/**" />
+											</fileset>
+										</copy>
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/PhoneGap-1.5.0/iOS/src/mobilecloudlib" overwrite="true">
+											<fileset dir="../../iphone/mobilecloudlib">
+												<exclude name="**/build/**" />
+											</fileset>
+										</copy>
+										
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/PhoneGap-1.5.0/iOS/bin" overwrite="true">
+											<fileset file="../../iphone/PhoneGapSyncApp/PhoneGapSyncApp/Plugins/SyncPlugin.h">
+											</fileset>
+											<fileset file="../../iphone/PhoneGapSyncApp/PhoneGapSyncApp/Plugins/SyncPlugin.m">
+											</fileset>
+											<fileset file="../../iphone/PhoneGapSyncApp/www/openmobster-sync-2.2.js">
+											</fileset>
+										</copy>
+										
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/PhoneGap-1.5.0/iOS/Samples/PhoneGapSyncApp" overwrite="true">
+											<fileset dir="../../iphone/PhoneGapSyncApp">
+												<exclude name="**/build/**" />
+											</fileset>
+										</copy>
+										<copy todir="target/openmobster-${project.version}/openmobster-${project.version}-android/PhoneGap-1.5.0/iOS/Samples/plugin-jquery-cloud" overwrite="true">
+											<fileset dir="../phonegap/plugin-jquery-cloud">
+												<exclude name="**/target/**" />
+											</fileset>
+										</copy>
+										
+										<!--  cleaup -->
+										<delete dir="target/openmobster-${project.version}/openmobster-${project.version}-android/SampleApps" />
+										
+
+										<!-- zip and tar the artifact Not needed -->
+										<!--  
+										<tar destfile="target/openmobster-${project.version}.tar" basedir="target/openmobster-${project.version}" />
+										<gzip destfile="target/openmobster-${project.version}.tar.gz" src="target/openmobster-${project.version}.tar" />											
+										<delete file="target/openmobster-${project.version}.tar" />
+										-->
+										
+										<zip destfile="target/openmobster-${project.version}.zip" basedir="target/openmobster-${project.version}" />									
+									</tasks>
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+</project>

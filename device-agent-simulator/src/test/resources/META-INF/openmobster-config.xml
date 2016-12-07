@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<deployment xmlns="urn:jboss:bean-deployer:2.0">
+   <!-- Device side components -->
+   <!--
+   				Device Side Component stack for the testsuite
+   -->
+   <bean name="test://DeviceMappingListener" class="test.openmobster.device.agent.sync.device.MappingListener"/>
+   
+   <bean name="test://errors/SyncEngine" class="test.openmobster.device.agent.sync.device.SyncEngineWithErrorSimulation">  
+   	  <property name="syncDataSource">
+   	  	<inject bean="simulator://SyncDataSource"/>
+   	  </property>
+   	  <property name="mobileObjectDatabase">
+   	  	<inject bean="mobileObject://MobileObjectDatabase"/>
+   	  </property>   		
+   </bean>
+   
+   <!-- Device Side components for the API Tests -->
+   <bean name="testMobileBeanSpec://mobileBeanRunner" class="org.openmobster.device.agent.test.framework.MobileBeanRunner">
+   		<property name="deviceId">IMEI:4930051</property>
+   		<property name="serverId">http://www.openmobster.org/sync-server</property>
+   		<property name="service">mockMobileTicket</property>
+   		<property name="user">blah2@gmail.com</property>
+   		<property name="credential">blahblah2</property>
+   		<property name="deviceSyncEngine">
+   			<inject bean="simulator://SyncEngine"/>
+   		</property>
+   		<property name="provisioner">
+   			<inject bean="security://Provisioner"/>
+   		</property>
+   		<property name="deviceDatabase">
+   			<inject bean="mobileObject://MobileObjectDatabase"/>
+   		</property>
+   		<property name="configuration">
+   			<inject bean="/testMobileBeanSpec/configuration"/>
+   		</property>
+   </bean>   
+   <bean name="/testMobileBeanSpec/configuration" 
+   class="org.openmobster.device.agent.test.framework.Configuration">
+   </bean>
+   
+   <!-- Devices for comet tests -->
+   <bean name="IMEI:12345" class="org.openmobster.device.agent.test.framework.MobileBeanRunner">
+   		<property name="deviceId">IMEI:12345</property>
+   		<property name="serverId">http://www.openmobster.org/sync-server</property>
+   		<property name="service">twitterChannel</property>
+   		<property name="user">blah@gmail.com</property>
+   		<property name="credential">blahblah</property>
+   		<property name="deviceSyncEngine">
+   			<inject bean="simulator://SyncEngine"/>
+   		</property>
+   		<property name="provisioner">
+   			<inject bean="security://Provisioner"/>
+   		</property>
+   		<property name="deviceDatabase">
+   			<inject bean="mobileObject://MobileObjectDatabase"/>
+   		</property>  
+   		<property name="cometDaemon">
+   			<inject bean="/IMEI:12345/cometDaemon"/>
+   		</property>
+   		<property name="configuration">
+   			<inject bean="/IMEI:12345/configuration"/>
+   		</property> 		
+   </bean>
+   <bean name="/IMEI:12345/cometDaemon" 
+   class="org.openmobster.device.agent.test.framework.CometDaemon">
+   		<property name="configuration">
+   			<inject bean="/IMEI:12345/configuration"/>
+   		</property>
+   </bean>
+   <bean name="/IMEI:12345/configuration" 
+   class="org.openmobster.device.agent.test.framework.Configuration">
+   </bean>
+   
+   <bean name="IMEI:67890" class="org.openmobster.device.agent.test.framework.MobileBeanRunner">
+   		<property name="deviceId">IMEI:67890</property>
+   		<property name="serverId">http://www.openmobster.org/sync-server</property>
+   		<property name="service">twitterChannel</property>
+   		<property name="user">blah2@gmail.com</property>
+   		<property name="credential">blahblah2</property>
+   		<property name="deviceSyncEngine">
+   			<inject bean="simulator://SyncEngine"/>
+   		</property>
+   		<property name="provisioner">
+   			<inject bean="security://Provisioner"/>
+   		</property>
+   		<property name="deviceDatabase">
+   			<inject bean="mobileObject://MobileObjectDatabase"/>
+   		</property>
+   		<property name="cometDaemon">
+   			<inject bean="/IMEI:67890/cometDaemon"/>
+   		</property>  
+   		<property name="configuration">
+   			<inject bean="/IMEI:67890/configuration"/>
+   		</property> 		
+   </bean>
+   <bean name="/IMEI:67890/cometDaemon" 
+   class="org.openmobster.device.agent.test.framework.CometDaemon">
+   		<property name="configuration">
+   			<inject bean="/IMEI:67890/configuration"/>
+   		</property>
+   </bean>
+   <bean name="/IMEI:67890/configuration" 
+   class="org.openmobster.device.agent.test.framework.Configuration">
+   </bean>
+   
+   <bean name="/test/start/pushrpc" class="test.openmobster.device.agent.StartPushRPC"/>
+    <bean name="/test/start/push" class="test.openmobster.device.comet.StartPush"/>
+    <bean name="/test/unit/push" class="test.openmobster.device.comet.UnitTestPush"/>
+   
+   <!-- Deploy the UploadPictureCommand -->
+   <bean name="/upload/picture" class="test.openmobster.device.agent.api.camera.UploadPictureCommand">
+   		<depends>services://CloudCameraService</depends>
+   </bean>
+   
+   <!-- MultiDevice Conflict Resolution -->
+   <bean name="12345" class="org.openmobster.device.agent.test.framework.MobileBeanRunner">
+   		<property name="deviceId">12345</property>
+   		<property name="serverId">http://www.openmobster.org/sync-server</property>
+   		<property name="service">testServerBean</property>
+   		<property name="user">blah2@gmail.com</property>
+   		<property name="credential">blahblah2</property>
+   		<property name="deviceSyncEngine">
+   			<inject bean="simulator://SyncEngine"/>
+   		</property>
+   		<property name="provisioner">
+   			<inject bean="security://Provisioner"/>
+   		</property>
+   		<property name="deviceDatabase">
+   			<inject bean="mobileObject://MobileObjectDatabase"/>
+   		</property>
+   		<property name="cometDaemon">
+   			<inject bean="/12345/cometDaemon"/>
+   		</property>  
+   		<property name="configuration">
+   			<inject bean="/12345/configuration"/>
+   		</property> 		
+   </bean>
+   <bean name="/12345/cometDaemon" 
+   class="org.openmobster.device.agent.test.framework.CometDaemon">
+   		<property name="configuration">
+   			<inject bean="/12345/configuration"/>
+   		</property>
+   </bean>
+   <bean name="/12345/configuration" 
+   class="org.openmobster.device.agent.test.framework.Configuration">
+   </bean>
+   
+   <bean name="6789" class="org.openmobster.device.agent.test.framework.MobileBeanRunner">
+   		<property name="deviceId">6789</property>
+   		<property name="serverId">http://www.openmobster.org/sync-server</property>
+   		<property name="service">testServerBean</property>
+   		<property name="user">blah3@gmail.com</property>
+   		<property name="credential">blahblah3</property>
+   		<property name="deviceSyncEngine">
+   			<inject bean="simulator://SyncEngine"/>
+   		</property>
+   		<property name="provisioner">
+   			<inject bean="security://Provisioner"/>
+   		</property>
+   		<property name="deviceDatabase">
+   			<inject bean="mobileObject://MobileObjectDatabase"/>
+   		</property>
+   		<property name="cometDaemon">
+   			<inject bean="/6789/cometDaemon"/>
+   		</property>  
+   		<property name="configuration">
+   			<inject bean="/6789/configuration"/>
+   		</property> 		
+   </bean>
+   <bean name="/6789/cometDaemon" 
+   class="org.openmobster.device.agent.test.framework.CometDaemon">
+   		<property name="configuration">
+   			<inject bean="/6789/configuration"/>
+   		</property>
+   </bean>
+   <bean name="/6789/configuration" 
+   class="org.openmobster.device.agent.test.framework.Configuration">
+   </bean>
+   
+   <!--  SyncEvent Propagation -->
+   <bean name="IMEI:0" class="org.openmobster.device.agent.test.framework.MobileBeanRunner">
+   		<property name="deviceId">IMEI:0</property>
+   		<property name="serverId">http://www.openmobster.org/sync-server</property>
+   		<property name="service">testServerBean</property>
+   		<property name="user">blah2@gmail.com</property>
+   		<property name="credential">blahblah2</property>
+   		<property name="deviceSyncEngine">
+   			<inject bean="simulator://SyncEngine"/>
+   		</property>
+   		<property name="provisioner">
+   			<inject bean="security://Provisioner"/>
+   		</property>
+   		<property name="deviceDatabase">
+   			<inject bean="mobileObject://MobileObjectDatabase"/>
+   		</property>
+   		<property name="cometDaemon">
+   			<inject bean="/IMEI:0/cometDaemon"/>
+   		</property>  
+   		<property name="configuration">
+   			<inject bean="/IMEI:0/configuration"/>
+   		</property> 		
+   </bean>
+   <bean name="/IMEI:0/cometDaemon" 
+   class="org.openmobster.device.agent.test.framework.CometDaemon">
+   		<property name="configuration">
+   			<inject bean="/IMEI:0/configuration"/>
+   		</property>
+   </bean>
+   <bean name="/IMEI:0/configuration" 
+   class="org.openmobster.device.agent.test.framework.Configuration">
+   </bean>
+   
+   <bean name="IMEI:1" class="org.openmobster.device.agent.test.framework.MobileBeanRunner">
+   		<property name="deviceId">IMEI:1</property>
+   		<property name="serverId">http://www.openmobster.org/sync-server</property>
+   		<property name="service">testServerBean</property>
+   		<property name="user">blah2@gmail.com</property>
+   		<property name="credential">blahblah2</property>
+   		<property name="deviceSyncEngine">
+   			<inject bean="simulator://SyncEngine"/>
+   		</property>
+   		<property name="provisioner">
+   			<inject bean="security://Provisioner"/>
+   		</property>
+   		<property name="deviceDatabase">
+   			<inject bean="mobileObject://MobileObjectDatabase"/>
+   		</property>
+   		<property name="cometDaemon">
+   			<inject bean="/IMEI:1/cometDaemon"/>
+   		</property>  
+   		<property name="configuration">
+   			<inject bean="/IMEI:1/configuration"/>
+   		</property> 		
+   </bean>
+   <bean name="/IMEI:1/cometDaemon" 
+   class="org.openmobster.device.agent.test.framework.CometDaemon">
+   		<property name="configuration">
+   			<inject bean="/IMEI:1/configuration"/>
+   		</property>
+   </bean>
+   <bean name="/IMEI:1/configuration" 
+   class="org.openmobster.device.agent.test.framework.Configuration">
+   </bean>
+   
+   <bean name="IMEI:2" class="org.openmobster.device.agent.test.framework.MobileBeanRunner">
+   		<property name="deviceId">IMEI:2</property>
+   		<property name="serverId">http://www.openmobster.org/sync-server</property>
+   		<property name="service">testServerBean</property>
+   		<property name="user">blah3@gmail.com</property>
+   		<property name="credential">blahblah3</property>
+   		<property name="deviceSyncEngine">
+   			<inject bean="simulator://SyncEngine"/>
+   		</property>
+   		<property name="provisioner">
+   			<inject bean="security://Provisioner"/>
+   		</property>
+   		<property name="deviceDatabase">
+   			<inject bean="mobileObject://MobileObjectDatabase"/>
+   		</property>
+   		<property name="cometDaemon">
+   			<inject bean="/IMEI:2/cometDaemon"/>
+   		</property>  
+   		<property name="configuration">
+   			<inject bean="/IMEI:2/configuration"/>
+   		</property> 		
+   </bean>
+   <bean name="/IMEI:2/cometDaemon" 
+   class="org.openmobster.device.agent.test.framework.CometDaemon">
+   		<property name="configuration">
+   			<inject bean="/IMEI:2/configuration"/>
+   		</property>
+   </bean>
+   <bean name="/IMEI:2/configuration" 
+   class="org.openmobster.device.agent.test.framework.Configuration">
+   </bean>
+   
+   <bean name="friends" 
+   class="org.openmobster.device.agent.location.FriendBean">
+   		<depends>services://MobileObjectMonitor</depends>
+   		<depends>services://MobileServiceMonitor</depends>
+   		<depends>org.openmobster.core.services.LocationServiceMonitor</depends>
+   </bean>
+</deployment>

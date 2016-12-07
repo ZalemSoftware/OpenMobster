@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+MIDlet-Version: 2.0
+MIDlet-Jar-Size: 0
+MicroEdition-Configuration: CLDC-1.1
+MIDlet-Jar-URL: openmobster.jar
+RIM-COD-Module-Dependencies: net_rim_cldc,net_rim_xml,net_rim_xml_org
+RIM-COD-URL-1: openmobster-1.cod
+RIM-COD-SHA1-1: 0e 73 22 be fa 63 8f da b1 d8 0c 9e f3 47 22 7f 02 cb 5c 4c
+RIM-MIDlet-Flags-1: 1
+RIM-COD-Size-1: 20208
+RIM-COD-Module-Name: openmobster
+MIDlet-Name: openmobster
+RIM-COD-Size: 91036
+RIM-COD-Creation-Time: 1238558880
+MIDlet-1: ,img/icon.png,
+RIM-COD-URL: openmobster.cod
+RIM-COD-SHA1: 70 f6 ed 9b 39 33 ac bd 56 6b 88 7a c8 aa 72 12 2f 4d 96 aa
+MicroEdition-Profile: MIDP-2.0
+MIDlet-Vendor: OpenMobster

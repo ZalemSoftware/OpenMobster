@@ -1,0 +1,27 @@
+Introduction to OpenMobster Mobile Cloud Platform
+
+OpenMobster is a platform for integrating Mobile Apps (native/on-device apps) with remote data services located in the "Cloud"
+
+It provides the following features:
+
+* Seamless Offline Data Synchronization
+  Cloud data is made available seamlessly inside an App's local storage. This data is available even if the device is offline and has no
+  connection with the cloud. The data is automatically synchronized with the Cloud service based on state changes. These state changes
+  are auto detected and does not require any device-side sync-related programming on the part of the developer
+	
+* Comet-style Push Notifications
+  <ulink url="http://en.wikipedia.org/wiki/Comet_%28programming%29">Comet</ulink> is an umbrella term for pushing state changes to an App from the server,
+  instead of an App proactively requesting it. The Push mechanism uses pure network/socket based approach instead of round about methodologies
+  like sending sms alerts or email alerts. The Push notifications happens inside the App's address space. Note: some platforms like the iPhone
+  do not allow background processing, and may need some workaround for the Comet Push. This is a limitation of the actual device platform.
+  
+
+* Simple Mobile Service RPC
+  Provides a simple way of exposing your server-side coarse grained business services. These services are invoked via a simple RPC mechanism without
+  any low-level programming like http-client code, client side REST library, etc on the part of the App developer. There is a simple
+  RPC API that is used for making these calls. The RPC calls are synchronous in nature.
+	
+
+* Management Console
+  A Management Console is provide to administrate the Cloud Server. It provides security, and account provisioning features. Over time the Management
+  Console will carry device management features like remote wipe, remote tracking, remote lock-down, etc 

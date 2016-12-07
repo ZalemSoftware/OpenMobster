@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="architecture">
+   <chapterinfo>
+      <author>
+         <firstname>openmobster</firstname>
+         <surname>at gmail.com</surname>
+         <email>openmobster@gmail.com</email>
+      </author>
+   </chapterinfo>
+   <title>Architecture</title>
+   <sect1>
+		<title>OpenMobster Architecture</title>
+		<imageobject>
+			<imagedata fileref="images/architecture.png" format="png"/>
+		</imageobject>
+   </sect1>
+   <sect1>
+   		<title>Device SDK Stack</title>
+		<para>
+		    <imageobject>
+				<imagedata fileref="images/mobileCloud.png" format="png" align="center"/>
+			</imageobject>
+		    This is a software stack that is installed on the mobile device. It provides the following services to Mobile Apps:
+		    <emphasis>Sync</emphasis>, <emphasis>Push</emphasis>, <emphasis>OfflineApp</emphasis>, <emphasis>Mobile RPC</emphasis>, <emphasis>Network</emphasis>, <emphasis>Local Storage</emphasis>.
+		</para>
+		<sect2>
+			<title>Sync</title>
+			<para>
+			<emphasis>Sync</emphasis> service auto-synchronizes all state changes to App/Moblet Data back with the Cloud Server. It supports 
+			various synchronization modes such as two way sync, one way server sync, one way device sync, slow sync, and boot sync. 
+			</para>
+		</sect2>
+		<sect2>
+			<title>Push</title>
+			<para>
+			<emphasis>Push</emphasis> service manages state updates being sent as notifications from the Cloud Server. This improves the mobile 
+			user's experience as they do not have to pro-actively check for new information. When relevant information becomes available on the 
+			server, the user is automatically notified via system notifications like a beep, vibration, etc. <emphasis>Clarification:</emphasis> The Push service is 
+			a real time comet based service. The notifications are received within the context of the App and not as SMS alerts or some other
+			non-intuitive experience. The experience is just like the Blackberry email experience. The Cloud Server <emphasis role="bold">does not</emphasis>
+			require any special infrastructure like the <emphasis>Blackberry Enterprise Server</emphasis> to make this happen.
+			</para>
+		</sect2>
+		<sect2>
+			<title>OfflineApp</title>
+			<para>
+				<emphasis>OfflineApp</emphasis> service provided is designed to be an App Developer's best friend. Its carries the management capabilities
+				to create smart coordination between low-level services like Sync and Push. Because of the OfflineApp service, the programmer
+				never has to write any code to actually perform any synchronization. Synchronization is something that is managed by the OfflineApp
+				service and it decides which mode of synchronization is the best for the current runtime state of the App. The App developer is
+				never exposed to low level synchronization details like two way sync, one way device sync, etc. It coordinates managing the Push
+				service. It carries the smartness to track the type of data being pushed along with which installed App on the device needs the
+				notification. The App developer does not have to write any special code to receive notifications. The moment the data channel for
+				the App is established, all synchronizations and push notifications are automatically handled by the OfflineApp service.
+			</para>
+		</sect2>
+		<sect2>
+			<title>Mobile RPC</title>
+			<para>
+				<emphasis>Mobile RPC</emphasis> facilitates making synchronous RPC (Remote Procedure Call) invocations from the device to the server side 'MobileServiceBean' components.
+			</para>
+		</sect2>
+		<sect2>
+			<title>Network</title>
+			<emphasis>Network</emphasis> service manages establishing a network connection with the Cloud Server. It manages the communication channel
+			needed to receive <emphasis>Push</emphasis> notifications from the server. It carries the smartness to track coverage and establishes proper connections
+			automatically. This is a very low-level service and an App developer never
+			has to deal with using it directly. The App developer is shielded from any low level connection establishment, security, protocol details, etc
+			by using the higher level <emphasis>Mobile Data Framework</emphasis> components.
+		</sect2>
+		<sect2>
+			<title>Local Storage</title>
+			<emphasis>Local Storage</emphasis> service manages local data storage details for Apps. Depending on the platform in question it uses 
+			the corresponding storage facilities. It is designed to coordinate storage among the suite of Apps/Moblets installed on the device.
+			It provides thread-safe concurrent access to the Apps. Just like the Network service, its a low-level service used by the 
+			<emphasis>Mobile Data Framework</emphasis> components.
+		</sect2>
+	</sect1>
+	<sect1>
+		<title>Cloud Server Stack</title>
+		<para>
+		    <imageobject>
+				<imagedata fileref="images/mobileServer.png" format="png"/>
+			</imageobject>
+		    This is a software stack that is installed on the server-side. It provides the following services to Mobile Apps:
+		    <emphasis>Sync</emphasis>, <emphasis>Push</emphasis>, <emphasis>Secure Socket-Based Data Service</emphasis>, <emphasis>Mobile RPC</emphasis>, <emphasis>Security</emphasis>, <emphasis>Management Console</emphasis> 
+			<sect2>
+				<title>Sync</title>
+				<para>
+					<emphasis>Sync</emphasis> service synchronizes device side App state changes with the backend services where the data actually originates. It provides 
+					a plugin framework to mobilize the backend data. It uses the concept of a data "Channel" which mobilizes the data in the form of "MobileBean" instances.
+				</para>
+			</sect2>
+			<sect2>
+				<title>Push</title>
+				<para>
+					<emphasis>Push</emphasis> service monitors data "Channels" for updates. The moment updates are detected, corresponding Comet-based notifications are 
+					sent back to the device. If the device is out of coverage or disconnected for some reason, it waits in a queue, and delivers the push the moment the
+					device connects back to the network. <emphasis>Clarification:</emphasis> The push service <emphasis role="bold">does not</emphasis> depend on any
+					special infrastructure like a <emphasis>Blackberry Enterprise Server</emphasis> to achieve its functionality. Its a pure
+					Comet-based approach via a socket channel with the device.
+				</para>
+			</sect2>
+			<sect2>
+				<title>Secure Socket-Based Data Service</title>
+				<para>
+					<emphasis>Secure Socket-Based Data Service</emphasis> is a high performance socket server based on Java NIO. The service uses
+					the <ulink url="http://mina.apache.org/">Apache MINA</ulink> network application framework. It provides both, a plain socket server
+					, and a SSL-based socket server, depending on the security requirements of the Apps. 
+				</para>
+			</sect2>
+			<sect2>
+				<title>Mobile RPC</title>
+				<para>
+					<emphasis>Mobile RPC</emphasis> service on the server-side provides a Remote Procedure Call framework for invoking coarse grained
+					business services of an App. The components are plugged in as <emphasis>MobileService Beans</emphasis> and the device-side
+					Mobile RPC service invokes them via a simple synchronous request/response based approach.
+				</para>
+			</sect2>
+			<sect2>
+				<title>Security</title>
+				<para>
+					<emphasis>Security</emphasis> component provides authentication and authorization services to make sure mobile devices connecting
+					to the Cloud Server are in fact allowed to access the system. Every device <emphasis role="bold">must</emphasis> be first 
+					securely provisioned with the system before it can be used. After the device is registered, it is challenged for proper credentials
+					when the device itself needs to be activated. Once the device is activated, all <emphasis>Cloud</emphasis> requests are properly
+					authenticated/authorized going forward.
+				</para>
+			</sect2>
+			<sect2>
+				<title>Management Console</title>
+				<para>
+					Every instance of a Cloud Server ships with a Command Line application called the <emphasis>Management Console</emphasis>.
+					The console provides user and device provisioning functionalities. In the future, this same component will have more 
+					device management features like remote data wipe, remote locking, remote tracking, etc.
+				</para>
+			</sect2>
+		</para>
+	</sect1>
+</chapter>

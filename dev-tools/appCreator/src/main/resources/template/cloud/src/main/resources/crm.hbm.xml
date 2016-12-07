@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">        
+<hibernate-mapping>    
+    <class name="org.crud.cloud.crm.Ticket" table="ticket">
+        <id name="id" column="id">
+            <generator class="native"/>
+        </id>
+        <property name="ticketId" type="string" column="ticketId"
+        not-null="true"
+        unique="true"
+        /> 
+        
+        <property name="title" type="string" column="title"
+        not-null="true"
+        /> 
+        
+        <property name="comment" type="string" column="comment"
+        not-null="true"
+        />
+        
+        <property name="customer" type="string" column="customer"
+        not-null="true"
+        />
+        
+        <property name="specialist" type="string" column="specialist"
+        not-null="true"
+        />                                                  
+    </class>
+</hibernate-mapping>

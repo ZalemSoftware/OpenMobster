@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.openmobster.core.phonegap</groupId>
+	<artifactId>phonegap</artifactId>
+	<version>2.4-M3.1</version>
+	<name>phonegap</name>
+	<packaging>pom</packaging>
+	
+	<properties>
+		<version.phonegap>1.5.0</version.phonegap>
+		<version.cordova>2.7.0</version.cordova>
+		<version.android.api>11</version.android.api>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<android.keystore.location>
+			${env.ANDROID_KEYSTORE}
+		</android.keystore.location>
+		<storepass>${env.ANDROID_STORE_PASS}</storepass>
+		<keypass>${env.ANDROID_KEY_PASS}</keypass>
+		<alias>${env.ANDROID_KEYSTORE_ALIAS}</alias>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- OpenMobster Dependency -->
+			<!--  
+			<dependency>
+				<groupId>org.openmobster.core.mobileCloud.android.2_0</groupId>
+				<artifactId>device-sdk</artifactId>
+				<version>${project.version}</version>
+				<classifier>full</classifier>
+			</dependency>
+			-->
+			<dependency>
+				<groupId>org.openmobster.core.mobileCloud.android.2_0</groupId>
+				<artifactId>device-sdk</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.openmobster.core</groupId>
+				<artifactId>cloud-sdk</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openmobster.core.dev.tools
+				</groupId>
+				<artifactId>dev-cloudServer
+				</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.openmobster.core</groupId>
+				<artifactId>device-agent-simulator
+				</artifactId>
+				<version>${project.version}</version>
+				<scope>test</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<dependencies>
+	</dependencies>
+
+	<modules>
+		<module>plugin</module>
+		<module>plugin-sandbox</module>
+		<module>plugin-jquery</module>
+		<module>plugin-sandbox-cloud</module>
+		<module>plugin-jquery-cloud</module>
+		<module>mbaas-plugin</module>
+		<module>mbaas-plugin-sandbox</module>
+		<module>hybrid-sample</module>
+	</modules>
+	
+	<build>
+		<plugins>
+	      <plugin>
+	        <groupId>org.apache.maven.plugins</groupId>
+	        <artifactId>maven-compiler-plugin</artifactId>
+	        <configuration>
+	          <source>1.5</source>
+	          <target>1.5</target>
+	        </configuration>
+	      </plugin>
+    	</plugins>
+    	<extensions>
+			<extension>
+				<groupId>org.jvnet.wagon-svn</groupId>
+				<artifactId>wagon-svn</artifactId>
+				<version>1.8</version>
+			</extension>
+		</extensions>
+		
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+					<artifactId>android-maven-plugin</artifactId>
+					<version>3.8.0</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>		
+	</build>
+	
+	<repositories>
+		<repository>
+			<id>jboss</id>
+			<url>http://anonsvn.jboss.org/repos/repository.jboss.org/maven2
+			</url>
+		</repository>
+
+		<repository>
+			<id>maven-codehaus</id>
+			<name>Public online CodeHaus Maven Repository</name>
+			<url>http://repository.codehaus.org
+			</url>
+		</repository>
+
+		<repository>
+			<id>maven2-repository.dev.java.net</id>
+			<name>Java.net Repository for Maven</name>
+			<url>http://download.java.net/maven/2/
+			</url>
+		</repository>
+
+		<repository>
+			<id>apache-snapshots</id>
+			<name>Apache Repository</name>
+			<url>https://repository.apache.org/content/groups/snapshots
+			</url>
+		</repository>
+
+		<repository>
+			<id>apache-public</id>
+			<name>Apache Repository</name>
+			<url>https://repository.apache.org/content/groups/public
+			</url>
+		</repository>
+		
+		<repository>
+			<id>openmobster-maven</id>
+			<name>OpenMobster Maven Repository</name>
+			<url>https://openmobster.googlecode.com/svn/maven2
+			</url>
+		</repository>
+	</repositories>
+	
+	<distributionManagement>
+		<repository>
+			<uniqueVersion>false</uniqueVersion>
+			<id>openmobster-maven</id>
+			<name>openmobster</name>
+			<url>svn:https://openmobster.googlecode.com/svn/maven2</url>
+			<layout>default</layout>
+		</repository>
+	</distributionManagement>	
+</project>

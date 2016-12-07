@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="pg_ios">
+   <chapterinfo>
+      <author>
+         <firstname>openmobster</firstname>
+         <surname>at gmail.com</surname>
+         <email>openmobster@gmail.com</email>
+      </author>
+   </chapterinfo>
+   <title>PhoneGap + iOS + OpenMobster integration</title>
+   <sect1>
+   		<title>Introduction</title>
+   		<para>
+   		 	<ulink url="http://www.phonegap.com">PhoneGap</ulink> is an HTML5 app platform that allows you to author native applications with web technologies and get access to APIs and app stores. <emphasis role="bold">PhoneGap</emphasis> leverages web technologies developers already know best... HTML and JavaScript.
+   		 	Starting with <emphasis role="bold">OpenMobster 2.2-M8</emphasis>, you can write offline web apps with synchronization of data using the <emphasis role="bold">OpenMobster Sync Plugin</emphasis> for PhoneGap. The Sync Plugin exposes the native Sync service to the
+   		 	JavaScript layer using the PhoneGap bridge technology. The rest of this chapter will discuss how to setup an iOS app for development using the SyncPlugin for iOS.
+   		</para>
+   </sect1>
+   <sect1>
+   		<title>Prepare the <emphasis role="bold">mobilecloudlib</emphasis> static library</title>
+   		<para>
+   			<itemizedlist>
+   				<listitem>Open the mobilecloudlib XCode project by opening: <emphasis role="bold">iPhone/mobilecloudlib/mobilecloudlib.xcodeproj</emphasis></listitem>
+   				<listitem>Build the project in XCode</listitem>
+   			</itemizedlist>
+   		</para>
+   		<para>
+   			For some reason, building the mobilecloudlib fail to compile if your XCode code location is set to the recommended setting of "Derived Data". You must change this option to "Location Specified By Targets".
+			Please take a look at this thread for details: <ulink url="https://groups.google.com/forum/#!searchin/openmobster-users/mobilecloudlib/openmobster-users/zJhJKbFekLs/WiNWtKfG_RcJ">https://groups.google.com/forum/#!searchin/openmobster-users/mobilecloudlib/openmobster-users/zJhJKbFekLs/WiNWtKfG_RcJ</ulink>
+   		</para>
+   </sect1>
+   <sect1>
+   		<title>Start a Cordova-based App</title>
+   		<para>
+   			<itemizedlist>
+   				<listitem>Go to File>New Project. In the displayed project templates select the <emphasis role="bold">Cordova-based Application</emphasis> and follow the wizard</listitem>
+   			</itemizedlist>
+   		</para>
+   </sect1>
+   <sect1>
+   		<title>Copy JSON components to the App</title>
+   		<para>
+   			<itemizedlist>
+   				<listitem>
+   					Create a New Folder called <emphasis role="bold">JSON</emphasis>
+   				</listitem>
+   				<listitem>
+   					Go to the <emphasis role="bold">mobilecloudlib</emphasis> project and Drag n Drop/Copy all the .h and .m files in the JSON folder to the JSON folder in your PhoneGap app
+   				</listitem>
+   			</itemizedlist>
+   		</para>
+   </sect1>
+   <sect1>
+   		<title>Create a Group called <emphasis role="bold">OpenMobster</emphasis></title>
+   		<para>
+   			<itemizedlist>
+   				<listitem>Create a New group named <emphasis role="bold">OpenMobster</emphasis></listitem>
+   				<listitem>From the <emphasis role="bold">mobilecloudlib</emphasis>project, DragnDrop/Copy all the resources located under the <emphasis role="bold">app-bundle</emphasis> group</listitem>
+   			</itemizedlist>
+   		</para>
+   </sect1>
+   <sect1>
+   		<title>Add the libraries and Frameworks</title>
+   		<para>
+   			In the Frameworks group add the following library and Frameworks
+   			<itemizedlist>
+   				<listitem>libmobilecloudlib.a - OpenMobster static library</listitem>
+   				<listitem>CoreData.framework</listitem>
+   				<listitem>CFNetwork.framework</listitem>
+   				<listitem>CoreGraphics.framework</listitem>
+   				<listitem>UIKit.framework</listitem>
+   			</itemizedlist>
+   		</para>
+   </sect1>
+   <sect1>
+   		<title>Add OpenMobster bootstrap code</title>
+   		<para>
+   			Before OpenMobster runtime can be used within an App. It must be bootstrapped and started. The following code shows how this bootstrapping process works.
+   		</para>
+   		<sect2>
+   			<title>The bootstrapping functions</title>
+   			<sect3>
+   				<title>Start Cloud Service</title>
+   				<para>
+   					<programlisting>
+   						<![CDATA[
+-(void)startCloudService
+{
+	@try 
+	{
+		CloudService *cloudService = [CloudService getInstance];
+		[cloudService startup];
+	}
+	@catch (NSException * e) 
+	{
+		//something caused the kernel to crash
+		//stop the kernel
+		[self stopCloudService];
+	}
+}
+   						]]>
+   					</programlisting>
+   				</para>
+   			</sect3>
+   			<sect3>
+   				<title>Stop Cloud Service</title>
+   				<para>
+   					<programlisting>
+   						<![CDATA[
+-(void)stopCloudService
+{
+	@try
+	{
+		CloudService *cloudService = [CloudService getInstance];
+		[cloudService shutdown];
+	}
+	@catch (NSException *e) 
+	{
+		
+	}
+}
+   						]]>
+   					</programlisting>
+   				</para>
+   			</sect3>
+   			<sect3>
+   				<title>Start Device Activation if it is not activated with the Cloud already</title>
+   				<para>
+   					<programlisting>
+   						<![CDATA[
+-(void)startActivation
+{
+	@try 
+	{
+		CloudService *cloudService = [CloudService getInstance];
+		[cloudService forceActivation:self.viewController];
+	}
+	@catch (NSException * e) 
+	{
+		//something caused the kernel to crash
+		//stop the kernel
+		[self stopCloudService];
+	}
+}
+   						]]>
+   					</programlisting>
+   				</para>
+   			</sect3>
+   			<sect3>
+   				<title>Do a Sync at Startup</title>
+   				<para>
+   					<programlisting>
+   						<![CDATA[
+-(void)sync
+{
+    CommandContext *commandContext = [CommandContext withInit:self.viewController];
+    BackgroundSyncCommand *syncCommand = [BackgroundSyncCommand withInit];
+    [commandContext setTarget:syncCommand];
+    CommandService *service = [CommandService getInstance];
+    [service execute:commandContext]; 
+}
+   						]]>
+   					</programlisting>
+   				</para>
+   			</sect3>
+   		</sect2>
+   		<sect2>
+   			<title>Integrating the bootstrapping function with the App Delegate</title>
+   			<sect3>
+   				<title>- (BOOL) application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions</title>
+   				<para>
+   				<programlisting>
+   						<![CDATA[
+- (BOOL) application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions
+{
+    //OpenMobster bootstrapping
+    [self startCloudService];
+    [self sync];
+    
+    NSURL* url = [launchOptions objectForKey:UIApplicationLaunchOptionsURLKey];
+    if (url && [url isKindOfClass:[NSURL class]]) {
+        self.invokeString = [url absoluteString];
+		NSLog(@"PhoneGapSyncApp launchOptions = %@", url);
+    }    
+    
+    CGRect screenBounds = [[UIScreen mainScreen] bounds];
+    self.window = [[[UIWindow alloc] initWithFrame:screenBounds] autorelease];
+    self.window.autoresizesSubviews = YES;
+    
+    CGRect viewBounds = [[UIScreen mainScreen] applicationFrame];
+    
+    self.viewController = [[[MainViewController alloc] init] autorelease];
+    self.viewController.useSplashScreen = YES;
+    self.viewController.wwwFolderName = @"www";
+    self.viewController.startPage = @"index.html";
+    self.viewController.view.frame = viewBounds;
+    
+    // over-ride delegates
+    self.viewController.webView.delegate = self;
+    self.viewController.commandDelegate = self;
+
+    // check whether the current orientation is supported: if it is, keep it, rather than forcing a rotation
+    BOOL forceStartupRotation = YES;
+    UIDeviceOrientation curDevOrientation = [[UIDevice currentDevice] orientation];
+    
+    if (UIDeviceOrientationUnknown == curDevOrientation) {
+        // UIDevice isn't firing orientation notifications yet… go look at the status bar
+        curDevOrientation = (UIDeviceOrientation)[[UIApplication sharedApplication] statusBarOrientation];
+    }
+    
+    if (UIDeviceOrientationIsValidInterfaceOrientation(curDevOrientation)) {
+        for (NSNumber *orient in self.viewController.supportedOrientations) {
+            if ([orient intValue] == curDevOrientation) {
+                forceStartupRotation = NO;
+                break;
+            }
+        }
+    } 
+    
+    if (forceStartupRotation) {
+        NSLog(@"supportedOrientations: %@", self.viewController.supportedOrientations);
+        // The first item in the supportedOrientations array is the start orientation (guaranteed to be at least Portrait)
+        UIInterfaceOrientation newOrient = [[self.viewController.supportedOrientations objectAtIndex:0] intValue];
+        NSLog(@"AppDelegate forcing status bar to: %d from: %d", newOrient, curDevOrientation);
+        [[UIApplication sharedApplication] setStatusBarOrientation:newOrient];
+    }
+    
+    
+    [self.window addSubview:self.viewController.view];
+    [self.window makeKeyAndVisible];
+    
+    //OpenMobster bootstrapping
+    [self startActivation];
+    
+    return YES;
+}
+   						]]>
+   					</programlisting>
+   				</para>
+   			</sect3>
+   			<sect3>
+   				<title>-(void)applicationWillEnterForeground:(UIApplication *)application</title>
+   				<para>
+   					<programlisting>
+   						<![CDATA[
+-(void)applicationWillEnterForeground:(UIApplication *)application 
+{
+    /*
+     Called as part of  transition from the background to the inactive state: here you can undo many of the changes made on entering the background.
+     */
+	[self sync];
+}
+   						
+   						]]>
+   					</programlisting>
+   				</para>
+   			</sect3>
+   			<sect3>
+   				<title>-(void)applicationWillTerminate:(UIApplication *)application</title>
+   				<para>
+   					<programlisting>
+   						<![CDATA[
+-(void)applicationWillTerminate:(UIApplication *)application 
+{
+    /*
+     Called when the application is about to terminate.
+     See also applicationDidEnterBackground:.
+     */
+	[self stopCloudService];
+}
+   						]]>
+   					</programlisting>
+   				</para>
+   			</sect3>
+   		</sect2>
+   </sect1>
+   <sect1>
+   		<title>PhoneGapSync App</title>
+   		<para>
+   		In the OpenMobster distribution, you can find an iOS/PhoneGap Sync App under <emphasis role="bold">iphone/PhoneGapSyncApp</emphasis>.
+   		On the Cloud Side, the App to run is located under <emphasis role="bold">iphone/showcase/cloud</emphasis>. You run the Cloud Server using the command
+   		<programlisting>
+   		<![CDATA[
+   			mvn -PrunCloud integration-test
+   		]]>
+   		</programlisting>
+   		</para>
+   </sect1>
+</chapter>

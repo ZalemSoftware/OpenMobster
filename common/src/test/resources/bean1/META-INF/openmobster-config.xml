@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<deployment xmlns="urn:jboss:bean-deployer:2.0"> 
+   <!-- Bean1 -->
+   <bean name="test://Bean1" class="test.openmobster.core.common.Bean1">   		
+   		<incallback method="notify"/>
+   		<property name="name">Hello I am Bean1</property>
+   		<property name="bean2">
+   			<inject bean="test://Bean2"/>
+   		</property>
+   </bean>                 
+</deployment>

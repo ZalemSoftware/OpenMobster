@@ -1,0 +1,9 @@
+<moblet-app>
+    <channels>
+		<channel>testapp_ticket_channel</channel>
+	</channels>		
+	
+	<commands>
+		<command id="/channel/bootup/helper">org.testapp.app.ChannelBootupHelper</command>	
+	</commands>		
+</moblet-app>

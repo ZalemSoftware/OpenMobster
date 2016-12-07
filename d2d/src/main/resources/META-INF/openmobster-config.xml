@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<deployment xmlns="urn:jboss:bean-deployer:2.0">        
+   <bean name="/d2d/send" class="org.openmobster.core.d2d.D2DSendProcessor">
+   		<depends>services://MobileObjectMonitor</depends>
+   		<depends>services://MobileServiceMonitor</depends>
+   </bean>  
+   
+   <bean name="/d2d/users" class="org.openmobster.core.d2d.D2DUsers">
+   		<depends>services://MobileObjectMonitor</depends>
+   		<depends>services://MobileServiceMonitor</depends>
+   </bean>                        
+</deployment>

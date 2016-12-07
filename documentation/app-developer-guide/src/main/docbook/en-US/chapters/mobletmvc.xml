@@ -1,0 +1,566 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="mobletmvc">
+   <chapterinfo>
+      <author>
+         <firstname>openmobster</firstname>
+         <surname>at gmail.com</surname>
+         <email>openmobster@gmail.com</email>
+      </author>
+   </chapterinfo>
+   <title>Mobile MVC Framework</title>
+   <sect1>
+   		<para>
+   		This is a thick client MVC (Model-View-Controller) framework. It is based on a 
+<ulink url="http://en.wikipedia.org/wiki/Rich_Internet_application">Rich Internet Application</ulink> design principle.
+At this moment in the evolution of the mobile space, there isn't a commonly adopted GUI development standard across various
+mobile platforms. This results in a lot of App porting activity across platforms. Although this framework
+is not designed for (Write Once, Run Anywhere) approach, it abstracts out a lot of the UI Framework plumbing that would otherwise
+need to be written, ported and maintained by the developer. The framework abstracts out some of the low level services into the container
+such as App bootstrapping, screen navigation, graceful error handling, and internationalization. 
+   		</para>
+   		<para>
+   		The MVC Framework provides the following features/benefit to an App developer:
+   		<itemizedlist>
+   			<listitem>An abstraction from the different bootstrapping behavior associated with each native phone platform.</listitem>
+   			<listitem>A Command framework used for Event Handling. Abstracts platform-level details related to Event Dispatch Thread, background processing, etc.</listitem>
+   			<listitem>A Navigation framework used to help with screen navigation needs.</listitem>
+   			<listitem>A portable way to do "Internationalization".</listitem>
+   			<listitem>A context oriented "State Management" system used to handle View level state.</listitem>
+   		</itemizedlist>
+   		</para>
+   		<sect2>
+   			<title>Components</title>
+   			<sect3>
+   				<title>Screen</title>
+   				<para>
+   				<emphasis>Screen</emphasis> is an abstraction for an instance of the App screen that must be made visible to the user at a particular moment in time.
+           	  	The low level <emphasis>Navigation</emphasis> service keeps track of the various screens of an App and provides services such as navigating to a specified screen, 
+           	  	going back to the previous screen, and going to the home screen. Besides the actual implementation of a "Screen" all services
+           	  	related to a "Screen" are portable across mobile platforms
+           	  	<programlisting><![CDATA[
+public abstract class Screen 
+{
+	private String id;
+	
+	public String getId()
+	{
+		return this.id;
+	}
+	
+	void setId(String id)
+	{
+		this.id = id;
+	}
+	
+	public abstract void render();	
+	public abstract Object getContentPane();
+	public abstract void postRender();
+}
+           	  	]]></programlisting>
+   				</para>
+   			</sect3>
+   			<sect3>
+   				<title>Command</title>
+   				<para>
+   				<emphasis>Command</emphasis> is an abstraction for an instance of a GUI Event Handler which receives various callbacks based on the screen's lifecycle.
+             	A command typically puts a business process into motion via accessing various other services like the Mobile Data Framework components,
+             	and/or native platform services. Command instances are managed by the built-in <emphasis>EventBus</emphasis> of the MVC framework. A 
+             	Command has the following life cycle which is managed by the event bus.
+             	<itemizedlist>
+             		<listitem><emphasis role="bold">doAction:</emphasis> This method is invoked when the actual business logic associated with the command should be executed.</listitem>
+             		<listitem><emphasis role="bold">doViewBefore:</emphasis> This method is invoked prior to doAction. 
+             		Its executed within an active Event Dispatch Thread and allows making any visual GUI changes to the screen.
+             		Some examples would be putting up a simple alert dialog, may be draw a status bar, etc
+             		</listitem>
+             		<listitem><emphasis role="bold">doViewAfter:</emphasis> This method is invoked after doAction is executed. This is also executed within the context of an Event Dispatch Thread, and allows
+             		for making visual GUI changes to the screen.
+             		</listitem>
+             		<listitem>
+             			<emphasis role="bold">doViewError:</emphasis> This method is invoked if an App-level exception is encountered during the execution of this command. Being
+             			executed within the context of an Event Dispatch thread, it provides the opportunity to make appropriate GUI changes
+             			to robustly handle the error condition.
+             		</listitem>
+             	</itemizedlist>
+   				</para>
+   				<para>
+   				The MVC Framework provides two builtin Commands. It provides standard behavior associated with these
+   				commands. This frees the App Developer to focus on the App behavior.
+   				</para>
+   				<sect4>
+   					<title>LocalCommand</title>
+   					<para>
+   					This tells the system that the business logic executes quickly and will not freeze the UI. 
+   					In the next iteration of the system, this component will probably be renamed to: FastCommand
+   					</para>
+   					<para>
+   					<programlisting><![CDATA[
+public class DemoLocalCommand implements LocalCommand
+{
+
+	public void doViewBefore(CommandContext commandContext)
+	{
+		Toast.makeText((Activity)commandContext.getAppContext(), 
+		"LocalCommand about to execute........", 
+		Toast.LENGTH_SHORT).show();
+	}
+
+	public void doAction(CommandContext commandContext)
+	{
+		try
+		{
+			System.out.println("-------------------------------------------------------");
+			System.out.println("Demo Local Command successfully executed...............");
+			System.out.println("-------------------------------------------------------");
+		}
+		catch(Exception e)
+		{
+			throw new RuntimeException(e.toString());
+		}
+	}
+
+	public void doViewAfter(CommandContext commandContext)
+	{	
+		Services.getInstance().getNavigationContext().navigate("local");
+	}
+
+	public void doViewError(CommandContext commandContext)
+	{
+		ViewHelper.getOkModal((Activity)commandContext.getAppContext(), 
+				"Error", "DemoLocalCommand had an error!!").show();
+	}
+}
+   					]]></programlisting>
+   					</para>
+   				</sect4>
+   				<sect4>
+   					<title>AsyncCommand</title>
+   					<para>
+	   					This tells the system that the associated business logic executes in the background. This 
+	   					approach is synonymous to the <ulink url='http://en.wikipedia.org/wiki/Ajax_%28programming%29'>Ajax</ulink> 
+	   					approach in the Web Development realm. This is used to make the mobile application more responsive
+	   					and at the same time accomplish some critical task of interacting with the remote cloud. The difference between
+	   					this and the RemoteCommand is that, this command immediately frees up the UI for other interactions. The RemoteCommand
+	   					freezes the UI but shows an <emphasis>in progress</emphasis> dialog. Once the action
+	   					associated with this command finishes execution outside the UI thread, it re-establises the view cycle. Any UI changes
+	   					associated with the execution of this command are then displayed to the user's screen. Below are some of many
+	   					mobile scenarios where an AsyncCommand can come in handy:
+	   					<itemizedlist>
+	   						<listitem>Show validation errors inline with user input</listitem>
+	   						<listitem>Update the current screen with data fetched from the Cloud without showing a busy dialog or freezing the UI</listitem>
+	   					</itemizedlist>
+   					</para>
+   					<para>
+   					<programlisting><![CDATA[
+public final class DemoAsyncCommand implements AsyncCommand
+{
+	public void doViewBefore(CommandContext commandContext)
+	{
+		Toast.makeText((Activity)commandContext.getAppContext(), 
+				"AsyncCommand about to execute........", 
+				Toast.LENGTH_SHORT).show();		
+	}
+
+	public void doAction(CommandContext commandContext) 
+	{
+		try
+		{
+			//Simulate network latency
+			Thread.currentThread().sleep(10000);
+			System.out.println("-------------------------------------------------------");
+			System.out.println("Demo Async Command successfully executed...............");
+			System.out.println("-------------------------------------------------------");						
+		}
+		catch(Exception e)
+		{
+			throw new RuntimeException(e.toString());
+		}
+	}	
+	
+	public void doViewAfter(CommandContext commandContext)
+	{
+		ViewHelper.getOkModal((Activity)commandContext.getAppContext(), 
+		"Success", "Async Command success...").show();
+		
+		//An Async Command should not navigate away from the screen that launch it...it can result in yucky UI errors
+		//Services.getInstance().getNavigationContext().navigate("async");
+	}
+	
+	public void doViewError(CommandContext commandContext)
+	{
+		ViewHelper.getOkModal((Activity)commandContext.getAppContext(), 
+				"Error", "DemoAsyncCommand had an error!!").show();
+	}
+}
+   					]]></programlisting>
+   					</para>
+   				</sect4>   				
+   				<sect4>
+   					<title>RemoteCommand</title>
+   					<para>
+   					This tells the system that the associated business logic executes slowly and must execute in the background.
+   					Usually a RemoteCommand is used when making network calls for data located in the cloud, or may be other scenarios
+   					where there is some form of waiting involved. The system wants to provide the appropriate user experience/feedback
+   					so that the user does not think the device is frozen. It will put up appropriate status indicators to keep the
+   					UI fluid. In the next iteration of the system, this component will probably be renamed to: BusyCommand
+   					</para>
+   					<programlisting><![CDATA[
+public final class DemoRemoteCommand implements RemoteCommand
+{
+	public void doViewBefore(CommandContext commandContext)
+	{
+		Toast.makeText((Activity)commandContext.getAppContext(), 
+				"RemoteCommand about to execute........", 
+				Toast.LENGTH_SHORT).show();			
+	}
+
+	public void doAction(CommandContext commandContext) 
+	{
+		try
+		{
+			//Simulate network latency
+			Thread.currentThread().sleep(10000);			
+			
+			System.out.println("-------------------------------------------------------");
+			System.out.println("Demo Remote Command successfully executed...............");
+			System.out.println("-------------------------------------------------------");						
+		}
+		catch(Exception e)
+		{
+			throw new RuntimeException(e.toString());
+		}
+	}	
+	
+	public void doViewAfter(CommandContext commandContext)
+	{
+		Services.getInstance().getNavigationContext().navigate("remote");
+	}
+	
+	public void doViewError(CommandContext commandContext)
+	{
+		ViewHelper.getOkModal((Activity)commandContext.getAppContext(), 
+				"Error", "DemoRemoteCommand had an error!!").show();
+	}
+}
+   					]]></programlisting>
+   					<para>
+   					</para>
+   				</sect4> 
+   				<sect4>
+   					<title>PushCommand</title>
+   					<para>
+	   				A <emphasis>PushCommand</emphasis> allows the developer to handle <emphasis>Cloud Push</emphasis> at the App level. When the <link linkend='/concepts/mobileCloud'>Mobile Cloud runtime</link> synchronizes
+	   			    the App state with the Cloud in the background, it decides how to route the push notifications to the respective Apps on the device.
+	   			    An App's <emphasis>PushCommand</emphasis> (if specified) is invoked so that the App can take necessary action such as showing a dialog box, showing some global screen, etc.
+	   			    <emphasis>Note:</emphasis> PushCommand should only be used to perform an App-specific action. The <link linkend='/concepts/mobileCloud'>Mobile Cloud runtime</link> automatically takes
+	   			    care of system level notifications like blinking LED, updating the app's icon with an alert, etc.	
+   					</para>
+   					<para>
+   					<programlisting><![CDATA[
+public final class PushHandler implements PushCommand
+{
+	public void doViewBefore(CommandContext commandContext)
+	{		
+	}
+
+	public void doAction(CommandContext commandContext) 
+	{
+		try
+		{
+			MobilePush push = commandContext.getPush();
+			System.out.println("Handling Push----------------------------------------");
+			System.out.println("Push Updates: "+push.getNumberOfUpdates());
+			MobileBeanMetaData[] updates = push.getPushData();
+			if(updates != null)
+			{
+				for(MobileBeanMetaData update:updates)
+				{
+					System.out.println("Bean: "+update.getId());
+				}
+			}
+			System.out.println("----------------------------------------");
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace(System.out);
+			throw new RuntimeException(e.toString());
+		}
+	}	
+	
+	public void doViewAfter(CommandContext commandContext)
+	{
+		MobilePush push = commandContext.getPush();
+		Context context = Registry.getActiveInstance().getContext();
+		Toast.makeText(context, push.getNumberOfUpdates()+" Updates successfully received!!", 
+		Toast.LENGTH_SHORT).show();
+	}
+	
+	public void doViewError(CommandContext commandContext)
+	{
+		Context context = Registry.getActiveInstance().getContext();
+		Toast.makeText(context, this.getClass().getName()+" had an error!!", 
+		Toast.LENGTH_SHORT).show();
+	}
+}
+   					]]></programlisting>
+   					</para>
+   				</sect4>  				
+   			</sect3>
+   		</sect2>
+   		<sect2>
+   			<title>Services</title>
+   			<sect3>
+   				<title>EventBus</title>
+   				<para>
+   				The <emphasis role="bold">EventBus</emphasis> shields the App Developer from learning the low-level GUI Event Management details. Each mobile platform
+   				has its own methodology for handling GUI events. Typically this revolves around using the Event Dispatch Thread most
+   				efficiently and providing a fluid user experience. Users are far more sensitive to GUI pauses on a mobile device
+   				compared to their traditional desktop. The <emphasis role="bold">EventBus</emphasis> frees up the App Developer to develop high-level App specific
+   				components like Screen and Commands, and lets the EventBus worry about the low-level details.
+   				</para>
+   			</sect3>
+   			<sect3>
+   				<title>Navigation</title>
+   				<para>
+   				The <emphasis role="bold">Navigation</emphasis> service abstracts low-level details about navigating through the
+   				various App screens that will be presented to the user.
+   				</para>
+   			</sect3>
+   			<sect3>
+   				<title>Internationalization</title>
+   				<para>
+   				The <emphasis role="bold">Internationalization</emphasis> service abstracts low-level details about localizing an App.
+   				It provides a platform independent way to package the resource bundles, and a standard API to access the information.
+   				The API is <emphasis>language-portable</emphasis>.
+   				</para>
+   			</sect3>
+   		</sect2>
+   		<sect2>
+   			<title>Tutorial</title>
+   			<sect3>
+   				<title>Simple Home Screen</title>
+   				<para>
+   				Create a simple Home Screen component. This will be the first screen that will be displayed upon launching an App.
+   				</para>
+   				<programlisting><![CDATA[
+import java.lang.reflect.Field;
+
+import org.openmobster.core.mobileCloud.android.configuration.Configuration;
+import org.openmobster.core.mobileCloud.android.errors.ErrorHandler;
+import org.openmobster.core.mobileCloud.android.errors.SystemException;
+import org.openmobster.core.mobileCloud.android.service.Registry;
+import org.openmobster.core.mobileCloud.android_native.framework.ViewHelper;
+import org.openmobster.core.mobileCloud.android_native.framework.events.ListItemClickEvent;
+import org.openmobster.core.mobileCloud.android_native.framework.events.ListItemClickListener;
+import org.openmobster.core.mobileCloud.api.model.MobileBean;
+import org.openmobster.core.mobileCloud.api.ui.framework.Services;
+import org.openmobster.core.mobileCloud.api.ui.framework.command.CommandContext;
+import org.openmobster.core.mobileCloud.api.ui.framework.navigation.NavigationContext;
+import org.openmobster.core.mobileCloud.api.ui.framework.navigation.Screen;
+import org.openmobster.core.mobileCloud.api.ui.framework.resources.AppResources;
+
+import android.app.Activity;
+import android.app.ListActivity;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MenuItem.OnMenuItemClickListener;
+import android.widget.ArrayAdapter;
+
+/**
+ * @author openmobster@gmail.com
+ */
+public class HomeScreen extends Screen
+{
+	private Integer screenId;
+	
+	@Override
+	public void render()
+	{
+		try
+		{
+			final Activity currentActivity = (Activity)Registry.getActiveInstance().
+			getContext();
+			
+			String layoutClass = currentActivity.getPackageName()+".R$layout";
+			String home = "home";
+			Class clazz = Class.forName(layoutClass);
+			Field field = clazz.getField(home);
+			
+			this.screenId = field.getInt(clazz);						
+		}
+		catch(Exception e)
+		{
+			SystemException se = new SystemException(this.getClass().getName(), "render", new Object[]{
+				"Message:"+e.getMessage(),
+				"Exception:"+e.toString()
+			});
+			ErrorHandler.getInstance().handle(se);
+			throw se;
+		}
+	}
+	
+	@Override
+	public Object getContentPane()
+	{
+		return this.screenId;
+	}
+	
+	@Override
+	public void postRender()
+	{
+		ListActivity listApp = (ListActivity)Registry.getActiveInstance().
+		getContext();
+		
+		AppResources res = Services.getInstance().getResources();
+		Configuration configuration = Configuration.getInstance(listApp);
+		
+		if(!configuration.isActive())
+		{
+			ViewHelper.getOkModalWithCloseApp(listApp, "App Error", res.localize("inactive_message","inactive_message")).
+			show();
+			
+			return;
+		}
+		
+		//Show the List of the "Demo Beans" stored on the device
+		if(MobileBean.isBooted("offlineapp_demochannel"))
+		{
+			MobileBean[] demoBeans = MobileBean.readAll("offlineapp_demochannel");
+			String[] ui = new String[demoBeans.length];
+			for(int i=0,size=ui.length;i<size;i++)
+			{
+				ui[i] = demoBeans[i].getValue("demoString");
+			}
+			listApp.setListAdapter(new ArrayAdapter(listApp, 
+		    android.R.layout.simple_list_item_1, 
+		    ui));
+			
+			//List Listener
+			ListItemClickListener clickListener = new ClickListener(demoBeans);
+			NavigationContext.getInstance().addClickListener(clickListener);
+		}
+		
+		//Setup the App Menu
+		this.setMenuItems();
+	}
+	
+	private void setMenuItems()
+	{
+		Menu menu = (Menu)NavigationContext.getInstance().
+		getAttribute("options-menu");
+		
+		if(menu != null)
+		{
+			MenuItem resetChannel = menu.add(Menu.NONE, Menu.NONE, 0, "Reset Channel");
+			resetChannel.setOnMenuItemClickListener(new OnMenuItemClickListener()
+			{
+				public boolean onMenuItemClick(MenuItem clickedItem)
+				{
+					//UserInteraction/Event Processing...this is where the Commands can be executed
+					CommandContext commandContext = new CommandContext();
+					commandContext.setTarget("/offlineapp/reset");
+					Services.getInstance().getCommandService().execute(commandContext);
+					return true;
+				}
+			});
+			
+			MenuItem pushTrigger = menu.add(Menu.NONE, Menu.NONE, 1, "Push Trigger");
+			pushTrigger.setOnMenuItemClickListener(new OnMenuItemClickListener()
+			{
+				public boolean onMenuItemClick(MenuItem clickedItem)
+				{
+					//UserInteraction/Event Processing...this is where the Commands can be executed
+					CommandContext commandContext = new CommandContext();
+					commandContext.setTarget("/offlineapp/pushtrigger");
+					Services.getInstance().getCommandService().execute(commandContext);
+					return true;
+				}
+			});
+			
+			MenuItem rpc = menu.add(Menu.NONE, Menu.NONE, 0, "Make RPC Invocation");
+			rpc.setOnMenuItemClickListener(new OnMenuItemClickListener()
+			{
+				public boolean onMenuItemClick(MenuItem clickedItem)
+				{
+					//UserInteraction/Event Processing...this is where the Commands can be executed
+					CommandContext commandContext = new CommandContext();
+					commandContext.setTarget("/offlineapp/rpc");
+					Services.getInstance().getCommandService().execute(commandContext);
+					return true;
+				}
+			});
+		}
+	}
+	
+	private static class ClickListener implements ListItemClickListener
+	{
+		private MobileBean[] activeBeans;
+		
+		private ClickListener(MobileBean[] activeBeans)
+		{
+			this.activeBeans = activeBeans;
+		}
+		
+		public void onClick(ListItemClickEvent clickEvent)
+		{
+			int selectedIndex = clickEvent.getPosition();
+			MobileBean selectedBean = activeBeans[selectedIndex];
+			
+			CommandContext commandContext = new CommandContext();
+			commandContext.setTarget("/demo/details");
+			commandContext.setAttribute("selectedBean", selectedBean.getValue("demoString"));
+			Services.getInstance().getCommandService().execute(commandContext);
+		}
+	}
+}
+   					]]></programlisting>
+   				<para>
+   				</para>
+   			</sect3>
+   			
+   			<sect3>
+   				<title>Configuration</title>
+   				<para>
+   					The Moblet code is packaged in a simple <emphasis>jar</emphasis> file. The configuration is located at:
+   					/moblet-app/moblet-app.xml
+   				</para>
+   				<para>
+   				<programlisting><![CDATA[
+<moblet-app>
+    <bootstrap>
+    	<screen>com.offlineApp.android.app.screen.HomeScreen</screen>
+    </bootstrap>
+    
+    <!--  
+       In Android's case this is not needed for this App...The Android core + OpenMobster core framework gives everything you need for the usecase on this App..
+       I stand corrected...Android is actually superior to BlackBerry Platform (atleast upto 4.0.x...have not used 5.0.x yet to have an opinion)
+    <push>
+    	<command>org.openmobster.core.examples.offline.command.PushHandler</command>
+    </push>
+	-->
+	
+	<commands>				
+		<command id="/demo/details">com.offlineApp.android.app.command.DemoDetails</command>
+		<command id="/offlineapp/pushtrigger">com.offlineApp.android.app.command.PushTrigger</command> 
+		<command id="/offlineapp/reset">com.offlineApp.android.app.command.ResetChannel</command>
+		
+		<command id="/offlineapp/rpc">com.offlineApp.android.app.command.DemoMobileRPC</command>
+	</commands>	
+	
+	<channels>
+		<channel>offlineapp_demochannel</channel>
+	</channels>					
+</moblet-app>
+   					]]></programlisting>
+   				</para>
+   			</sect3>
+   			<sect3>
+   				<title>Putting it all together</title>
+   				<para>Detailed Examples located at: 
+   				<emphasis>src/dev-tools/sampleApps/offlineapp/app-android</emphasis>, 
+   				<emphasis>src/dev-tools/sampleApps/rpcdemo/app-android</emphasis>, and
+   				<emphasis>src/mobileCloud/android/2_0/test-suite/nativeframework-testdrive/src/main</emphasis>  
+   				</para>
+   			</sect3>
+   		</sect2>
+   </sect1>
+</chapter>

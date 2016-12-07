@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="hellomobster">
+	<chapterinfo>
+		<author>
+			<firstname>openmobster</firstname>
+			<surname>at gmail.com</surname>
+			<email>openmobster@gmail.com</email>
+		</author>
+	</chapterinfo>
+	<title>Get Started: Hello Mobster</title>
+	<sect1>
+		<para>
+			In the spirit of confidence building when using a new technology,
+			lets start with a simple app. We will
+			call it the
+			<emphasis role='bold'>HelloMobster</emphasis>
+			moblet.
+		</para>
+		<sect2>
+			<title>System Requirements</title>
+			<sect3>
+				<title>Cloud Server</title>
+				<para>
+					<itemizedlist>
+						<listitem>Java SE JDK v6.0 (the server component is version
+							5.0
+							compliant, but the Blackberry Development Environment requires
+							6.0)</listitem>
+					</itemizedlist>
+				</para>
+			</sect3>
+			<sect3>
+				<title>Blackberry Development</title>
+				<para>
+					<itemizedlist>
+						<itemizedlist>
+							<listitem>Java SE JDK v6.0</listitem>
+							<listitem>Eclipse 3.4 (the JDE plugin does not run on 3.5
+								yet)
+							</listitem>
+							<listitem>Windows® 2000 SPI or later, or Windows XP
+							</listitem>
+							<listitem>Windows Vista (BlackBerry JDE v4.2.1 and higher)
+							</listitem>
+							<listitem>Monitor with a resolution of 1024 x 768 or
+								higher
+							</listitem>
+						</itemizedlist>
+					</itemizedlist>
+				</para>
+			</sect3>
+		</sect2>
+	</sect1>
+	<sect1>
+		<title>Create your first Mobile Cloud App (a.k.a Moblet)</title>
+		<para>
+			Download an OpenMobster distribution from here:
+			<ulink url='http://code.google.com/p/openmobster/downloads/list'>Downloads</ulink>
+			.
+		</para>
+		<para>
+			In your distribution, go to the directory AppCreator. Inside the
+			directory, use a tool called the
+			'appcreator.bat' (Windows), 'appcreator.sh' (Linux and Mac) to generate a skeleton
+			'Moblet' project
+			<programlisting><![CDATA[
+				
+		appcreator.bat		
+		]]></programlisting>
+			This will generate a Maven-based skeleton for the Mobile App. Each
+			generated project has the following three maven modules:
+			<itemizedlist>
+				<listitem>
+					<emphasis role='bold'>app-rimos:</emphasis>
+					Contains the device side application code for the Blackberry OS -
+					version 4.3.0 and higher
+				</listitem>
+				<listitem>
+					<emphasis role='bold'>cloud:</emphasis>
+					Contains the "OpenMobster Cloud Server" based artifacts which will
+					be deployed on the server side
+				</listitem>
+				<listitem>
+					<emphasis role='bold'>moblet:</emphasis>
+					Represents a "OpenMobster Moblet" which combines both the device
+					side and server side artifacts into one single
+					artifact. The moblet is deployed as a simple jar file into the "OpenMobster
+					Cloud Server". When the moblet is deployed into the Cloud
+					server it is registered with the built-in App store. Once registered with
+					the App Store, this moblet can be easily downloaded, installed, and
+					managed on the device
+				</listitem>
+			</itemizedlist>
+		</para>
+	</sect1>
+	<sect1>
+		<title>
+			Run the
+			<emphasis>Cloud Server</emphasis>
+			in Development Mode
+		</title>
+		<para>
+			Go to the 'cloud' module
+			<programlisting><![CDATA[
+				
+		cd cloud		
+		]]></programlisting>
+			Run the
+			<emphasis>Cloud Server</emphasis>
+			in Development Mode
+			<programlisting><![CDATA[
+				
+		mvn -PrunCloud integration-test		
+		]]></programlisting>
+			This will start the
+			<emphasis>Cloud Server</emphasis>
+			and the server artifacts corresponding to this project. This is a
+			fully functional instance of the
+			<emphasis>Cloud Server</emphasis>
+			ready to process traffic from your moblets.
+		</para>
+	</sect1>
+	<sect1>
+		<title>
+			Build and Deploy the
+			<emphasis>Moblet</emphasis>
+			in a Blackberry Simulator
+		</title>
+		<para>
+			Go to the 'app-rimos' module
+			<programlisting><![CDATA[
+				
+		cd app-rimos		
+		]]></programlisting>
+			Build and deploy the
+			<emphasis>Moblet</emphasis>
+			into the Simulator
+			<programlisting><![CDATA[
+				
+		mvn install
+		]]></programlisting>
+			To improve development productivity "mvn package or mvn install"
+			command installs the required
+			<emphasis>MobileCloud</emphasis>
+			runtime
+			into the specified Blackeberry Simulator. This binary improves developer
+			productivity by automating the manual provisioning
+			processes by automagically creating a Cloud account under the name:
+			<emphasis role='bold'>blah2@gmail.com</emphasis>
+			.
+			<para>
+				<emphasis role='bold'>Note:</emphasis>
+				This is a strict development stage only optimization and should not
+				be used in a real world setting.
+				The location of the simulator is specified in the
+				<emphasis role='bold'>RIM_JDE_HOME</emphasis>
+				environment variable.
+			</para>
+		</para>
+	</sect1>
+	<sect1>
+		<title>Run the Moblet in the Simulator</title>
+		<para>
+			Run the Blackberry Simulator. It will take a while and once it loads,
+			the
+			<emphasis>Moblet</emphasis>
+			and the
+			<emphasis>MobileCloud</emphasis>
+			should
+			be installed and ready for use. You can go to the
+			<emphasis>Apps</emphasis>
+			and there should be an icon for
+			<emphasis role='bold'>HelloMobster</emphasis>
+			.
+			Click the icon. You should see the following screens:
+		</para>
+		<para>
+			<imageobject>
+				<imagedata fileref="images/hellomobster1.png" format="png"
+					align="center" />
+			</imageobject>
+
+			<imageobject>
+				<imagedata fileref="images/hellomobster2.png" format="png"
+					align="center" />
+			</imageobject>
+			<imageobject>
+				<imagedata fileref="images/hellomobster3.png" format="png"
+					align="center" />
+			</imageobject>
+			<imageobject>
+				<imagedata fileref="images/hellomobster4.png" format="png"
+					align="center" />
+			</imageobject>
+		</para>
+	</sect1>
+	<sect1>
+		<title>Making some changes</title>
+		<para>
+			Inside the 'cloud' module, go to
+			<emphasis role='bold'>
+				org.openmobster.core.examples.rpc.DemoMobileBeanService.java
+			</emphasis>
+			file and modify
+			the
+			<emphasis>invoke</emphasis>
+			implementation as follows:
+			<para>
+				Change the line
+				<programlisting><![CDATA[
+				
+response.setAttribute(name, "response://"+value);		
+		]]></programlisting>
+				to
+				<programlisting><![CDATA[
+				
+response.setAttribute(name, "response://hellomobster/"+value);		
+		]]></programlisting>
+			</para>
+			Re-start the 'Cloud Server'
+		</para>
+	</sect1>
+	<sect1>
+		<title>Run in Production Mode</title>
+		<para>
+			More details about the OpenMobster Production Mode setup can be found
+			here:
+			<link linkend='installation'>Production Mode</link>
+		</para>
+		<para>
+			Inside the 'moblet' module, execute:
+			<programlisting><![CDATA[
+				
+		mvn install
+		]]></programlisting>
+			This will generate a
+			<emphasis>target/${project.name}-${project.version}-moblet.jar
+			</emphasis>
+			. Copy this file to your JBoss
+			'openmobster' instance at openmobster/deploy directory. Run the moblet in the
+			simulator
+			<para>
+				Welcome to the OpenMobster Community. Your are officially a
+				"Mobster" ;)
+			</para>
+		</para>
+	</sect1>
+</chapter>

@@ -1,0 +1,12 @@
+<app-conf>
+	<encryption>false</encryption>
+	
+	<push>
+		<launch-activity-class>org.openmobster.app.MainActivity</launch-activity-class>
+		<icon-name>push</icon-name>
+	</push>
+	
+	<channels>
+		<channel name='plugin_jquery_channel'/>
+	</channels>
+</app-conf>

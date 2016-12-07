@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="blackberry">
+   <chapterinfo>
+      <author>
+         <firstname>openmobster</firstname>
+         <surname>at gmail.com</surname>
+         <email>openmobster@gmail.com</email>
+      </author>
+   </chapterinfo>
+   <title>Blackberry</title>
+   <sect1>
+   		<title>Blackberry</title>
+   		 <para>
+			The Blackberry platform by <ulink url="http://www.blackberry.com">Research In Motion Limited</ulink> is the first mobile platform supported
+			by the <emphasis role="bold">OpenMobster Cloud Platform</emphasis>.
+   		 </para>
+   		 <sect2>
+   		 	<title>System Requirements</title>
+   		 	<para>
+   		 		<itemizedlist>
+   		 			<listitem>Java SE JDK v6.0</listitem>
+   		 			<listitem>Eclipse 3.4 (the JDE plugin does not run on 3.5 yet)</listitem>
+   		 			<listitem>Windows® 2000 SPI or later, or Windows XP</listitem>
+   		 			<listitem>Windows Vista (BlackBerry JDE v4.2.1 and higher)</listitem>
+   		 			<listitem>Monitor with a resolution of 1024 x 768 or higher</listitem>
+   		 		</itemizedlist>
+   		 	</para>
+   		 </sect2>
+   		 <sect2>
+   		 	<title>Some Helpful Development Tips</title>
+   		 	<para>
+   		 		<itemizedlist>
+   		 			<listitem>
+   		 				The SDK is available at: <ulink url="http://na.blackberry.com/eng/developers/javaappdev/devtools.jsp">Blackberry SDK</ulink>
+   		 			</listitem>
+   		 			<listitem>
+   		 				OpenMobster has been developed using this environment: <emphasis>Blackberry JDE Plug-in for Eclipse v1.0 (with the BlackBerry JDE v4.5 Component Pack)</emphasis>
+   		 			</listitem>
+   		 			<listitem>
+   		 				The platform version supported is version 4.3.0+. The Blackberry platform is fully backward compatible
+   		 			</listitem>
+   		 			<listitem>
+   		 			    Blackberry Development is officially supported only
+   		 			    on the Windows Platform. 
+   		 			</listitem>
+   		 			<listitem>
+   		 				Blackberry follows a two-stage compilation process. The first stage called preverification (preverify) pre-verifies
+   		 				the Java code and produces the artifact to be processed by the next stage. The next stage called (rapc) actually produces
+   		 				the binary that can be installed on the device. The extension of the generated binary is .cod
+   		 			</listitem>
+   		 			<listitem>
+   		 				Moblets/Apps that integrate with the <emphasis>OpenMobster Cloud Platform</emphasis> MUST combine their App's classes with the
+   		 				<emphasis role="bold">device-sdk-${project.version}-full.jar</emphasis> library before compiling their App into a binary.
+   		 				With the distribution, this library is located under: <emphasis>mobileCloud/blackberry-4.3.0/sdk</emphasis>
+   		 			</listitem>
+   		 			<listitem>
+   		 			    Blackberry has a selected set of APIs which require "signing" the binary (.cod) before installing it on the device. The <emphasis>OpenMobster</emphasis>
+   		 			    binaries makes use of these APIs, and hence requires "signing" before installing it on the device. For more information about the
+   		 			    "signing" process: <ulink url="http://na.blackberry.com/eng/developers/javaappdev/codekeys.jsp">Signing Process</ulink>
+   		 			</listitem>
+   		 			<listitem>
+   		 			   Code Signing is not required for installing/testing Apps in a simulation environment. In fact all the <emphasis>OpenMobster</emphasis> binaries have been
+   		 			   thoroughly tested on a 4.3.0 OS simulator. All tests have passed without any errors, warnings, or crashes.
+   		 			</listitem>
+   		 			<listitem>
+						As of 2.0-M3 community release, all
+						<emphasis>OpenMobster</emphasis>
+						Blackberry binaries have been signed and tested on an actual
+						BlackBerry device. The device used was the BlackBerry Curve 8330 running on the Sprint
+						CDMA network.
+					</listitem>
+   		 		</itemizedlist>
+   		 	</para>
+   		 </sect2>
+   </sect1>
+</chapter>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<moblet-apps>
+	<!-- Android version -->
+	<moblet-app>	    
+	    <name><appCreator.android.app.name></name>
+	    <description><appCreator.android.app.name></description>
+		<bin-loc>/<appCreator.android.app.artifactId>-<appCreator.project.version>-zipped.apk</bin-loc>	
+	</moblet-app>	
+	
+	<!-- BlackBerry version -->
+	<moblet-app>	    
+	    <name><appCreator.rimos.app.name></name>
+	    <description><appCreator.rimos.app.name></description>
+		<bin-loc>/<appCreator.rimos.app.name>.cod</bin-loc>	
+		<config-loc>/<appCreator.rimos.app.name>.jad</config-loc>	
+	</moblet-app>	
+</moblet-apps>

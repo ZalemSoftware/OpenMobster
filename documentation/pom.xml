@@ -1,0 +1,88 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         
+   <parent>
+		<groupId>org.openmobster.core</groupId>
+		<artifactId>core</artifactId>
+		<version>2.4-M3.1</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+  
+   <modelVersion>4.0.0</modelVersion>
+   <artifactId>openmobster-documentation-parent</artifactId>
+   <version>2.4-M3.1</version>
+   <packaging>pom</packaging>
+   <name>OpenMobster Documentation</name>
+   <url>http://www.openmobster.org</url>
+   <description>OpenMobster Documentation</description>   
+   
+   <modules> 
+      <module>app-developer-guide</module>          
+   </modules> 
+   
+   <build>
+   		<plugins>
+   			<plugin>
+				<groupId>org.jboss.maven.plugins</groupId>
+				<artifactId>maven-jdocbook-plugin</artifactId>
+				<extensions>true</extensions> 
+			    <dependencies>
+	               <dependency>
+	                  <groupId>org.jboss.seam</groupId>
+	                  <artifactId>seam-docbook-xslt</artifactId>
+	                  <version>1.1.0.GA</version>
+	                  <exclusions>
+	                     <exclusion>
+	                        <groupId>org.eclipse.wst.css</groupId>
+	                        <artifactId>core</artifactId>
+	                     </exclusion>
+	                     <exclusion>
+	                        <groupId>org.eclipse.wst.sse</groupId>
+	                        <artifactId>core</artifactId>
+	                     </exclusion>
+	                  </exclusions>
+	               </dependency>
+	               <dependency>
+	                  <groupId>org.jboss</groupId>
+	                  <artifactId>jbossorg-jdocbook-style</artifactId>
+	                  <version>1.1.0</version>
+	                  <type>jdocbook-style</type>
+	               </dependency>
+	               <dependency>
+	                  <groupId>org.jboss.seam</groupId>
+	                  <artifactId>seam-jdocbook-style</artifactId>
+	                  <version>1.1.0.GA</version>
+	                  <type>jdocbook-style</type>
+	               </dependency>
+	            </dependencies>
+			    <configuration>
+			    	<sourceDirectory>${basedir}/src/main/docbook</sourceDirectory>
+					<sourceDocumentName>master.xml</sourceDocumentName>
+					<imageResource>
+                  		<directory>${basedir}/src/main/docbook</directory>
+                  		<includes>
+                     		<include>images/*.png</include>
+                  		</includes>
+               		</imageResource>
+					<formats>
+		           	  <format>
+	                     <formatName>html</formatName>
+	                     <stylesheetResource>
+	                        classpath:/xslt/org/jboss/seam/xhtml.xsl
+	                     </stylesheetResource>
+	                     <finalName>index.html</finalName>
+	                  </format>	
+	                  <format>
+	                  	<formatName>pdf</formatName>
+	                  </format>		
+	                </formats>
+					<options>
+	                  <xincludeSupported>true</xincludeSupported>
+	                  <xmlTransformerType>saxon</xmlTransformerType>
+	                  <docbookVersion>1.72.0</docbookVersion>
+	                  <injectionDateFormat>MM/dd/yyy</injectionDateFormat>
+	               	</options>
+				</configuration>
+   			</plugin>
+   		</plugins>
+   </build>
+</project>

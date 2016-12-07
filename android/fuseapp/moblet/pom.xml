@@ -1,0 +1,94 @@
+<project>
+	<modelVersion>4.0.0</modelVersion>
+
+	<!-- User Provided -->	
+	<parent>
+		<groupId>com.fuseapp</groupId>
+		<artifactId>fuseapp</artifactId>
+		<version>1.0</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<groupId>com.fuseapp.moblet</groupId>
+	<name>fuseapp</name>
+	<artifactId>fuseapp</artifactId>
+	<packaging>jar</packaging>
+	
+	<!-- Customize Me -->
+	<properties>
+		<jboss.home>/Users/openmobster/runtime/jboss-5.1.0.GA</jboss.home>
+	</properties>
+	
+	<dependencies>
+		<dependency>
+	    	<groupId>com.fuseapp.cloud.app</groupId>
+	    	<artifactId>fuseapp-cloud</artifactId>
+	    	<version>${project.version}</version>
+	  	</dependency>
+	
+		<dependency>
+	      <groupId>com.fuseapp.android.app</groupId>
+	      <artifactId>fuseapp</artifactId>
+	      <version>${project.version}</version>
+	      <classifier>bin</classifier>
+	    </dependency>
+	</dependencies>
+	
+	<profiles>
+		<profile>
+		    <id>jboss-install</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>install</id>
+								<phase>install</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<tasks>
+										<echo>Installing into a JBoss AS instance</echo>
+										<copy todir="${jboss.home}/server/openmobster/deploy"
+										 overwrite="true"
+										 file="${basedir}/target/${project.artifactId}-${project.version}-moblet.jar">
+										</copy>
+									</tasks>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+    
+    <!--
+			DO NOT MODIFY: Required by the OpenMobster Mobile Cloud Platform  
+	-->
+    <build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.2-beta-5</version>
+				<configuration>
+					<descriptors>
+						<descriptor>src/assemble/moblet.xml</descriptor>
+					</descriptors>
+				</configuration>
+				<executions>
+					<execution>
+						<id>moblet</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

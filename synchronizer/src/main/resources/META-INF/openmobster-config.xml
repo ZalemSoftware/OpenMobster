@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<deployment xmlns="urn:jboss:bean-deployer:2.0">
+   <bean name="synchronizer://HibernateManager" class="org.openmobster.core.common.database.HibernateManager">
+   	  <property name="config">hibernate-synchronizer.cfg.xml</property>
+   </bean> 
+   
+   <!-- Server Side Record Mapping Engine (Mapping as in mapping local recordIds to remote recordIds) -->
+   <bean name="synchronizer://MapEngine" class="org.openmobster.core.synchronizer.server.engine.MapEngine">
+   		<property name="hibernateManager">
+   			<inject bean="synchronizer://HibernateManager"/>
+   		</property>   		
+   </bean>
+         
+   <!-- Server Side MobileObjectGateway Service -->
+   <bean name="synchronizer://MobileObjectGateway" class="org.openmobster.core.synchronizer.server.engine.MobileObjectGateway">
+   		<property name="mapEngine">
+   			<inject bean="synchronizer://MapEngine"/>
+   		</property>
+   		<property name="serializer">
+   			<inject bean="mobileObject://MobileObjectSerializer"/>
+   		</property>
+   		<property name="mobileContainer">
+   			<inject bean="mobileContainer://MobileContainer"/>
+   		</property>
+   		<property name="eventManager"><inject bean="common://EventManager"/></property>
+   		<incallback method="notify"/>
+   </bean>      
+      
+   <!-- Server Side Sync Engine/Adapter setup -->
+   <bean name="synchronizer://ServerSyncEngine" class="org.openmobster.core.synchronizer.server.engine.ServerSyncEngineImpl">   		  		  
+   		<property name="gateway">
+   			<inject bean="synchronizer://MobileObjectGateway"/>
+   		</property> 		
+   		<property name="hibernateManager">
+   			<inject bean="synchronizer://HibernateManager"/>
+   		</property>
+   		<property name="mapEngine">
+   			<inject bean="synchronizer://MapEngine"/>
+   		</property>  
+   		<property name="conflictEngine">
+   			<inject bean="ConflictEngine"/>
+   		</property>    		
+   </bean> 
+      
+   <!-- Server Synchronizer Adapter --> 
+   <bean name="synchronizer://SessionManager" class="org.openmobster.core.synchronizer.server.SessionManager">
+   </bean>                
+   <bean name="synchronizer://SyncServerAdapter" class="org.openmobster.core.synchronizer.server.SyncJBPMServerAdapter">   		
+   		<property name="serverSyncEngine">
+   			<inject bean="synchronizer://ServerSyncEngine"/>
+   		</property>
+   		<property name="sessionManager">
+   			<inject bean="synchronizer://SessionManager"/>
+   		</property>
+   </bean>
+    
+   <!-- Event Listeners -->  
+   <bean name="synchronizer://SyncChannelEventListener" 
+   class="org.openmobster.core.synchronizer.event.SyncChannelEventListener"> 
+   		<property name="syncEngine">
+   			<inject bean="synchronizer://ServerSyncEngine"/>
+   		</property>      
+   </bean>
+   <bean name="synchronizer://UpdateBeanEventListener" 
+   class="org.openmobster.core.synchronizer.event.UpdateBeanEventListener"> 
+   		<property name="syncEngine">
+   			<inject bean="synchronizer://ServerSyncEngine"/>
+   		</property>  
+   		<property name="conflictEngine">
+   			<inject bean="ConflictEngine"/>
+   		</property>
+   		<property name="notifier"><inject bean="org.openmobster.core.push.notification.Notifier"/></property>   
+   		<depends>synchronizer://MobileObjectGateway</depends> 
+   </bean>
+   <bean name="synchronizer://CreateBeanEventListener" 
+   class="org.openmobster.core.synchronizer.event.CreateBeanEventListener"> 
+   		<property name="syncEngine">
+   			<inject bean="synchronizer://ServerSyncEngine"/>
+   		</property>
+   		<property name="conflictEngine">
+   			<inject bean="ConflictEngine"/>
+   		</property>
+   		<property name="notifier"><inject bean="org.openmobster.core.push.notification.Notifier"/></property>
+   		<depends>synchronizer://MobileObjectGateway</depends>      
+   </bean>
+   <bean name="synchronizer://DeleteBeanEventListener" 
+   class="org.openmobster.core.synchronizer.event.DeleteBeanEventListener"> 
+   		<property name="syncEngine">
+   			<inject bean="synchronizer://ServerSyncEngine"/>
+   		</property>  
+   		<property name="conflictEngine">
+   			<inject bean="ConflictEngine"/>
+   		</property>
+   		<property name="notifier"><inject bean="org.openmobster.core.push.notification.Notifier"/></property>   
+   		<depends>synchronizer://MobileObjectGateway</depends> 
+   </bean>
+   
+   <!-- Conflict Detection Engine -->
+   <bean name="ConflictEngine" class="org.openmobster.core.synchronizer.server.engine.ConflictEngine">   		  		  	
+   		<property name="hibernateManager">
+   			<inject bean="synchronizer://HibernateManager"/>
+   		</property>
+   		<property name="serializer">
+   			<inject bean="mobileObject://MobileObjectSerializer"/>
+   		</property>   		
+  		<property name="hibernateManager">
+   			<inject bean="synchronizer://HibernateManager"/>
+   		</property>
+   </bean> 
+   
+   <!-- App-To-Channel Persistence -->
+   <bean name="AppToChannelPersistence" class="org.openmobster.core.synchronizer.server.engine.AppToChannelPersistence">   		  		  	
+   		<property name="hibernateManager">
+   			<inject bean="synchronizer://HibernateManager"/>
+   		</property>
+   </bean> 
+   
+   
+   <!-- Beans adicionados na versão 2.4-M3.1 -->
+   <bean name="synchronizer://ReactiveSyncEventListener" 
+   class="org.openmobster.core.synchronizer.event.ReactiveSyncEventListener"> 
+   		<property name="syncEngine">
+   			<inject bean="synchronizer://ServerSyncEngine"/>
+   		</property>
+   		<property name="monitor">
+   		    <inject bean="services://MobileObjectMonitor"/>
+   		</property> 
+   		<depends>synchronizer://MobileObjectGateway</depends>      
+   </bean>
+</deployment>

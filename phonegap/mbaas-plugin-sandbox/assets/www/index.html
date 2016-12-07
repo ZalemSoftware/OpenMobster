@@ -1,0 +1,724 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>PhoneGap</title>
+<script type="text/javascript" charset="utf-8" src="cordova-2.7.0.js"></script>
+<script type="text/javascript" charset="utf-8" src="openmobster-mbaas.js"></script>
+<style>  
+        .pass:before {  
+            content: 'PASS: ';  
+            color:  blue;  
+            font-weight: bold;  
+        }  
+          
+        .fail:before {  
+            content: 'FAIL: ';  
+            color: red;  
+            font-weight: bold;  
+              
+        }  
+</style>  
+<script type="text/javascript">
+function echo(message)
+{
+	window.sync.echo(message,
+		function(success)
+		{
+			alert(success);
+			assert(message===success, 'Echo Test');
+		},
+		function(error)
+		{
+			alert(error);
+		}
+	);
+}
+
+function json()
+{
+	var input = {"param1":"json","param2":"rocks"};
+	window.sync.json(input,
+		function(json)
+		{
+			console.log("Param1: "+json.param1);
+			console.log("Param2: "+json.param2);
+		},
+		function(error)
+		{
+			alert(error);
+		}
+	);
+}
+
+function nestedJson()
+{
+	var message = {};
+	message['from.value'] = "test";
+	
+	console.log(JSON.stringify(message));
+}
+
+function addNewBean()
+{
+	var state = {};
+	state['title'] = "/test/newBean";
+	var channel = "phonegap_channel";
+	window.sync.newBean(channel,state,
+		function(oid)
+		{
+			assert(oid !== null, 'AddNewBean/OID');
+			var properties = ['title'];
+			window.sync.readBean(channel,oid,properties,
+				function(bean)
+				{
+					console.log("Id: "+bean.id);
+					console.log("Title: "+bean.title);
+					console.log("******************************");
+					assert(bean.title === '/test/newBean','AddNewBean/Title');
+				},
+				function(error)
+				{
+					alert("ReadBean: "+error);
+				}
+			);
+		},
+		function(error)
+		{
+			alert("AddNewBean:"+error);
+		}
+	);
+}
+
+function readall()
+{
+	var channel = "phonegap_channel";
+	var properties = ['title'];
+	window.sync.readall(channel,properties,
+		function(beans)
+		{
+			var length = beans.length;
+			for(var i=0; i<length; i++)
+			{
+				var bean = beans[i];
+				console.log("Id: "+bean.id);
+				console.log("Title: "+bean.title);
+				console.log("******************************");
+			}
+			assert(true,"ReadAll");
+		},
+		function(error)
+		{
+			alert("ReadAll: "+error);
+		}
+	);
+}
+
+function readBean(id)
+{
+	var channel = "phonegap_channel";
+	var properties = ['title'];
+	
+	window.sync.readBean(channel,id,properties,
+		function(bean)
+		{
+			console.log("Id: "+bean.id);
+			console.log("Title: "+bean.title);
+			console.log("******************************");
+			assert(true,"ReadBean");
+		},
+		function(error)
+		{
+			alert("ReadBean: "+error);
+		}
+	);
+}
+
+function updateBean()
+{
+	var channel = "phonegap_channel";
+	
+	window.sync.readall(channel,[],
+		function(beans)
+		{
+			var length = beans.length;
+			for(var i=0; i<length; i++)
+			{
+				var bean = beans[i];
+				var state = {};
+				state['title'] = "/test/updateBean/"+bean.id;
+				window.sync.updateBean(channel,bean.id,state,
+					function(beanId)
+					{
+						window.sync.readBean(channel,beanId,['title'],
+						function(bean)
+						{
+							var title = bean.title;
+							var id = bean.id;
+							var value = "/test/updateBean/"+bean.id;
+							assert(title === value, "UpdateBean/Title");
+						},
+						function(error)
+						{
+							alert("ReadBean Error: "+error);
+						}
+						);
+					},
+					function(error)
+					{
+						alert("Update Bean: "+error);
+					}
+				);
+			}
+		},
+		function(error)
+		{
+			alert("ReadAll: "+error);
+		}
+	);
+}
+
+function deleteBean()
+{
+	var channel = "phonegap_channel";
+	
+	window.sync.readall(channel,[],
+		function(beans)
+		{
+			var length = beans.length;
+			for(var i=0; i<length; i++)
+			{
+				var bean = beans[i];
+				window.sync.deleteBean(channel,bean.id,
+					function(beanId)
+					{
+						console.log(beanId+" was deleted");
+						window.sync.readBean(channel,beanId,[],
+							function(bean)
+							{
+								assert(bean.id === undefined, "DeleteBean");
+							},
+							function(error)
+							{
+								alert("ReadBean: "+error);
+							}
+						);
+					},
+					function(error)
+					{
+						alert("Delete Bean: "+error);
+					}
+				);
+			}
+		},
+		function(error)
+		{
+			alert("ReadAll: "+error);
+		}
+	);
+}
+
+function arrayInsert()
+{
+	var channel = "phonegap_channel";
+	
+	window.sync.readall(channel,[],
+		function(beans)
+		{
+			var length = beans.length;
+			for(var i=0; i<length; i++)
+			{
+				var bean = beans[i];
+				
+				var values = [];
+				for(var j=0; j<5; j++)
+				{
+					values[j] = "customer://"+j;
+				}
+				
+				var messages = [];
+				for(var j=0; j<5; j++)
+				{
+					var message = {};
+					message['from'] = "from://"+j;
+					message['to'] = "to://"+j;
+					message['message'] = "message://"+j;
+					messages[j] = message;
+				}
+				
+				//updating a string array
+				window.sync.arrayInsert(channel,bean.id,"customers",values,
+					function(metadata)
+					{
+						var arrayLength = metadata.arrayLength;
+						var oid = metadata.id;
+						for(var j=0;j<arrayLength; j++)
+						{
+							var customerUri = 'customers['+j+']';
+							window.sync.arrayValue(channel,oid,customerUri,
+								function(value)
+								{
+									console.log(value);
+								},
+								function(error)
+								{
+									alert('StringArray:'+error);
+								}
+							);
+						}
+					},
+					function(error)
+					{
+						alert("ArrayInsert: "+error);
+					}
+				);
+				
+				//updating an object array
+				window.sync.arrayInsert(channel,bean.id,"messages",messages,
+					function(metadata)
+					{
+						var arrayLength = metadata.arrayLength;
+						var oid = metadata.id;
+						for(var j=0;j<arrayLength; j++)
+						{
+							var fromUri = 'messages['+j+'].from';
+							window.sync.arrayValue(channel,oid,fromUri,
+								function(value)
+								{
+									console.log(value);
+								},
+								function(error)
+								{
+									alert('FromUri:'+error);
+								}
+							);
+							
+							var toUri = 'messages['+j+'].to';
+							window.sync.arrayValue(channel,oid,toUri,
+								function(value)
+								{
+									console.log(value);
+								},
+								function(error)
+								{
+									alert('ToUri:'+error);
+								}
+							);
+							
+							var messageUri = 'messages['+j+'].message';
+							window.sync.arrayValue(channel,oid,messageUri,
+								function(value)
+								{
+									console.log(value);
+								},
+								function(error)
+								{
+									alert('MessageUri:'+error);
+								}
+							);
+						}
+					},
+					function(error)
+					{
+						alert("ArrayInsert: "+error);
+					}
+				);
+			}
+		},
+		function(error)
+		{
+			alert("ReadAll: "+error);
+		}
+	);
+}
+
+function clearArray()
+{
+	var channel = "phonegap_channel";
+	
+	window.sync.readall(channel,[],
+		function(beans)
+		{
+			var length = beans.length;
+			for(var i=0; i<length; i++)
+			{
+				var bean = beans[i];
+				
+				window.sync.clearArray(channel,bean.id,"customers",
+					function(arrayLength)
+					{
+						console.log("Arraylength: "+arrayLength);
+						assert(arrayLength === "0", "ClearArray/customers");
+					},
+					function(error)
+					{
+						alert("ClearArray: "+error);
+					}
+				);
+				
+				window.sync.clearArray(channel,bean.id,"messages",
+					function(arrayLength)
+					{
+						console.log("Arraylength: "+arrayLength);
+						assert(arrayLength === "0", "ClearArray/messages");
+					},
+					function(error)
+					{
+						alert("ClearArray: "+error);
+					}
+				);
+			}
+		},
+		function(error)
+		{
+			alert("ReadAll: "+error);
+		}
+	);
+}
+
+function arrayUpdate()
+{
+	var channel = "phonegap_channel";
+	
+	window.sync.readall(channel,[],
+		function(beans)
+		{
+			var length = 1;
+			for(var i=0; i<length; i++)
+			{
+				var bean = beans[i];
+				
+				window.sync.arrayLength(channel,bean.id,"customers",
+					function(arrayLength)
+					{
+						for(var j=0;j<arrayLength;j++)
+						{
+							var fieldUri = "customers["+j+"]";
+							var newValue = "customers["+j+"]/updated";
+							window.sync.arrayUpdate(channel,bean.id,fieldUri,newValue,
+								function(beanId)
+								{
+								},
+								function(error)
+								{
+									alert("ArrayUpdate: "+error);
+								}
+							);
+						}
+						
+						//print the array
+						for(var j=0;j<arrayLength; j++)
+						{
+							var customerUri = 'customers['+j+']';
+							window.sync.arrayValue(channel,bean.id,customerUri,
+								function(value)
+								{
+									console.log(value);
+									assert(value.indexOf("/updated") !== -1,"ArrayUpdate/customers");
+								},
+								function(error)
+								{
+									alert('StringArray:'+error);
+								}
+							);
+						}
+					},
+					function(error)
+					{
+						alert("ArrayLength: "+error);
+					}
+				);
+			}
+		},
+		function(error)
+		{
+			alert("ReadAll: "+error);
+		}
+	);
+}
+
+function sortByProperty()
+{
+	var channel = "phonegap_channel";
+	var properties = ['title'];
+	window.sync.sortByProperty(channel,'title',true,
+		function(cursor)
+		{
+			var count = cursor.count;
+			var channel = cursor.channel;
+			var cursorId = cursor.id;
+			
+			console.log("Cursor Count: "+count);
+			console.log("Cursor Channel: "+channel);
+			console.log("Cursor Id: "+cursorId);
+			console.log("******************************");
+			assert(count>0,"SortByProperty/Ascending");
+			
+			for(var i=0;i<count;i++)
+			{
+				window.sync.cursor.currBean(cursorId,properties,
+					function(bean)
+					{
+						console.log("Id: "+bean.id);
+						console.log("Title: "+bean.title);
+						console.log("******************************");
+					},
+					function(error)
+					{
+						alert("CurrBean: "+error);
+					}
+				);
+			}
+		},
+		function(error)
+		{
+			alert("SortByProperty: "+error);
+		}
+	);
+	
+	window.sync.sortByProperty(channel,'title',false,
+		function(cursor)
+		{
+			var count = cursor.count;
+			var channel = cursor.channel;
+			var cursorId = cursor.id;
+			
+			console.log("Cursor Count: "+count);
+			console.log("Cursor Channel: "+channel);
+			console.log("Cursor Id: "+cursorId);
+			console.log("******************************");
+			assert(count>0,"SortByProperty/Descending");
+			
+			for(var i=0;i<count;i++)
+			{
+				window.sync.cursor.currBean(cursorId,properties,
+					function(bean)
+					{
+						console.log("Id: "+bean.id);
+						console.log("Title: "+bean.title);
+						console.log("******************************");
+					},
+					function(error)
+					{
+						alert("CurrBean: "+error);
+					}
+				);
+			}
+		},
+		function(error)
+		{
+			alert("SortByProperty: "+error);
+		}
+	);
+}
+
+function queryByProperty()
+{
+	var channel = "phonegap_channel";
+	var properties = ['title'];
+	window.sync.queryByProperty(channel,'title','/test/newBean',
+		function(cursor)
+		{
+			var count = cursor.count;
+			var channel = cursor.channel;
+			var cursorId = cursor.id;
+			
+			console.log("Cursor Count: "+count);
+			console.log("Cursor Channel: "+channel);
+			console.log("Cursor Id: "+cursorId);
+			console.log("******************************");
+			assert(count>0,"QueryByProperty/test/newBean");
+			
+			for(var i=0;i<count;i++)
+			{
+				window.sync.cursor.currBean(cursorId,properties,
+					function(bean)
+					{
+						console.log("Id: "+bean.id);
+						console.log("Title: "+bean.title);
+						console.log("******************************");
+					},
+					function(error)
+					{
+						alert("CurrBean: "+error);
+					}
+				);
+			}
+		},
+		function(error)
+		{
+			alert("QueryByProperty: "+error);
+		}
+	);
+}
+
+function searchByMatchAll()
+{
+	var channel = "phonegap_channel";
+	var properties = ['title'];
+	var nameValuePairs = [];
+	nameValuePairs[0] = {};
+	nameValuePairs[0].name = 'title';
+	nameValuePairs[0].value = '/test/newBean';
+	window.sync.searchByMatchAll(channel,nameValuePairs,
+		function(cursor)
+		{
+			var count = cursor.count;
+			var channel = cursor.channel;
+			var cursorId = cursor.id;
+			
+			console.log("Cursor Count: "+count);
+			console.log("Cursor Channel: "+channel);
+			console.log("Cursor Id: "+cursorId);
+			console.log("******************************");
+			assert(count>0,"SearchByMatchAll/test/newBean");
+			
+			for(var i=0;i<count;i++)
+			{
+				window.sync.cursor.currBean(cursorId,properties,
+					function(bean)
+					{
+						console.log("Id: "+bean.id);
+						console.log("Title: "+bean.title);
+						console.log("******************************");
+					},
+					function(error)
+					{
+						alert("CurrBean: "+error);
+					}
+				);
+			}
+		},
+		function(error)
+		{
+			alert("SearchByMatchAll: "+error);
+		}
+	);
+}
+
+function searchByMatchAtleastOne()
+{
+	var channel = "phonegap_channel";
+	var properties = ['title'];
+	var nameValuePairs = [];
+	nameValuePairs[0] = {};
+	nameValuePairs[0].name = 'title';
+	nameValuePairs[0].value = '/test/newBean';
+	window.sync.searchByMatchAtleastOne(channel,nameValuePairs,
+		function(cursor)
+		{
+			var count = cursor.count;
+			var channel = cursor.channel;
+			var cursorId = cursor.id;
+			
+			console.log("Cursor Count: "+count);
+			console.log("Cursor Channel: "+channel);
+			console.log("Cursor Id: "+cursorId);
+			console.log("******************************");
+			assert(count>0,"SearchByMatchAtleastOne/test/newBean");
+			
+			for(var i=0;i<count;i++)
+			{
+				window.sync.cursor.currBean(cursorId,properties,
+					function(bean)
+					{
+						console.log("Id: "+bean.id);
+						console.log("Title: "+bean.title);
+						console.log("******************************");
+					},
+					function(error)
+					{
+						alert("CurrBean: "+error);
+					}
+				);
+			}
+		},
+		function(error)
+		{
+			alert("SearchByMatchAtleastOne: "+error);
+		}
+	);
+}
+
+function cursorAllBeans()
+{
+	var channel = "phonegap_channel";
+	var properties = ['title'];
+	var nameValuePairs = [];
+	nameValuePairs[0] = {};
+	nameValuePairs[0].name = 'title';
+	nameValuePairs[0].value = '/test/newBean';
+	window.sync.searchByMatchAtleastOne(channel,nameValuePairs,
+		function(cursor)
+		{
+			var count = cursor.count;
+			var channel = cursor.channel;
+			var cursorId = cursor.id;
+			
+			console.log("Cursor Count: "+count);
+			console.log("Cursor Channel: "+channel);
+			console.log("Cursor Id: "+cursorId);
+			console.log("******************************");
+			assert(count>0,"CursorAllBeans/test/newBean");
+			if(count == 0)
+			{
+				return;
+			}
+			
+			window.sync.cursor.allBeans(cursorId,properties,
+				function(beans)
+				{
+					var length = beans.length;
+					for(var i=0; i<length; i++)
+					{
+						var bean = beans[i];
+						console.log("Id: "+bean.id);
+						console.log("Title: "+bean.title);
+						console.log("******************************");
+					}
+				},
+				function(error)
+				{
+					alert("CursorAllBeans: "+error);
+				}
+			);
+		},
+		function(error)
+		{
+			alert("SearchByMatchAtleastOne: "+error);
+		}
+	);
+}
+</script>
+</head>
+<body>
+	<h1>PhoneGap/Cordova OpenMobster MBaaS Plugin</h1><br/>
+	<ul id="output"></ul><br/>
+	<script type="text/javascript">
+		var output = document.getElementById('output');  
+  
+		function assert( outcome, description ) 
+		{  
+		    var li = document.createElement('li');  
+		    li.className = outcome ? 'pass' : 'fail';  
+		    li.appendChild( document.createTextNode( description ) );  
+		      
+		    output.appendChild(li);  
+		};  
+	</script>
+	<input type='button' value='Echo' onclick="javascript:echo('Hello World');"/><br/>
+	<input type='button' value='Get JSON' onclick="javascript:json();"/><br/>
+	<input type='button' value='Nested JSON' onclick="javascript:nestedJson();"/><br/>
+	<input type='button' value='Add New Bean' onclick="javascript:addNewBean();"/><br/>
+	<input type='button' value='Read All' onclick="javascript:readall();"/><br/>
+	<input type='button' value='Update Bean' onclick="javascript:updateBean();"/><br/>
+	<input type='button' value='Delete Bean' onclick="javascript:deleteBean();"/><br/>
+	<input type='button' value='Array Insert' onclick="javascript:arrayInsert();"/><br/>
+	<input type='button' value='Array Clear' onclick="javascript:clearArray();"/><br/>
+	<input type='button' value='Array Update' onclick="javascript:arrayUpdate();"/><br/>
+	<input type='button' value='SortByProperty' onclick="javascript:sortByProperty();"/><br/>
+	<input type='button' value='QueryByProperty' onclick="javascript:queryByProperty();"/><br/>
+	<input type='button' value='SearchByMatchAll' onclick="javascript:searchByMatchAll();"/><br/>
+	<input type='button' value='SearchByMatchAtleastOne' onclick="javascript:searchByMatchAtleastOne();"/><br/>
+	<input type='button' value='CursorAllBeans' onclick="javascript:cursorAllBeans();"/><br/>
+</body>
+</html>

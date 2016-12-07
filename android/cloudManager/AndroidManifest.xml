@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      package="org.openmobster.core.mobileCloud"
+      android:versionCode="1"
+      android:versionName="1.0">
+    <application android:label="@string/app_name" android:icon="@drawable/icon">
+        <activity android:name="org.openmobster.core.mobileCloud.manager.CloudManagerApp"
+                  android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
+        
+        <!-- KeepAlive Service -->
+        <service android:name="org.openmobster.core.mobileCloud.manager.KeepAliveService">
+        	<intent-filter>
+            	<action android:name="org.openmobster.core.mobileCloud.manager.KeepAliveService"/>
+            </intent-filter>
+        </service>
+        
+        
+        <receiver android:name="org.openmobster.core.mobileCloud.manager.DeviceManagementBroadcastReceiver">
+                <intent-filter>
+                    <action android:name="org.openmobster.device.management" />
+                </intent-filter>
+         </receiver>
+         
+         <receiver android:name="org.openmobster.core.mobileCloud.manager.DeviceBootupBroadcastReceiver">
+			<intent-filter>
+				<action
+				android:name="android.intent.action.BOOT_COMPLETED" />
+				<category android:name="android.intent.category.HOME" />
+			</intent-filter>
+		 </receiver>
+         
+         <receiver android:name="org.openmobster.core.mobileCloud.android.module.connection.PolicyManager$PolicyReceiver"
+            android:label="OpenMobster Device Administrator"
+            android:permission="android.permission.BIND_DEVICE_ADMIN">
+            <meta-data android:name="android.app.device_admin"
+                android:resource="@xml/device_admin" />
+            <intent-filter>
+                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
+            </intent-filter>
+        </receiver> 
+        
+        <receiver android:name="org.openmobster.core.mobileCloud.push.NetworkStartupBroadcastReceiver">
+                <intent-filter>
+                    <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                </intent-filter>
+        </receiver>
+        <service android:name="org.openmobster.core.mobileCloud.push.StartNetwork" android:exported="false">
+    	</service>
+    	
+        <receiver android:name="org.openmobster.core.mobileCloud.android.module.connection.ActivatePushSocket">
+        </receiver>
+        <service android:name="org.openmobster.core.mobileCloud.android.module.connection.BackgroundActivatePushSocket" android:exported="false">
+    	</service>
+    	
+        <receiver android:name="org.openmobster.core.mobileCloud.android.module.connection.DeadSocketDetector">
+            <intent-filter>
+                    <action android:name="org.openmobster.core.mobileCloud" />
+            </intent-filter>
+        </receiver>
+        <service android:name="org.openmobster.core.mobileCloud.android.module.connection.DeadSocketService" android:exported="false">
+    	</service>
+    </application>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/> 
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-sdk android:minSdkVersion="11"/>
+</manifest>

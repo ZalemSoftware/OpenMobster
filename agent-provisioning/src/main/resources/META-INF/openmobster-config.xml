@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<deployment xmlns="urn:jboss:bean-deployer:2.0">           
+   <bean name="provisioning://AgentProvisioner" class="org.openmobster.core.agent.provisioning.AgentProvisioner">
+   		<depends>services://MobileObjectMonitor</depends>
+   		<depends>services://MobileServiceMonitor</depends>
+   		<depends>dataService://PlainServer</depends>
+   		<property name="customConfig"><inject bean="common://CustomConfig"/></property>
+   		<property name="provisioner"><inject bean="security://Provisioner"/></property>
+   		<property name="identityController"><inject bean="security://IdentityController"/></property>   	
+   </bean>
+   <bean name="dm_callback" class="org.openmobster.core.agent.provisioning.DeviceManagementCallback">
+   		<depends>services://MobileObjectMonitor</depends>
+   		<depends>services://MobileServiceMonitor</depends>  
+   		<property name="deviceController"><inject bean="security://DeviceController"/></property>    		
+   </bean>  
+   <bean name="iphone_push_callback" class="org.openmobster.core.agent.provisioning.IPhonePushCallback">
+   		<depends>services://MobileObjectMonitor</depends>
+   		<depends>services://MobileServiceMonitor</depends>  
+   		<property name="deviceController"><inject bean="security://DeviceController"/></property>  
+   		<property name="pushAppController"><inject bean="security://PushAppController"/></property>   		
+   </bean>
+   <bean name="android_push_callback" class="org.openmobster.core.agent.provisioning.AndroidPushCallback">
+   		<depends>services://MobileObjectMonitor</depends>
+   		<depends>services://MobileServiceMonitor</depends>  
+   		<property name="deviceController"><inject bean="security://DeviceController"/></property>  
+   		<property name="pushAppController"><inject bean="security://AndroidPushAppController"/></property>   		
+   </bean>
+   <bean name="/status/mobilebeanservice" class="org.openmobster.core.agent.provisioning.status.StatusMobileBeanService"/>     
+   <bean name="syncstatuschannel" class="org.openmobster.core.agent.provisioning.status.SyncStatusChannel"/>             
+</deployment>

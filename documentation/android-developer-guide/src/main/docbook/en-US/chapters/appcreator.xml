@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="appcreator">
+   <chapterinfo>
+      <author>
+         <firstname>openmobster</firstname>
+         <surname>at gmail.com</surname>
+         <email>openmobster@gmail.com</email>
+      </author>
+   </chapterinfo>
+   <title>AppCreator - A Maven based App Development tool</title>
+   <sect1>
+   		<title>AppCreator</title>
+   		<para>
+   		OpenMobster Cloud Platform provides a <ulink url='http://maven.apache.org/'>Maven</ulink> based tool called the AppCreator. App developers can use AppCreator to quickly develop, unit test, and debug their
+   		mobile cloud apps. It greatly improves developer productivity by allowing them to fully develop and test their components right from the development environment. There
+   		is no need for firing up a fully loaded App Server to run the OpenMobster Cloud. AppServer packaging is also provided when its time to deploy the app into production.
+   		</para>
+   </sect1>
+   <sect1>
+   		<title>App Developer Productivity</title>
+   		<itemizedlist>
+   			<listitem>
+   				<emphasis role='bold'>Testability:</emphasis> <ulink url='http://www.jboss.org/jbossmc'>JBoss Microcontainer</ulink> based kernel allows running the Cloud Server fully inside a standard Java SE VM. 
+   				This speeds up development dramatically as all components can be <emphasis>unit</emphasis> as well as <emphasis>integration</emphasis> tested right from 
+   				the development environment. There is no need to fire up a heavy App Server during this stage.
+   				in the development cycle
+   			</listitem>
+   			<listitem>
+   				<emphasis role='bold'>Multi-Mobile Platform support:</emphasis> Use of Maven profiles helps with better maintenance and development of the same App over multiple
+   				mobile platforms 
+   			</listitem>
+   			<listitem>
+   				<emphasis role='bold'>Development Mode runtimes:</emphasis> Development Mode device side runtimes can be used to rapidly test apps end-to-end. These runtimes automate
+   				various bootstrapping processes like device activation, and account provisioning. Security is never compromised even in a test environment. The cloud functionality
+   				in the test phase is always the same as in production/deployment phase.
+   			</listitem>
+   		</itemizedlist>
+   </sect1>
+   <sect1>
+   		<title>AppCreator in Action</title>
+   		<itemizedlist>
+   			<listitem>
+   				Start an App. This launches a simple command line wizard. The options are self-explanatory. It generates the new project under the 'workspace' directory. This is where all your
+   				App projects are created by default. Feel free to move these wherever it suits best for your environment.
+   				<programlisting><![CDATA[				java -jar appcreator.jar]]></programlisting>
+   			</listitem>
+   			<listitem>
+   				Start the Cloud. Go to the <emphasis role='bold'>cloud</emphasis> directory under your project. Type in:
+   				<programlisting><![CDATA[				mvn -PrunCloud integration-test]]></programlisting>
+   			</listitem>
+   			<listitem>
+   				Start the Android emulator. <ulink url='http://developer.android.com/guide/developing/tools/emulator.html'>Here</ulink> are more details about using the Android Emulator
+   				<programlisting><![CDATA[				emulator -avd droid]]></programlisting>
+   				and
+   				<programlisting><![CDATA[				ddms]]></programlisting>
+   			</listitem>
+   			<listitem>
+   				Install the Sample Android Offline App. Go to the <emphasis role='bold'>app-android</emphasis> directory under your project. Type in:
+   				<programlisting><![CDATA[				mvn -Papp-hot-deploy install]]></programlisting>
+   			</listitem>
+   			<listitem>
+   				Launch the Sample Offline App.
+   			</listitem>
+   		</itemizedlist>
+   </sect1>
+   
+   <sect1>
+   		<title>Project Structure</title>
+   		<para>
+   			The AppCreator generates a multi-module maven project. Here is an explanation of each module. As a developer you may not need all the modules, and you can feel free to adjust
+   			using your maven pom files.
+   			<itemizedlist>
+   				<listitem>
+   					<emphasis role='bold'>cloud:</emphasis> Contains the src for the Cloud-side components. Java code is located under <emphasis>src/main/java</emphasis>, 
+   					and configuration is located under <emphasis>src/main/resources</emphasis>.
+   				</listitem>
+   				<listitem>
+   					<emphasis role='bold'>app-android:</emphasis> Contains the src for the Android App. Java code is located under <emphasis>src/main/java</emphasis>,
+   					Configuration is located under <emphasis>src/main/resources/moblet-app</emphasis>. Besides the OpenMobster component setup, the Android SDK specific setup is located under
+   					<emphasis>AndroidManifest.xml, and res directory</emphasis>
+   				</listitem>
+   				<listitem>
+   					<emphasis role='bold'>moblet:</emphasis> This is an assembly component that packages this App into a jar file ready for deployment in a JBoss AS based OpenMobster instance.
+   				</listitem>
+   			</itemizedlist>
+   		</para>
+   </sect1>
+</chapter>

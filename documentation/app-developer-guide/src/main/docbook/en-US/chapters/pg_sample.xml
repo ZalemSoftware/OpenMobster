@@ -1,0 +1,538 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="pg_sample">
+   <chapterinfo>
+      <author>
+         <firstname>openmobster</firstname>
+         <surname>at gmail.com</surname>
+         <email>openmobster@gmail.com</email>
+      </author>
+   </chapterinfo>
+   <title>PhoneGap: Offline Web Apps using the Sync Plugin</title>
+   <sect1>
+   		<title>Introduction</title>
+   		<para>
+   		 	<ulink url="http://www.phonegap.com">PhoneGap</ulink> is an HTML5 app platform that allows you to author native applications with web technologies and get access to APIs and app stores. <emphasis role="bold">PhoneGap</emphasis> leverages web technologies developers already know best... HTML and JavaScript.
+   		 	Starting with <emphasis role="bold">OpenMobster 2.2-M8</emphasis>, you can write offline web apps with synchronization of data using the <emphasis role="bold">OpenMobster Sync Plugin</emphasis> for PhoneGap. The Sync Plugin exposes the native Sync service to the
+   		 	JavaScript layer using the PhoneGap bridge technology. The rest of this chapter will discuss how to use the Sync Plugin using a JQuery based sample offline application.
+   		</para>
+   </sect1>
+   <sect1>
+   		<title>Offline App Usage</title>
+   		<sect2>
+   			<title>Running the Cloud Server</title>
+   			<para>
+   			<programlisting>
+   				<![CDATA[
+   					cd PhoneGap/plugin-jquery-cloud
+   					
+   					mvn -PrunCloud integration-test
+   				]]>
+   			</programlisting>
+   			This should make the OpenMobster Cloud Server up and running for the Offline App.
+   			</para>
+   		</sect2>
+   		<sect2>
+   			<title>Cloud Activation</title>
+   			<para>
+   			For security reasons, before apps can use the OpenMobster Cloud, the device must be registered with the cloud. 
+   			This is done using a CloudManager App that comes with the OpenMobster distribution. 
+   			</para>
+   			<para>
+   			You can locate this App in the distribution under <emphasis role="bold">Android/core-runtime/CloudManager.apk</emphasis>.
+   			You can install this App on the Android device or emulator using the following command:
+   			<programlisting>
+   				<![CDATA[
+   					adb install -r CloudManager.apk
+   				]]>
+   			</programlisting>
+   			Once installed you can use the <emphasis role="bold">Activate</emphasis> function to register with the Cloud.
+   			</para>
+   		</sect2>
+   		<sect2>
+   			<title>Installing the Offline App</title>
+   			<para>
+   			<programlisting>
+   				<![CDATA[
+   					adb install -r JQueryOfflineApp.apk
+   				]]>
+   			</programlisting>
+   			</para>
+   		</sect2>
+   </sect1>
+   <sect1>
+   		<title>Dissecting the JQuery Offline App</title>
+   		<sect2>
+   			<title>Load Synchronized Beans</title>
+   			<para>
+   				<programlisting>
+   					<![CDATA[
+   					//read the oids of the tickets stored in the sync channel
+	  		window.plugins.sync.readall(channel,
+				function(oids)
+				{
+					if(oids == '0')
+					{
+						return;
+					}
+					
+					oids = JSON.parse(oids);
+					var length = oids.length;
+					for(var i=0; i<length; i++)
+					{
+					   var oid = oids[i];
+					   
+					   //read the value of the 'title' property of the synchronized bean
+					   window.plugins.sync.value(channel,oid,'title',
+						   function(value)
+						   {
+						   		var encodedOid = encodeURIComponent(oid);
+		   		
+		   						//create a list item corresponding to the ticket in question
+		   						html += '<li><a href="#read_ticket?oid='+encodedOid+'" data-rel="dialog">'+value+'</a></li>';
+						   },
+						   function(error)
+						   {
+						   }
+					   );
+					}
+				},
+				function(error)
+				{
+					alert('Sync Plugin:'+error);
+				}
+			);
+   					]]>
+   				</programlisting>
+   				This function reads the oids of the beans and then iterates through each bean and extracts the <emphasis role="bold">title</emphasis> property.
+   			</para>
+   			<para>
+   				<programlisting>
+   					<![CDATA[
+   				window.plugins.sync.readall(channel,
+				function(oids)
+				{
+					if(oids == '0')
+					{
+						return;
+					}
+					
+					oids = JSON.parse(oids);
+   					]]>
+   				</programlisting>
+   				Invokes the <emphasis role="bold">readall</emphasis> function and reads the oids of all the beans stored in the sync channel. 
+   				If the function is successful it returns an array of oids in JSON format. oids are then parse into a JavaScript object using
+   				the <emphasis role="bold">JSON.parse</emphasis> function.
+   			</para>
+   			<para>
+   				<programlisting>
+   					<![CDATA[
+   						//read the value of the 'title' property of the synchronized bean
+					   window.plugins.sync.value(channel,oid,'title',
+						   function(value)
+						   {
+						   		var encodedOid = encodeURIComponent(oid);
+		   		
+		   						//create a list item corresponding to the ticket in question
+		   						html += '<li><a href="#read_ticket?oid='+encodedOid+'" data-rel="dialog">'+value+'</a></li>';
+						   },
+						   function(error)
+						   {
+						   }
+					   );
+					   ]]>
+   				</programlisting>
+   				<emphasis role="bold">window.plugins.sync.value</emphasis> reads the value of the specified <emphasis role="bold">title</emphasis> property.
+   				It takes the channel name and the oid of the bean as arguments to locate the bean whose property is to be read.
+   			</para>
+   		</sect2>
+   		<sect2>
+   			<title>Add a New Bean to the Sync Channel</title>
+   			<para>
+   				<programlisting>
+   					<![CDATA[
+   					window.plugins.sync.addNewBean(channel,
+					function(tempoid)
+					{
+						window.plugins.sync.updateBean(channel,tempoid,'title',title,
+						function(success)
+						{
+						},
+						function(error)
+						{
+						});
+						
+						window.plugins.sync.updateBean(channel,tempoid,'customer',customer,
+						function(success)
+						{
+						},
+						function(error)
+						{
+						});
+						
+						window.plugins.sync.updateBean(channel,tempoid,'specialist',specialist,
+						function(success)
+						{
+						},
+						function(error)
+						{
+						});
+						
+						window.plugins.sync.updateBean(channel,tempoid,'comments',comments,
+						function(success)
+						{
+						},
+						function(error)
+						{
+						});
+					},
+					function(error)
+					{
+						alert("Sync Plugin:"+error);
+					});
+					
+					//Commit here
+					window.plugins.sync.commit(function(success)
+					{
+						alert("Ticket was successfully added");
+					},
+					function(error){
+						alert("Ticket Add Error:"+error);
+					});
+   					]]>
+   				</programlisting>
+   				The above code creates a new bean in the Sync Channel. Once the bean is created, its properties are updated and committed to the Sync Engine for synchronization
+   			</para>
+   			<para>
+   				<programlisting>
+   				<![CDATA[
+   					window.plugins.sync.addNewBean(channel,
+					function(tempoid)
+					{
+   				]]>
+   				</programlisting>
+   				<emphasis role="bold">window.plugins.sync.addNewBean</emphasis> creates a new bean into the Sync Channel. The method returns a temporary oid used to refer to this newly added bean.
+   			</para>
+   			<para>
+   				<programlisting>
+   					<![CDATA[
+   						window.plugins.sync.updateBean(channel,tempoid,'title',title,
+						function(success)
+						{
+						},
+						function(error)
+						{
+						});
+						
+						window.plugins.sync.updateBean(channel,tempoid,'customer',customer,
+						function(success)
+						{
+						},
+						function(error)
+						{
+						});
+   					]]>
+   				</programlisting>
+   				<emphasis role="bold">window.plugins.sync.updateBean</emphasis> updates the specified property on the bean referred to by its oid.
+   				In this case it modifies the <emphasis role="bold">title</emphasis> property on the newly added bean referred to by <emphasis role="bold">tempoid</emphasis>.
+   			</para>
+   			<para>
+   				<programlisting>
+   					<![CDATA[
+   					//Commit here
+					window.plugins.sync.commit(function(success)
+					{
+						alert("Ticket was successfully added");
+					},
+					function(error){
+						alert("Ticket Add Error:"+error);
+					});
+   					]]>
+   				</programlisting>
+   				<emphasis role="bold">window.plugins.sync.commit</emphasis> commits the beans into the Sync Channel for synchronization
+   			</para>
+   		</sect2>
+   		<sect2>
+   			<title>Update an existing Bean in the Sync Channel</title>
+   			<para>
+   				<programlisting>
+   					<![CDATA[
+   					var oid = $('#update_ticket_oid').val();
+					
+					//update the 'title' property on the ticket bean
+					window.plugins.sync.updateBean(channel,oid,'title',title,
+					function(success)
+					{
+						
+					},
+					function(error)
+					{
+					});
+					
+					//update the 'customer' property on the ticket bean
+					window.plugins.sync.updateBean(channel,oid,'customer',customer,
+					function(success)
+					{
+						
+					},
+					function(error)
+					{
+					});
+					
+					//update the 'specialist' property on the ticket bean
+					window.plugins.sync.updateBean(channel,oid,'specialist',specialist,
+					function(success)
+					{
+						
+					},
+					function(error)
+					{
+					});
+					
+					//update the 'comments' property on the ticket bean
+					window.plugins.sync.updateBean(channel,oid,'comments',comments,
+					function(success)
+					{
+						
+					},
+					function(error)
+					{
+					});
+					
+					//commit
+				    window.plugins.sync.commit(function(success)
+					{
+						alert("The Ticket was successfully saved");
+					},
+					function(error){
+						alert('Ticket Update Failed: '+error);
+					});
+   					]]>
+   				</programlisting>
+   				This is very similar to the add new bean explanation above. It updates each property of the bean and then calls commit to get the bean synchronized with the Cloud.
+   			</para>
+   		</sect2>
+   		<sect2>
+   			<title>Delete a Bean from the Sync Channel</title>
+   			<para>
+   				<programlisting>
+   					<![CDATA[
+   				function deleteTicket()
+				{
+					var oid = $('#read_ticket_oid').val();
+					
+					//delete this bean
+					window.plugins.sync.deleteBean(channel,oid,
+						function(success)
+						{
+							//commit
+						    window.plugins.sync.commit(function(success)
+							{
+								alert("The Ticket was successfully deleted");
+							},
+							function(error){alert("Ticket Delete Failed: "+error);});
+						},
+						function(error)
+						{
+							alert("Ticket Delete Failed: "+error);
+						}
+					);
+					$.mobile.changePage('#tickets','slide',true,false);
+				}
+   					]]>
+   				</programlisting>
+   				<emphasis role="bold">window.plugins.sync.deleteBean</emphasis> deletes the bean referred to by the oid on the specified channel.
+   				<emphasis role="bold">window.plugins.sync.commit</emphasis> commits this change into the Sync Channel and prepares for synchronization with the Cloud.
+   			</para>
+   		</sect2>
+   </sect1>
+   <sect1>
+   		<title>Dissecting the Cloud</title>
+   		<sect2>
+   			<title>The MobileBean</title>
+   			<para>
+   				<programlisting>
+   					<![CDATA[
+   					public class JQueryBean implements MobileBean,Serializable
+					{
+						@MobileBeanId
+						private String oid;
+   					]]>
+   				</programlisting>
+   				Creates a <emphasis role="bold">MobileBean</emphasis> by implementing the MobileBean interface. This is the component
+   				which will be injected into the Sync Channel. It will then be accesssed on the device via the Sync Plugin API.
+   				The <emphasis role="bold">MobileBeanId</emphasis> annotation specified that the <emphasis role="bold">oid</emphasis> field
+   				will serve as the unique object identifier for these beans.
+   			</para>
+   			<para>
+   				Full Source of the MobileBean implementation
+   				<programlisting>
+   					<![CDATA[
+public class JQueryBean implements MobileBean,Serializable
+{
+	@MobileBeanId
+	private String oid;
+	
+	private String title;
+	private String customer;
+	private String specialist;
+	private String comments;
+	
+	public JQueryBean()
+	{
+		
+	}
+
+	public String getOid()
+	{
+		return oid;
+	}
+
+	public void setOid(String oid)
+	{
+		this.oid = oid;
+	}
+
+	public String getTitle()
+	{
+		return title;
+	}
+
+	public void setTitle(String title)
+	{
+		this.title = title;
+	}
+
+	public String getCustomer()
+	{
+		return customer;
+	}
+
+	public void setCustomer(String customer)
+	{
+		this.customer = customer;
+	}
+
+	public String getSpecialist()
+	{
+		return specialist;
+	}
+
+	public void setSpecialist(String specialist)
+	{
+		this.specialist = specialist;
+	}
+
+	public String getComments()
+	{
+		return comments;
+	}
+
+	public void setComments(String comments)
+	{
+		this.comments = comments;
+	}
+}
+   					]]>
+   				</programlisting>
+   			</para>
+   		</sect2>
+   		<sect2>
+   			<title>The Channel</title>
+   			<para>
+   				<emphasis role="bold">The Channel</emphasis> is the component that exposes the <emphasis role="bold">MobileBeans</emphasis>
+   				to the Sync Engine via a CRUD (Create, Read, Update, Delete) interface.
+   				
+   				<programlisting>
+   					<![CDATA[
+@ChannelInfo(uri="plugin_jquery_channel", mobileBeanClass="org.openmobster.core.phonegap.plugin.jquery.cloud.JQueryBean")
+public class PluginJQueryChannel implements Channel
+   					]]>
+   				</programlisting>
+   				The <emphasis role="bold">ChannelInfo.uri</emphasis> specifies the name of the Sync Channel and <emphasis role="bold">ChannelInfo.mobileBeanClass</emphasis>
+   				specifies the class of the MobileBean instance that the channel will be dealing with. The MobileBean instances used by the Channel implementation must be
+   				instances of this specified class. If this rule is not followed there will be unexpected errors during the synchronization process.
+   			</para>
+   			<sect3>
+   				<title>Read the MobileBeans</title>
+   				<para>
+   					<programlisting>
+   						<![CDATA[
+@Override
+	public List<? extends MobileBean> readAll() 
+	{
+		Collection<Object> all = this.objectStore.readAll();
+		List<JQueryBean> beans = new ArrayList<JQueryBean>();
+		if(all != null && !all.isEmpty())
+		{
+			for(Object bean:all)
+			{
+				beans.add((JQueryBean)bean);
+			}
+		}
+		
+		return beans;
+	}
+
+	@Override
+	public List<? extends MobileBean> bootup() 
+	{
+		return this.readAll();
+	}
+	
+	@Override
+	public MobileBean read(String id) 
+	{
+		return (JQueryBean)this.objectStore.read(id);
+	} 						
+   						]]>
+   					</programlisting>
+   				</para>
+   			</sect3>
+   			<sect3>
+   				<title>Create the MobileBean</title>
+   				<para>
+   					<programlisting>
+   						<![CDATA[
+   	@Override
+	public String create(MobileBean mobileBean) 
+	{
+		JQueryBean toCreate = (JQueryBean)mobileBean;
+		return this.objectStore.save(toCreate.getOid(), toCreate);
+	}
+   						]]>
+   					</programlisting>
+   				</para>
+   			</sect3>
+   			<sect3>
+   				<title>Update the MobileBean</title>
+   				<para>
+   					<programlisting>
+   						<![CDATA[
+   	@Override
+	public void update(MobileBean mobileBean) 
+	{
+		JQueryBean toUpdate = (JQueryBean)mobileBean;
+		this.objectStore.save(toUpdate.getOid(), toUpdate);
+	}
+   						]]>
+   					</programlisting>
+   				</para>
+   			</sect3>
+   			<sect3>
+   				<title>Delete the MobileBean</title>
+   				<para>
+   					<programlisting>
+   						<![CDATA[
+   	@Override
+	public void delete(MobileBean mobileBean) 
+	{	
+		JQueryBean toDelete = (JQueryBean)mobileBean;
+		this.objectStore.delete(toDelete.getOid());
+	}
+   						]]>
+   					</programlisting>
+   				</para>
+   			</sect3>
+   		</sect2>
+   </sect1>
+</chapter>

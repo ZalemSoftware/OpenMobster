@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="clustering">
+   <chapterinfo>
+      <author>
+         <firstname>openmobster</firstname>
+         <surname>at gmail.com</surname>
+         <email>openmobster@gmail.com</email>
+      </author>
+   </chapterinfo>
+   <title>Clustering</title>
+   <sect1>
+   		<title>Clustering the Cloud Server</title>
+   		<para>
+   		 	You can setup the OpenMobster Cloud as a highly available <emphasis role='bold'>Clustered</emphasis> environment.
+   		</para>
+   		<sect2>
+   			<title>High Availability</title>
+   			<para>
+   				The <emphasis role='bold'>high availability</emphasis> cluster consists of multiple <emphasis role='bold'>JBoss</emphasis> nodes of the <emphasis role='bold'>OpenMobster Cloud Server</emphasis>. 
+   				Out of these nodes there is a single node that serves as the Master node. All the incoming traffic is directed to this Master node. The Master node is not a single point of failure because
+   				if the Master node goes down, one of the other nodes immediately becomes a Master node. This process keeps going till all the nodes are used up.
+   				This is how you can get a highly available cluster running since at any given time there is always one master node processing requests from the
+   				mobile devices.
+   			</para>
+   		</sect2>
+   		<sect2>
+   			<title>Load Balancing</title>
+   			<para>
+   				At this point in time the Master node processes all the incoming requests. It does not delegate any requests to its other nodes to balance the load. This feature will be supported 
+   				in a future release. This is a challenge because it needs to replicate local state among the cluster members. At this point, the Sync service does not support this replication except
+   				data sharing via the shared database. This is not enough and will require some re-architecting to make the service truly stateless. From here on out, all new services developed
+   				will support load balancing to get the best out of a clustered setup.
+   		   </para>
+   		</sect2>
+   </sect1>
+   <sect1>
+   		<title>Setup</title>
+   		<para>
+   			This will cover the steps for setting up an <emphasis role='bold'>OpenMobster Cloud</emphasis> in a clustered environment
+   		</para>
+   		<sect2>
+   			<title>Configuration</title>
+   			<para>
+   				In your JBoss server open the following file: <emphasis role='bold'>deploy/openmobster.last/clustering-2.4-SNAPSHOT.jar/META-INF/openmobster-config.xml</emphasis>.
+   				Make sure the file looks as the following to activate the node as a Cluster node
+   			</para>
+   			<para>
+   				<programlisting><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+
+<deployment xmlns="urn:jboss:bean-deployer:2.0">        
+   <bean name="clustering://ClusterService" class="org.openmobster.core.cluster.ClusterService">
+   	  <!-- Make this value true to activate this node as a Cluster node -->
+   	  <property name="active">true</property>
+   </bean>                       
+</deployment>
+   				]]></programlisting>
+   			</para>
+   		</sect2>
+   		<sect2>
+   			<title>Starting the Cluster</title>
+   			<para>
+   				To start the cluster you start one node at a time. The first started node starts off as the Master node. The other nodes remain in standby to become the Master node when/if it goes down.
+   				You start the node using the standard JBoss command:
+   			</para>
+   			<para>
+   				<programlisting><![CDATA[
+   					./run.sh -c {server-name} -b {node-ipaddress}
+   				]]></programlisting>
+   			</para>
+   		</sect2>
+   </sect1>
+</chapter>

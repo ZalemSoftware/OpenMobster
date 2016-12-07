@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!--
+	Relationships:
+	
+	Identity -> IdentityAttribute = one-to-many	(unidirectional/non-lazy)
+	Group -> GroupAttribute = one-to-many (unidirectional/non-lazy)
+	Group <-> Identity = many-to-many (bidirectional/lazy/non-cascading)
+	Device -> Identity = one-to-one	(unidirectional/non-lazy/non-cascading)
+-->        
+<hibernate-mapping>	
+	<class name="org.openmobster.core.security.identity.Identity" table="openmobster_identity">
+        <id name="id" column="identityId">
+            <generator class="native"/>
+        </id>
+        <property name="principal" type="string" column="principal"
+        not-null="true"
+        unique="true"
+        />        
+        <property name="credential" type="string" column="credential"
+        not-null="true"
+        />   
+         
+        <!-- one-many relationship between Identity-IdentityAttribute -->       
+    	<set name="attributes" table="openmobster_identity_attributes" 
+    	cascade="all-delete-orphan"
+    	lazy="false"
+    	>
+	        <key column="identityId" not-null="true"/>
+	        <many-to-many class="org.openmobster.core.security.identity.IdentityAttribute" unique="true"/>
+    	</set>
+    	
+    	<!-- many-many relationship between Identity-Group -->
+    	<set name="groups" table="openmobster_identity_group"     	
+    	lazy="true"    	
+    	>
+	        <key column="identityId"/>
+	        <many-to-many class="org.openmobster.core.security.identity.Group" column="groupId"/>
+    	</set>
+    </class>
+    <class name="org.openmobster.core.security.identity.IdentityAttribute" table="openmobster_identity_attribute">
+        <id name="id" column="attributeId">
+            <generator class="native"/>
+        </id>
+        <property name="name" type="string" column="name"
+        not-null="true"
+        />        
+        <property name="value" type="string" column="value"
+        not-null="true"
+        />                        
+    </class>
+    <class name="org.openmobster.core.security.identity.Group" table="openmobster_group">
+        <id name="id" column="groupId">
+            <generator class="native"/>
+        </id>
+        <property name="name" type="string" column="name"
+        not-null="true"
+        unique="true"
+        />    
+        
+        <!-- one-many relationship between Group-GroupAttribute -->       
+    	<set name="attributes" table="openmobster_group_attributes" 
+    	cascade="all-delete-orphan"
+    	lazy="false"
+    	>
+	        <key column="groupId" not-null="true"/>
+	        <many-to-many class="org.openmobster.core.security.identity.GroupAttribute" unique="true"/>
+    	</set>
+    	
+    	<!-- many-many relationship between Group-Identity -->
+    	<set name="members" table="openmobster_identity_group"     	
+    	lazy="true"
+    	>
+	        <key column="groupId"/>
+	        <many-to-many class="org.openmobster.core.security.identity.Identity" column="identityId"/>
+    	</set>            
+    </class>
+    <class name="org.openmobster.core.security.identity.GroupAttribute" table="openmobster_group_attribute">
+        <id name="id" column="attributeId">
+            <generator class="native"/>
+        </id>
+        <property name="name" type="string" column="name"
+        not-null="true"
+        />        
+        <property name="value" type="string" column="value"
+        not-null="true"
+        />                        
+    </class>  
+    <class name="org.openmobster.core.security.device.Device" table="openmobster_device">
+        <id name="id" column="deviceId">
+            <generator class="native"/>
+        </id>
+        
+        <property name="identifier" type="string" column="identifier"
+        not-null="true"
+        unique="true"
+        />        
+                    
+        <!-- one-many relationship between Device-DeviceAttribute -->       
+    	<set name="attributes" table="openmobster_device_attributes" 
+    	cascade="all-delete-orphan"
+    	lazy="false"
+    	>
+	        <key column="deviceId" not-null="true"/>
+	        <many-to-many class="org.openmobster.core.security.device.DeviceAttribute" unique="true"/>
+    	</set> 
+    	
+    	<!-- one-to-one unidirectional relationship between Device and Identity, unique=true makes this one-to-one -->
+    	<many-to-one name="identity" 
+    	column="identityId"
+    	not-null="true"    	
+    	unique="true"
+    	lazy="false"
+    	/>   	
+    </class>
+    <class name="org.openmobster.core.security.device.DeviceAttribute" table="openmobster_device_attribute">
+        <id name="id" column="attributeId">
+            <generator class="native"/>
+        </id>
+        <property name="name" type="string" column="name"
+        not-null="true"
+        />        
+        <property name="value" type="string" column="value"
+        not-null="true"
+        />                        
+    </class>      
+</hibernate-mapping>

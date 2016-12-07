@@ -1,0 +1,111 @@
+In the spirit of confidence building when using a new technology, lets start with a simple app. We will
+call it the HelloMobster moblet.
+
+* System Requirements for the OpenMobster Cloud Server
+
+	* Java SE JDK v6.0 (the server component is version 5.0 compliant, but the Blackberry Development Environment requires 6.)
+	
+* System Requirements for the Blackberry JDE Development Environment
+
+	* Java SE JDK v6.0
+	* Windows® 2000 SPI or later, or Windows XP
+	* Windows Vista (BlackBerry JDE v4.2.1 and higher)
+	* Eclipse 3.4 (the JDE plugin does not run on 3.5 yet)
+	* Monitor with a resolution of 1024 x 768 or higher
+	
+The Blackberry Development Environment is supported only on Windows. Cross Platform support is coming later this year.
+ 
+
+* Create your first Mobile Cloud App (a.k.a Moblet)
+
+In your distribution, go to the directory AppCreator. Inside the directory, use a tool called the
+'appcreator.bat' (Windows), 'appcreator.sh' (Linux and Mac) to generate a skeleton 'Moblet' project
+
+<programlisting>appcreator.bat</programlisting>
+
+This will generate a Maven-based skeleton for the Mobile App. Each generated project has the following three maven modules:
+
+* app-rimos - Contains the device side application code for the Blackberry OS - version 4.3.0 and higher
+
+* cloud - Contains the "OpenMobster Cloud Server" based artifacts which will be deployed on the server side
+
+* moblet - Represents a "OpenMobster Moblet" which combines both the device side and server side artifacts into one single
+artifact. The moblet is deployed as a simple jar file into the "OpenMobster Cloud Server". When the moblet is deployed into the Cloud
+server it is registered with the built-in App store. Once registered with the App Store, this moblet can be easily downloaded, installed, and
+managed on the actual device via the "App Store" functionality under the "Cloud Manager" app 
+
+
+* Run the "Cloud Server" in development mode
+
+Go to the 'cloud' module
+
+<programlisting>cd cloud</programlisting>
+
+Run the "Cloud Server" in development mode
+
+<programlisting>mvn -PrunCloud integration-test</programlisting>
+
+This will start the "Cloud Server" and the server artifacts corresponding to this project. This is a 
+fully functional instance of the "Cloud Server" ready to process traffic from your moblets.
+
+
+* Build and Deploy the "Moblet" in a Blackberry Simulator
+
+Go to the 'app-rimos' module
+
+<programlisting>app-rimos</programlisting>
+
+Build and deploy the 'Moblet' into the Simulator
+
+<programlisting>mvn install</programlisting>
+
+To improve development productivity "mvn package or mvn install" command installs the required "MobileCloud" runtime 
+into the specified Blackeberry Simulator. This binary improves developer productivity by automating the manual provisioning 
+processes by provisioning a Cloud account under the name: "blah2@gmail.com".
+
+Note: This is a strict development stage only optimization and should not be used in a real world setting.
+
+The location of the simulator is specified in the "RIM_JDE_HOME" environment variable.
+
+
+* Run the Moblet in the Simulator
+
+Run the Blackberry Simulator. It will take a while and once it loads, the Moblet and the MobileCloud should
+be installed and ready for use.
+
+You can go to the "Apps" and there should be an icon for "HelloMobster". Click the icon.
+
+You should see the following screens:
+
+<screenshots>
+
+* Making some changes
+
+Inside the 'cloud' module, go to 'org.openmobster.core.examples.rpc.DemoMobileBeanService.java' file and modify
+the 'invoke' implementation as follows:
+
+Change the line 
+
+<programlisting>response.setAttribute(name, "response://"+value);</programlisting>
+
+to 
+
+<programlisting>response.setAttribute(name, "response://hellomobster/"+value);</programlisting>
+
+Re-start the 'Cloud Server' using 
+
+<programlisting>mvn -PrunCloud integration-test</programlisting>
+
+* Run in production mode
+
+Inside the 'moblet' module, execute:
+
+<programlisting>mvn install</programlisting>
+
+This will generate a target/${project.name}-${project.version}-moblet.jar. Copy this file to your JBoss
+'openmobster' instance at openmobster/deploy. Run the moblet in the simulator
+
+Welcome to the OpenMobster Community. Your are officially a "Mobster" ;)
+
+
+

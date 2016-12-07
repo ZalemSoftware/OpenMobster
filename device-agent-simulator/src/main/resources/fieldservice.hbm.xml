@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">        
+<hibernate-mapping>    
+    <class name="test.openmobster.device.agent.api.Ticket" table="ticket">
+        <id name="id" column="id">
+            <generator class="native"/>
+        </id>
+        <property name="ticketId" type="string" column="ticketId"
+        not-null="true"
+        unique="true"
+        />        
+        <property name="name" type="string" column="name"
+        not-null="true"
+        />
+        
+        <!-- one-to-one unidirectional relationship with the CustomerInfo object -->
+        <many-to-one name="customerInfo" class="test.openmobster.device.agent.api.CustomerInfo" column="customer_info_id"
+        not-null="true"
+        cascade="save-update"
+        lazy="false"
+        />
+        
+        <!-- one-to-one unidirectional relationship with the Equipment object -->
+        <many-to-one name="equipment" class="test.openmobster.device.agent.api.Equipment" column="equipment_id"        
+        cascade="save-update"
+        lazy="false"
+        />
+        
+        <!-- one-to-one unidirectional relationship with the Technician object -->
+        <many-to-one name="technician" class="test.openmobster.device.agent.api.Technician" column="technician_id"        
+        cascade="save-update"
+        lazy="false"
+        />
+        
+        <!-- one-to-many unidirectional relationship with the Note object -->
+        <list name="notes" table="ticket_note_assoc" 
+        lazy="false" 
+        cascade="all">
+        	<key column="ticketId"/>
+        	<list-index column="array_index"/>     	
+        	<many-to-many class="test.openmobster.device.agent.api.Note" column="noteId"
+            unique="true"            
+            />
+    	</list>
+    	
+    	<!-- one-to-many unidirectional relationship with the Part object -->
+        <list name="parts" table="ticket_part_assoc" 
+        lazy="false" 
+        cascade="all">
+        	<key column="ticketId"/>
+        	<list-index column="array_index"/>     	
+        	<many-to-many class="test.openmobster.device.agent.api.Part" column="partId"
+            unique="true"            
+            />
+    	</list>                                                  
+    </class>		
+    <class name="test.openmobster.device.agent.api.Technician" table="technician">
+        <id name="id" column="id">
+            <generator class="native"/>
+        </id>
+        <property name="employeeId" type="string" column="employeeId"
+        not-null="true"
+        unique="true"
+        />        
+        <property name="name" type="string" column="name"
+        not-null="true"
+        />
+        <property name="status" type="string" column="status"
+        not-null="false"
+        />                          
+    </class>    
+    <class name="test.openmobster.device.agent.api.CustomerInfo" table="customer_info">
+        <id name="id" column="id">
+            <generator class="native"/>
+        </id>
+        <property name="customerId" type="string" column="customerId"
+        not-null="true"
+        />        
+        <property name="name" type="string" column="name"
+        not-null="true"
+        />
+        <property name="comments" type="string" column="comments"
+        not-null="false"
+        />   
+    </class>
+    <class name="test.openmobster.device.agent.api.Note" table="ticket_note">
+        <id name="id" column="id">
+            <generator class="native"/>
+        </id>
+        <property name="note" type="string" column="note"
+        not-null="true"
+        />                   
+    </class>
+    <class name="test.openmobster.device.agent.api.Part" table="part">
+        <id name="id" column="id">
+            <generator class="native"/>
+        </id>
+        <property name="name" type="string" column="name"
+        not-null="true"
+        />                   
+    </class>
+    <class name="test.openmobster.device.agent.api.Equipment" table="equipment">
+        <id name="id" column="id">
+            <generator class="native"/>
+        </id>
+        <property name="name" type="string" column="name"
+        not-null="true"
+        />                   
+    </class>     
+</hibernate-mapping>

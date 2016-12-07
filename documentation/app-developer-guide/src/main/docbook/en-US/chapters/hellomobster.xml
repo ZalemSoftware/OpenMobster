@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="hellomobster">
+	<chapterinfo>
+		<author>
+			<firstname>openmobster</firstname>
+			<surname>at gmail.com</surname>
+			<email>openmobster@gmail.com</email>
+		</author>
+	</chapterinfo>
+	<title>Get Started: Hello Mobster</title>
+	<sect1>
+		<para>
+			In the spirit of confidence building when using a new technology,
+			lets start with a simple app. We will
+			call it the
+			<emphasis role='bold'>HelloSync</emphasis> app.
+		</para>
+		<sect2>
+			<title>System Requirements</title>
+			<sect3>
+				<title>Cloud Server</title>
+				<para>
+					<itemizedlist>
+						<listitem>Java SE JDK v6.0</listitem>
+					</itemizedlist>
+				</para>
+			</sect3>
+		</sect2>
+	</sect1>
+	<sect1>
+		<title>Create your first Mobile Cloud App</title>
+		<para>
+			Download an OpenMobster distribution from here:
+			<ulink url='http://code.google.com/p/openmobster/downloads/list'>Downloads</ulink>
+			.
+		</para>
+		<para>
+			In your distribution, go to the directory AppCreator. Inside the
+			directory, use a tool called the
+			'appcreator.bat' (Windows), 'appcreator.sh' (Linux and Mac) to generate a skeleton
+			project
+			<programlisting><![CDATA[
+				
+		appcreator.bat		
+		]]></programlisting>
+			This will generate a Maven-based skeleton for the Mobile App. Each
+			generated project has the following maven modules:
+			<itemizedlist>
+   				<listitem>
+   					<emphasis role='bold'>cloud:</emphasis> Contains the src for the Cloud-side Channel component. Java code is located under <emphasis>src/main/java</emphasis>, 
+   					and configuration is located under <emphasis>src/main/resources</emphasis>.
+   				</listitem>
+   				<listitem>
+   					<emphasis role='bold'>app-android:</emphasis> Contains the src for the Android App. Java code is located under <emphasis>src/main/java</emphasis>,
+   					Configuration is located under <emphasis>src/main/resources/moblet-app</emphasis>. Besides the OpenMobster component setup, the Android SDK specific setup is located under
+   					<emphasis>AndroidManifest.xml, and res directory</emphasis>
+   				</listitem>
+   				<listitem>
+   					<emphasis role='bold'>moblet:</emphasis> This is an assembly component that packages this App into a jar file ready for deployment in a JBoss AS based OpenMobster instance.
+   				</listitem>
+   			</itemizedlist>
+		</para>
+	</sect1>
+	
+	<sect1>
+   		<title>Developing the <emphasis role='bold'>Channel</emphasis></title>
+   		
+   		<sect2>
+   			<title>Step 1: Write the HelloSyncBean</title>
+   			<para>
+   			The <emphasis>HelloSyncBean</emphasis> is a simple annotated <emphasis>MobileBean</emphasis> that carries the domain level information
+   			that will be synchronized with the device. This information is encapsulated inside a <emphasis>MobileBean</emphasis>
+   			instance. It will be used by the native App on the device side. This bean implements the <emphasis>org.openmobster.cloud.api.sync.MobileBean</emphasis> interface.
+   			This is a simple marker interface. It does not require any methods to be implemented.
+   			</para>
+   			<para>
+<programlisting><![CDATA[
+package com.hello.sync;
+
+import org.openmobster.cloud.api.sync.MobileBean;
+import org.openmobster.cloud.api.sync.MobileBeanId;
+
+public class HelloSyncBean implements MobileBean 
+{
+	private static final long serialVersionUID = 1L;
+
+	@MobileBeanId
+	private String oid;
+	
+	private String message;
+	
+	public HelloSyncBean()
+	{
+		
+	}
+
+	public String getOid() 
+	{
+		return oid;
+	}
+
+	public void setOid(String oid) 
+	{
+		this.oid = oid;
+	}
+
+	public String getMessage() 
+	{
+		return message;
+	}
+
+	public void setMessage(String message) 
+	{
+		this.message = message;
+	}
+}
+]]>
+</programlisting>
+   			</para>
+   		</sect2>
+   		
+   		<sect2>
+   			<title>Step 2: Write the HelloSyncChannel</title>
+   			<para>
+   			A Channel serves as a gateway for integrating on-device model/data objects with the
+ 			server-side backend storage systems such as relational databases, email servers, content repositories, or 
+    		Enterprise systems like CRMs, ERPs etc. It provides a simple CRUD (Create, Read, Update, and Delete)
+    		interface to expose the backend data. The Channel is specifically designed such that the Developer does
+    		not have to worry about any low-level state management, and synchronization issues.
+   			</para>
+   			<para>
+   			For sake of simplicity, we will only implement a small portion of the <emphasis>org.openmobster.cloud.api.sync.Channel</emphasis> interface. 
+   			</para>
+   			<sect3>
+   				<title>Implement the <emphasis>org.openmobster.cloud.api.sync.Channel</emphasis> interface</title>
+<programlisting><![CDATA[
+package com.hello.sync;
+
+import java.util.Date;
+import java.util.List;
+import java.util.ArrayList;
+
+import org.openmobster.cloud.api.sync.Channel;
+import org.openmobster.cloud.api.sync.ChannelInfo;
+import org.openmobster.cloud.api.sync.MobileBean;
+
+import org.openmobster.core.security.device.Device;
+
+@ChannelInfo(uri="hellosync", mobileBeanClass="com.hello.sync.HelloSyncBean")
+public class HelloSyncChannel implements Channel 
+]]>
+</programlisting>
+            	<para>
+            		Annotate the channel class with <emphasis>org.openmobster.cloud.api.sync.ChannelInfo</emphasis> annotation.
+            		<itemizedlist>
+            			<listitem>
+            				<emphasis role='bold'>uri: </emphasis> Unique value for registering the channel with the Channel Framework.
+            			</listitem>
+            			<listitem>
+            				<emphasis role='bold'>mobileBeanClass: </emphasis> Class of the <emphasis>MobileBean</emphasis> that will be managed via this channel.
+            			</listitem>
+            		</itemizedlist>
+            	</para>
+   			</sect3>
+   			
+   			<sect3>
+   				<title>Implement <emphasis>bootup</emphasis> method</title>
+<programlisting><![CDATA[
+@Override
+public List<? extends MobileBean> bootup() 
+{
+	List<HelloSyncBean> bootupBeans = new ArrayList<HelloSyncBean>();
+	
+	//Just using mock data...Usually this will extract the information from a backend service or database
+	for(int i=0; i<5; i++)
+	{
+		HelloSyncBean syncBean = new HelloSyncBean();
+		
+		syncBean.setOid(""+i);
+		syncBean.setMessage("hello from "+syncBean.getOid());
+		
+		bootupBeans.add(syncBean);
+	}
+	
+	return bootupBeans;
+}
+]]>
+</programlisting>
+			<para>
+				This method only returns the essential beans needed to make the App functional. It can be thought of as providing enough information for <emphasis>booting</emphasis> up the App.
+				The rest of the beans are synchronized silently in the background without requiring any manual intervention or docking the device to a desktop, etc.
+				This allows instant usage of the App without having to wait a few hours for all the required data to be loaded.
+			</para>
+   			</sect3>
+   			
+   			<sect3>
+   				<title>Implement <emphasis>scanForNew</emphasis> method</title>
+ <programlisting><![CDATA[
+@Override
+public String[] scanForNew(Device device, Date lastScanTimestamp) 
+{
+	//In this example, it pushes something every scan..Just for push demo
+	return new String[]{"push:1",
+	"push:2"};
+}
+ ]]>
+ </programlisting>
+	 			<para>
+	 				This method checks with the backend service if a <emphasis role='bold'>new</emphasis> MobileBean instance has been created on the backend connected to by the channel.
+					Based on that it would send the just new bean <emphasis role='bold'>ids</emphasis> back, or return null, if nothing new is available.
+					If something new is available, this information is automatically synced and notified on the user's mobile device.
+					If not, nothing happens on the device side.
+					<itemizedlist>
+						<listitem>
+							<emphasis role='bold'>device: </emphasis> provides the context around which device should this call apply to. Backend information is linked via the user
+							identity associated with the device
+						</listitem>
+						<listitem>
+							<emphasis role='bold'>lastScanTimestamp: </emphasis> provides when the last scan occurred. This way developer knows to only include beans that may have been created in
+							the backend since this period in time.
+						</listitem>
+					</itemizedlist>
+	 			</para>
+   			</sect3>
+   			
+   			<sect3>
+   				<title>Implement <emphasis>read</emphasis> method</title>
+<programlisting><![CDATA[
+@Override
+public MobileBean read(String id) 
+{
+	//Just mock data....Usually the bean 
+	//would be constructed using the data 
+	//from a backend service or database
+	HelloSyncBean syncBean = new HelloSyncBean();
+	syncBean.setOid(id);
+	syncBean.setMessage("hello from "+syncBean.getOid());
+	
+	return syncBean;
+}
+]]>
+</programlisting>
+				<para>
+					This method provides a fully loaded <emphasis>MobileBean</emphasis> instance associated with the supplied <emphasis>id</emphasis>.
+				</para>
+   			</sect3>
+   		</sect2>
+   		
+   		<sect2>
+   			<title>Step 3: Configuration</title>
+   			<para>
+   				Register this channel using the <emphasis role='bold'>cloud/src/resources/META-INF/openmobster-config.xml</emphasis> file.
+   			</para>
+ <programlisting><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+
+<deployment xmlns="urn:jboss:bean-deployer:2.0">
+   <bean name="hellosync" class="com.hello.sync.HelloSyncChannel">
+   		<depends>services://MobileObjectMonitor</depends>
+   		<depends>services://MobileServiceMonitor</depends>
+   </bean>  
+</deployment>
+ ]]>
+ </programlisting>
+   		</sect2>
+   </sect1>
+   
+   <sect1>
+   		<title>Developing the <emphasis role='bold'>Android App</emphasis></title>
+   		
+   		<sect2>
+   			<title>Step 1: Write the HomeScreen</title>
+   			<para>
+   			Using the OpenMobster MVC Framework requires at the very least a very basic understanding of <ulink url='http://developer.android.com/guide/topics/fundamentals.html'>Android Application Fundamentals</ulink>. A high level understanding of the concept
+   			of <emphasis role='bold'>Activities</emphasis> is a bonus. The <emphasis role='bold'>HomeScreen</emphasis> component represents the main/home screen that is launched when the Android App is launched.
+   			The full src code of the <emphasis role='bold'>HomeScreen</emphasis> component can be found <ulink url='http://openmobster.googlecode.com/svn/samples/hellosync/app-android/src/main/java/com/hello/sync/app/HomeScreen.java'>here</ulink>. In order to keep the tutorial clean, we will only highlight the
+   			aspect that deals with displaying the <emphasis role='bold'>HelloSyncBeans</emphasis> that are synchronized between the Cloud and the device. This is accomplished using
+   			the following snippet of code:
+   			</para>
+<programlisting><![CDATA[
+@Override
+public void postRender()
+{
+	ListActivity listApp = (ListActivity)Registry.getActiveInstance().
+	getContext();
+	
+	.............
+	
+	//Show the List of the "HelloSyncBeans" automatically synced and stored on the device
+	//As a developer you only deal with the MobileBean component...
+	//No low-level sync stuff to worry about
+	if(MobileBean.isBooted("hellosync"))
+	{
+		MobileBean[] helloBeans = MobileBean.readAll("hellosync");
+		
+		//Preparing the ui with data stored in the beans..in the message field
+		String[] ui = new String[helloBeans.length];
+		for(int i=0,size=ui.length;i<size;i++)
+		{
+			ui[i] = helloBeans[i].getValue("message");
+		}
+		
+		//Showing the data in the list
+		listApp.setListAdapter(new ArrayAdapter(listApp, 
+	    android.R.layout.simple_list_item_1, 
+	    ui));
+	}
+	
+	............
+}
+]]>
+</programlisting>
+   		</sect2>
+   		
+   		<sect2>
+   			<title>Step 2: Configuration</title>
+   			<para>
+				Configure the Sync and Push systems using <emphasis role='bold'>app-android/src/resources/openmobster-app.xml</emphasis>
+			</para>
+<programlisting><![CDATA[
+<app-conf>
+	<encryption>false</encryption>
+	
+	<push>
+		<launch-activity-class>org.openmobster.core.mobileCloud.android_native.framework.ListApp</launch-activity-class>
+		<icon-name>push</icon-name>
+	</push>
+	
+	<!-- Registers the Cloud channels used by the App -->
+	<channels>
+		<channel name='hellosync'/>
+	</channels>
+</app-conf>
+]]>
+</programlisting>
+   			<para>
+   				Configure the OpenMobster MVC Framework used by this App using <emphasis role='bold'>app-android/src/resources/moblet-app/moblet-app.xml</emphasis>
+   			</para>
+<programlisting><![CDATA[
+<moblet-app>
+    <!-- Registers the home/main screen of the app -->
+    <bootstrap>
+    	<screen>com.hello.sync.app.HomeScreen</screen>
+    </bootstrap>
+    
+    <!-- Registers App Commands with the OpenMobster Command Framework. App Commands 
+    are fired in response to events generated by user interactions 
+    -->
+    <commands>
+    	<command id='/hellosync/reset'>com.hello.sync.app.ResetChannel</command>
+    </commands>					
+</moblet-app>
+]]>
+</programlisting>
+			<para>
+				Android platform specific configuration can be found under: <emphasis>android-app/AndroidManifest.xml</emphasis>, <emphasis>android-app/res/layout/home.xml</emphasis>,
+				and <emphasis>android-app/res/strings.xml</emphasis>
+			</para>
+   		</sect2>
+   </sect1>
+   
+   <sect1>
+   		<title>Running the App</title>
+   		<itemizedlist>
+   			<listitem>
+   				Build the whole HelloSync project
+   				<programlisting><![CDATA[mvn clean install]]></programlisting>
+   			</listitem>
+   			<listitem>
+   				Start the Cloud Server. Under the HelloSync project, go to the <emphasis role='bold'>cloud</emphasis> directory, and type in:
+   				<programlisting><![CDATA[				mvn -PrunCloud integration-test]]></programlisting>
+   			</listitem>
+   			<listitem>
+   				Start the Android emulator. <ulink url='http://developer.android.com/guide/developing/tools/emulator.html'>Here</ulink> are more details about using the Android Emulator
+   				<programlisting><![CDATA[				emulator -avd droid]]></programlisting>
+   				and
+   				<programlisting><![CDATA[				ddms]]></programlisting>
+   			</listitem>
+   			<listitem>
+   				Once the emulator is started and ddms is connected, install the <emphasis role='bold'>HelloSync App</emphasis>. Go to the <emphasis role='bold'>app-android</emphasis> directory and type in:
+   				<programlisting><![CDATA[				mvn -Papp-hot-deploy install]]></programlisting>
+   			</listitem>
+   			<listitem>
+   				Launch the HelloSync App.
+   			</listitem>
+   			<listitem>
+   				At first launch you will be guided through an <emphasis role='bold'>Activation</emphasis> process of the App with the Cloud Server. This is a security measure to make sure only securely authenticated
+   				users are allowed to access the data in the Cloud.
+   			</listitem>
+   			<listitem>
+   				You can download the entire HelloSync App here: <ulink url='http://openmobster.googlecode.com/svn/samples/hellosync-2.4.zip'>HelloSyncApp</ulink>
+   			</listitem>
+   		</itemizedlist>
+   </sect1>
+   
+   <sect1>
+   		<title>JBoss Deployment</title>
+   		<para>
+   			Once the App and its corresponding Cloud artifacts are developed and tested end-to-end, you can aggregate all these artifacts into a single jar ready for deployment into a JBoss AS based Cloud Server. For instructions on setting up your JBoss instance please see <link linkend='/installation/jboss'>JBoss Setup</link>.
+   		</para>
+   		<para>
+   			This single artifact when deployed into the JBoss AS based Cloud Server performs all necessary registrations with the system and is ready for deploying the app onto a real device via the Internet.
+   			<itemizedlist>
+   				<listitem>Go to the moblet module: <emphasis role='bold'>cd moblet</emphasis></listitem>
+   				<listitem>Generate the app and deploy into the JBoss AS instance: <emphasis role='bold'>mvn -Pjboss-install install</emphasis></listitem>
+   			</itemizedlist>
+   		</para>
+   		<para>
+   			<emphasis role='bold'>Note:</emphasis> Before executing this deployment command you will need to make sure that the <emphasis role='bold'>jboss.home</emphasis> property is properly set to your location of the JBoss 5.1.0.GA AS. You can change this value in the <emphasis role='bold'>moblet/pom.xml</emphasis> file
+   		</para>
+   </sect1>
+</chapter>

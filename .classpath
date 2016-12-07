@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="api/src/main/java"/>
+	<classpathentry kind="src" path="api/src/test/java"/>
+	<classpathentry kind="src" path="api-cloudConnector/src/main/java"/>
+	<classpathentry kind="src" path="common/src/main/java"/>
+	<classpathentry excluding="**" kind="src" path="common/src/main/resources"/>
+	<classpathentry kind="src" path="common/src/test/java"/>
+	<classpathentry excluding="**" kind="src" path="common/src/test/resources"/>
+	<classpathentry kind="src" path="services/src/main/java"/>
+	<classpathentry excluding="**" kind="src" path="services/src/main/resources"/>
+	<classpathentry kind="src" path="services/src/test/java"/>
+	<classpathentry excluding="**" kind="src" path="services/src/test/resources"/>
+	<classpathentry kind="src" path="synchronizer/src/main/java"/>
+	<classpathentry excluding="**" kind="src" path="synchronizer/src/main/resources"/>
+	<classpathentry kind="src" path="synchronizer/src/test/java"/>
+	<classpathentry excluding="**" kind="src" path="synchronizer/src/test/resources"/>
+	<classpathentry kind="src" path="dataService/src/main/java"/>
+	<classpathentry excluding="**" kind="src" path="dataService/src/main/resources"/>
+	<classpathentry kind="src" path="dataService/src/test/java"/>
+	<classpathentry excluding="**" kind="src" path="dataService/src/test/resources"/>
+	<classpathentry kind="src" path="mobileObject/src/main/java"/>
+	<classpathentry excluding="**" kind="src" path="mobileObject/src/main/resources"/>
+	<classpathentry kind="src" path="mobileObject/src/test/java"/>
+	<classpathentry excluding="**" kind="src" path="mobileObject/src/test/resources"/>
+	<classpathentry kind="src" path="mobileContainer/src/main/java"/>
+	<classpathentry excluding="**" kind="src" path="mobileContainer/src/main/resources"/>
+	<classpathentry kind="src" path="mobileContainer/src/test/java"/>
+	<classpathentry excluding="**" kind="src" path="mobileContainer/src/test/resources"/>
+	<classpathentry kind="src" path="deviceService/src/main/java"/>
+	<classpathentry excluding="**" kind="src" path="deviceService/src/main/resources"/>
+	<classpathentry kind="src" path="deviceService/src/test/java"/>
+	<classpathentry excluding="**" kind="src" path="deviceService/src/test/resources"/>
+	<classpathentry kind="src" path="security/src/main/java"/>
+	<classpathentry excluding="**" kind="src" path="security/src/main/resources"/>
+	<classpathentry kind="src" path="security/src/test/java"/>
+	<classpathentry excluding="**" kind="src" path="security/src/test/resources"/>
+	<classpathentry kind="src" path="agent-provisioning/src/main/java"/>
+	<classpathentry excluding="**" kind="src" path="agent-provisioning/src/main/resources"/>
+	<classpathentry kind="src" path="agent-provisioning/src/test/java"/>
+	<classpathentry excluding="**" kind="src" path="agent-provisioning/src/test/resources"/>
+	<classpathentry kind="src" path="moblet-management/src/main/java"/>
+	<classpathentry excluding="**" kind="src" path="moblet-management/src/main/resources"/>
+	<classpathentry kind="src" path="moblet-management/src/test/java"/>
+	<classpathentry excluding="**" kind="src" path="moblet-management/src/test/resources"/>
+	<classpathentry kind="src" path="console/src/main/java"/>
+	<classpathentry excluding="**" kind="src" path="console/src/main/resources"/>
+	<classpathentry kind="src" path="console/src/test/java"/>
+	<classpathentry excluding="**" kind="src" path="console/src/test/resources"/>
+	<classpathentry kind="src" path="console-server/src/main/java"/>
+	<classpathentry excluding="**" kind="src" path="console-server/src/main/resources"/>
+	<classpathentry kind="src" path="console-server/src/test/java"/>
+	<classpathentry excluding="**" kind="src" path="console-server/src/test/resources"/>
+	<classpathentry kind="src" path="sar/src/main/java"/>
+	<classpathentry excluding="**" kind="src" path="sar/src/main/resources"/>
+	<classpathentry kind="src" path="device-agent-simulator/src/main/java"/>
+	<classpathentry excluding="**" kind="src" path="device-agent-simulator/src/main/resources"/>
+	<classpathentry kind="src" path="device-agent-simulator/src/test/java"/>
+	<classpathentry excluding="**" kind="src" path="device-agent-simulator/src/test/resources"/>
+	<classpathentry kind="src" path="device-agent-frameworks/src/main/java"/>
+	<classpathentry excluding="**" kind="src" path="device-agent-frameworks/src/main/resources"/>
+	<classpathentry kind="src" path="device-agent-frameworks/src/test/java"/>
+	<classpathentry excluding="**" kind="src" path="device-agent-frameworks/src/test/resources"/>
+	<classpathentry kind="src" path="server-testsuite/src/main/java"/>
+	<classpathentry excluding="**" kind="src" path="server-testsuite/src/main/resources"/>
+	<classpathentry kind="src" path="server-testsuite/src/test/java"/>
+	<classpathentry excluding="**" kind="src" path="server-testsuite/src/test/resources"/>
+	<classpathentry kind="src" path="testdrive-server/src/main/java"/>
+	<classpathentry excluding="**" kind="src" path="testdrive-server/src/main/resources"/>
+	<classpathentry kind="src" path="testdrive-server/src/test/java"/>
+	<classpathentry excluding="**" kind="src" path="testdrive-server/src/test/resources"/>
+	<classpathentry kind="src" path="push-apn/src/main/java"/>
+	<classpathentry kind="src" path="push-apn/src/test/java"/>
+	<classpathentry kind="src" path="location/src/main/java"/>
+	<classpathentry kind="src" path="location/src/test/java"/>
+	<classpathentry kind="src" path="d2d/src/main/java"/>
+	<classpathentry kind="src" path="d2d/src/test/java"/>
+	<classpathentry kind="src" path="clustering/src/main/java"/>
+	<classpathentry kind="src" path="clustering/src/test/java"/>
+	<classpathentry kind="src" path="android/api/src/main/java"/>
+	<classpathentry kind="src" path="android/native-framework/src/main/java"/>
+	<classpathentry kind="src" path="android/cloudManager/src/main/java"/>
+	<classpathentry kind="src" path="android/common/src/main/java"/>
+	<classpathentry kind="src" path="android/mobileObject/src/main/java"/>
+	<classpathentry kind="src" path="android/bus/src/main/java"/>
+	<classpathentry kind="src" path="android/connection/src/main/java"/>
+	<classpathentry kind="src" path="android/sync/src/main/java"/>
+	<classpathentry kind="src" path="android/mobileCloud-runtime/src/main/java"/>
+	<classpathentry kind="src" path="android/moblet-runtime/src/main/java"/>
+	<classpathentry kind="src" path="android/dm/src/main/java"/>
+	<classpathentry kind="src" path="android/location/src/main/java"/>
+	<classpathentry kind="src" path="android/fuseapp/app-android/src/main/java"/>
+	<classpathentry kind="src" path="android/fuseapp/cloud/src/main/java"/>
+	<classpathentry kind="src" path="android/test-suite/test-framework/src/main/java"/>
+	<classpathentry kind="src" path="android/test-suite/test-api-port/src/main/java"/>
+	<classpathentry kind="src" path="android/test-suite/test-common-port/src/main/java"/>
+	<classpathentry kind="src" path="android/test-suite/test-mobileObject-port/src/main/java"/>
+	<classpathentry kind="src" path="android/test-suite/test-bus-port/src/main/java"/>
+	<classpathentry kind="src" path="android/test-suite/test-sync-port/src/main/java"/>
+	<classpathentry kind="src" path="android/test-suite/test-connection-port/src/main/java"/>
+	<classpathentry kind="src" path="android/test-suite/test-native-framework/src/main/java"/>
+	<classpathentry kind="src" path="android/test-suite/test-cloud-as-service/src/main/java"/>
+	<classpathentry kind="src" path="android/test-suite/test-dm/src/main/java"/>
+	<classpathentry kind="src" path="android/test-suite/test-performance/src/main/java"/>
+	<classpathentry kind="src" path="android/test-suite/test-location/src/main/java"/>
+	<classpathentry kind="src" path="android/test-suite/test-encryption/src/main/java"/>
+	<classpathentry kind="src" path="android/ide_hack"/>
+	<classpathentry kind="src" path="phonegap/plugin/src/main/java"/>
+	<classpathentry kind="src" path="phonegap/plugin-sandbox/src/main/java"/>
+	<classpathentry kind="src" path="phonegap/plugin-jquery/src/main/java"/>
+	<classpathentry kind="src" path="phonegap/plugin-sandbox-cloud/src/main/java"/>
+	<classpathentry kind="src" path="phonegap/plugin-jquery-cloud/src/main/java"/>
+	<classpathentry kind="src" path="phonegap/mbaas-plugin/src/main/java"/>
+	<classpathentry kind="src" path="phonegap/mbaas-plugin-sandbox/src/main/java"/>
+	<classpathentry kind="src" path="phonegap/hybrid-sample/src/main/java"/>
+	<classpathentry kind="src" path="dev-tools/android-devcloud/src/main/java"/>
+	<classpathentry kind="src" path="dev-tools/dev-cloudServer/src/main/java"/>
+	<classpathentry kind="src" path="dev-tools/appCreator/src/main/java"/>
+	<classpathentry kind="src" path="android/javascript-bridge/src/main/java"/>
+	<classpathentry kind="src" path="android/test-suite/testapp/cloud/src/main/java"/>
+	<classpathentry kind="src" path="android/test-suite/testapp/app-android/src/main/java"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="var" path="M2_REPO/javax/activation/activation/1.1/activation-1.1.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/hibernate/hibernate/3.2.6.ga/hibernate-3.2.6.ga.jar"/>
+	<classpathentry kind="var" path="M2_REPO/hsqldb/hsqldb/1.8.0.7/hsqldb-1.8.0.7.jar"/>
+	<classpathentry kind="var" path="M2_REPO/asm/asm/1.5.3/asm-1.5.3.jar"/>
+	<classpathentry kind="var" path="M2_REPO/commons-codec/commons-codec/1.3/commons-codec-1.3.jar"/>
+	<classpathentry kind="var" path="M2_REPO/commons-collections/commons-collections/2.1.1/commons-collections-2.1.1.jar"/>
+	<classpathentry kind="var" path="M2_REPO/commons-logging/commons-logging/1.0.4/commons-logging-1.0.4.jar"/>
+	<classpathentry kind="var" path="M2_REPO/javax/jms/jms/1.1/jms-1.1.jar"/>
+	<classpathentry kind="var" path="M2_REPO/junit/junit/3.8.2/junit-3.8.2.jar"/>
+	<classpathentry kind="var" path="M2_REPO/log4j/log4j/1.2.15/log4j-1.2.15.jar"/>
+	<classpathentry kind="var" path="M2_REPO/javax/mail/mail/1.4/mail-1.4.jar"/>
+	<classpathentry kind="var" path="M2_REPO/commons-beanutils/commons-beanutils/1.7.0/commons-beanutils-1.7.0.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/apache/mina/mina-core/2.0.7/mina-core-2.0.7.jar"/>
+	<classpathentry kind="var" path="M2_REPO/commons-validator/commons-validator/1.3.1/commons-validator-1.3.1.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/jbpm/jbpm3/jbpm-jpdl/3.3.1.GA/jbpm-jpdl-3.3.1.GA.jar"/>
+	<classpathentry kind="var" path="M2_REPO/dom4j/dom4j/1.6.1/dom4j-1.6.1.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/jboss/jboss-common-core/2.2.1.GA/jboss-common-core-2.2.1.GA.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/jboss/microcontainer/jboss-kernel/2.0.4.GA/jboss-kernel-2.0.4.GA.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/jboss/microcontainer/jboss-dependency/2.0.4.GA/jboss-dependency-2.0.4.GA.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/hornetq/hornetq-core/2.0.0.BETA5/hornetq-core-2.0.0.BETA5.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/hornetq/hornetq-core-client/2.0.0.BETA5/hornetq-core-client-2.0.0.BETA5.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/hornetq/hornetq-jms/2.0.0.BETA5/hornetq-jms-2.0.0.BETA5.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/hornetq/hornetq-jms-client/2.0.0.BETA5/hornetq-jms-client-2.0.0.BETA5.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/thoughtworks/xstream/xstream/1.3.1/xstream-1.3.1.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/googlecode/json-simple/json-simple/1.1/json-simple-1.1.jar"/>
+	<classpathentry kind="var" path="M2_REPO/javax/servlet/servlet-api/2.4/servlet-api-2.4.jar"/>
+	<classpathentry kind="var" path="M2_REPO/javax/transaction/jta/1.1/jta-1.1.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/codehaus/plexus/plexus-classworlds/1.2-alpha-10/plexus-classworlds-1.2-alpha-10.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/codehaus/plexus/plexus-component-annotations/1.0-alpha-1/plexus-component-annotations-1.0-alpha-1.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/codehaus/plexus/plexus-component-api/1.0-alpha-32/plexus-component-api-1.0-alpha-32.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/codehaus/plexus/plexus-container-default/1.0-alpha-32/plexus-container-default-1.0-alpha-32.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/codehaus/plexus/plexus-utils/1.4.5/plexus-utils-1.4.5.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/apache/geronimo/gshell/support/gshell-ansi/1.0-alpha-1/gshell-ansi-1.0-alpha-1.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/apache/geronimo/gshell/gshell-cli/1.0-alpha-1/gshell-cli-1.0-alpha-1.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/apache/geronimo/gshell/support/gshell-clp/1.0-alpha-1/gshell-clp-1.0-alpha-1.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/apache/geronimo/gshell/gshell-command-api/1.0-alpha-1/gshell-command-api-1.0-alpha-1.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/apache/geronimo/gshell/support/gshell-common/1.0-alpha-1/gshell-common-1.0-alpha-1.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/apache/geronimo/gshell/gshell-core/1.0-alpha-1/gshell-core-1.0-alpha-1.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/apache/geronimo/gshell/support/gshell-i18n/1.0-alpha-1/gshell-i18n-1.0-alpha-1.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/apache/geronimo/gshell/gshell-parser/1.0-alpha-1/gshell-parser-1.0-alpha-1.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/apache/geronimo/gshell/support/gshell-prefs/1.0-alpha-1/gshell-prefs-1.0-alpha-1.jar"/>
+	<classpathentry kind="var" path="M2_REPO/jline/jline/0.9.93/jline-0.9.93.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/apache/httpcomponents/httpclient/4.1.2/httpclient-4.1.2.jar"/>
+	<classpathentry kind="var" path="ANDROID_HOME/platforms/android-11/android.jar"/>
+	<classpathentry kind="var" path="ANDROID_HOME/add-ons/addon-google_apis-google-11/libs/maps.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/phonegap/phonegap/1.5.0/phonegap-1.5.0.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/apache/cordova/cordova/2.7.0/cordova-2.7.0.jar"/>
+	<classpathentry kind="var" path="M2_REPO/javapns/javapns-jdk15/165/javapns-jdk15-165.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/jgroups/jgroups/3.2.3.Final/jgroups-3.2.3.Final.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/netty/netty/3.5.10.Final/netty-3.5.10.Final.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

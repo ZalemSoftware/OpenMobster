@@ -1,0 +1,16 @@
+<moblet-app>
+	<bootstrap>
+    	<screen>org.openmobster.core.dev.tools.android.HomeScreen</screen>
+    </bootstrap>
+    
+    <screens>
+		<screen id="manualSync">
+			org.openmobster.core.dev.tools.android.ManualSyncScreen
+		</screen>
+	</screens>
+    			
+	<commands>
+		<command id="activate">org.openmobster.core.dev.tools.android.ActivationCommand</command>
+		<command id="manualSync">org.openmobster.core.dev.tools.android.ManualSync</command>
+	</commands>
+</moblet-app>

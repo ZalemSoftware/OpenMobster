@@ -1,0 +1,24 @@
+<app-conf>
+	<encryption>false</encryption>
+	
+	<push>
+		<launch-activity-class>org.openmobster.app.MainActivity</launch-activity-class>
+		<icon-name>push</icon-name>
+	</push>
+	
+	<channels>
+		<channel name='fuseapp_channel'>
+			<sync-push-message>You have {0} FuseApp Channel Update(s)</sync-push-message>
+		</channel>
+		<!--   
+		<channel name='one_sync_channel'>
+			<sync-push-message>You have {0} One Sync Channel Messages</sync-push-message>
+		</channel>
+		-->
+		<!--  
+		<channel name='two_sync_channel'>
+			<sync-push-message>You have {0} Two Sync Channel Messages</sync-push-message>
+		</channel>
+		-->
+	</channels>
+</app-conf>

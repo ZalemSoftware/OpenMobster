@@ -1,0 +1,80 @@
+Programming Concepts
+
+* Cloud Server
+	A Cloud Server is the server-side component of the infrastructure that is located in the 'Cloud'. The system provides various mobile-oriented
+	features like offline synchronization, comet-style push, and mobile service rpc. From an architecture standpoint its sits between the 
+	mobile device and the actual cloud data services being mobilized. The Cloud Server provides a Java based Developer API to expose your
+	data services. Here are its programming concepts:
+		
+		* Channel
+		  A Channel serves as a gateway for integrating on-device model/data objects with the
+ 		  server-side backend storage systems such as relational databases, content repositories, or 
+          Enterprise systems like CRMs, ERPs etc. It provides a simple CRUD (Create, Read, Update, and Delete)
+          interface to expose the backend data. The Channel is specifically designed such that the Developer does
+          not have to worry about any low-level state management, and synchronization issues.
+          
+        
+        * MobileServiceBean
+          A MobileServiceBean exposes some coarse grained business process to the on-device mobile app. It provides a very simple
+          request/response based synchronous invocation mechanism. It frees up the developer from all low-level RPC concerns like
+          making network connections, security, marshalling/unmarshalling payloads etc. Note: This component is quite simple at the time of the
+          milestone M1 release. Eventually it will provide more robust REST-based functionality. In any case, the Developer will still be
+          shielded from the low-level protocol details including a REST-based approach or not.
+          
+
+* Moblet 
+  	A Moblet is a mobile app that uses the various device-side OpenMobster frameworks to integrate with the OpenMobster Cloud Server. A moblet developer can use
+  	the following device-side frameworks available.
+  	
+  		* Mobile Cloud Framework
+  		  The Mobile Cloud Framework provides components used to use offline synchronized data, receive comet-style push notifications, and
+  		  make mobile service rpc calls
+  		  
+  		  * MobileBean
+  		    MobileBean is a managed Mobile Component which carries the state of the domain object that it represents on the server. It is
+  		    propagated from the Cloud Server to the mobile device via its corresponding "Channel" on the server. The Mobile Bean framework shields
+  		    the App developer from state management issues like, offline access, receiving push notifications related to state changes on the server,
+            synchronizing locally modified beans back with the server etc.
+            
+          * PushListener
+            
+            
+          * MobileService
+            Mobile Service facilitates making synchronous RPC invocations from the device to the server side 'MobileServiceBean' components
+         
+         * Mobile MVC Framework
+           This is a thick client MVC (Model-View-Controller) framework. It is based on a 
+           <a href="http://en.wikipedia.org/wiki/Rich_Internet_application">Rich Internet Application</a> design principle.
+           At this point in time of evolution of the mobile space, there isn't a commonly adopted GUI development standard across various
+           mobile platforms. This results in a lot of App porting activity across platforms. Although this framework
+           is not designed for (Write Once, Run Anywhere) approach, it abstracts out a lot of the UI Framework plumbing that would otherwise
+           need to be written, ported and maintained by the developer. The framework abstracts out some of the low level services into the container
+           such as App bootstrapping, screen navigation, graceful error handling, and internationalization. There are two types of components in this framework that
+           use a plugin mechanism and receive call backs to perform activities implemented using native platform API. These components are:
+           
+           	* Screen
+           	  Screen is an abstraction for an instance of the App screen that must be made visible to the user at a particular moment in time
+           	  The low level Navigation Manager keeps track of the various screens of an App and provides services such as navigating to a specified screen, 
+           	  going back to the previous screen, and going to the home screen. Besides the actual implementation of a "Screen" all services
+           	  related to a "Screen" are portable across mobile platforms
+           	  
+           * Command
+             Command is an abstraction for an instance of a GUI Event Handler which receives various callbacks based on the screen's lifecycle
+             A command typically puts a business process into motion via accessing various other services like the Mobile Cloud Framework components
+             and/or native platform services
+             
+           The Mobile MVC Framework is extensible to support various GUI frameworks. This does open the door for integrating cross platform GUI 
+           frameworks like standard widgets, HTML5 based GUI, etc.
+           
+           
+* Mobile Cloud
+  	Mobile Cloud is an on-device native runtime. It hosts the runtime that is used by the Mobile Cloud Framework and the Mobile MVC Framework.
+  	On platforms that support inter-application communication, there is a single instance of a Mobile Cloud which is shared by all the Moblets
+  	installed on the device. This helps make better use of device resources like storage, network management, background services, etc. On platforms
+  	that do not support inter-application communication, an instance of the Mobile Cloud runtime must be installed by bundling it with each 
+  	Moblet
+            
+          
+  		    	  
+          
+          

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<deployment xmlns="urn:jboss:bean-deployer:2.0">        
+   <bean name="org.openmobster.core.push.apn.PushService" class="org.openmobster.core.push.apn.PushService"> 
+   		<property name="deviceController">
+   			<inject bean="security://DeviceController"/>
+   		</property> 
+   		<property name="pushAppController">
+   			<inject bean="security://PushAppController"/>
+   		</property> 
+   		<!--   
+   		<property name="host">gateway.sandbox.push.apple.com</property>
+   		-->
+   		<property name="host">gateway.push.apple.com</property>
+   		<property name="port">2195</property>		  		
+   </bean>
+   
+   <bean name="org.openmobster.core.push.notification.Notifier" class="org.openmobster.core.push.notification.Notifier">
+   		<property name="deviceController">
+   			<inject bean="security://DeviceController"/>
+   		</property>
+   </bean>                          
+</deployment>

@@ -1,0 +1,7 @@
+<app-conf>
+	<encryption>false</encryption>
+	
+	<channels>
+		<channel name='plugin_jquery_channel'/>
+	</channels>
+</app-conf>

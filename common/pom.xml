@@ -1,0 +1,80 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<parent>
+		<groupId>org.openmobster.core</groupId>
+		<artifactId>core</artifactId>
+		<version>2.4-M3.1</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+	
+	<modelVersion>4.0.0</modelVersion>	
+	<name>common</name>	
+	<artifactId>common</artifactId>	
+	<packaging>jar</packaging>
+	
+	<dependencies>	
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-validator</groupId>
+			<artifactId>commons-validator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>oro</groupId>
+			<artifactId>oro</artifactId>
+		</dependency>				
+	</dependencies>
+	
+	<!-- build configuration -->
+	<build>		
+		<plugins>			     		
+     		<!-- test plugin -->  
+	 		<plugin>
+	          <groupId>org.apache.maven.plugins</groupId>
+	          <artifactId>maven-surefire-plugin</artifactId>
+	          <configuration>
+	                <argLine>-Dfile.encoding=UTF-8</argLine>
+	          		<additionalClasspathElements>
+	                	<additionalClasspathElement>${project.build.directory}/../target/test-classes/bean1.jar</additionalClasspathElement>
+	                	<additionalClasspathElement>${project.build.directory}/../target/test-classes/bean2.jar</additionalClasspathElement>
+	                	<additionalClasspathElement>${project.build.directory}/../target/test-classes/validation.jar</additionalClasspathElement>
+	          		</additionalClasspathElements>
+	          		<!--	          		
+	          		<includes>
+	          			<include>**/TestObjectSerialization.java</include>
+	          		</includes>
+	          		-->
+	          </configuration>	          
+	        </plugin>     		
+	        
+        	<!-- Comentado por se tratar de um plugin de teste que impacta no build normal -->
+	        <!-- ant plugin
+	        
+	        <plugin>
+	          <groupId>org.apache.maven.plugins</groupId>
+	          <artifactId>maven-antrun-plugin</artifactId>
+	          <executions>
+		          <execution>
+		          	  <id>Generating Test Artifacts</id>
+		          	  <phase>test-compile</phase>
+		          	  <goals>
+		          	  		<goal>run</goal>
+		          	  </goals>		          	  
+			          <configuration>
+			          		<tasks>
+			          			<jar basedir="${project.build.directory}/../target/test-classes/bean1" destfile="${project.build.directory}/../target/test-classes/bean1.jar">
+			          			</jar>
+			          			<jar basedir="${project.build.directory}/../target/test-classes/bean2" destfile="${project.build.directory}/../target/test-classes/bean2.jar">
+			          			</jar>
+			          			<jar basedir="${project.build.directory}/../target/test-classes/validation" destfile="${project.build.directory}/../target/test-classes/validation.jar">
+			          			</jar>       							
+			          		</tasks>
+			          </configuration>			          
+		          </execution>	          
+	          </executions>	          
+	        </plugin>		
+	         -->   			    						
+		</plugins>							
+	</build>
+</project>

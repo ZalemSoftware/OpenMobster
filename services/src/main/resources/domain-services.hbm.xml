@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+        
+<hibernate-mapping>	    
+    <class name="org.openmobster.core.services.channel.LastScanTimestamp" table="services_channel_lastscan_timestamp">
+    	<id name="id" column="id">
+            <generator class="native"/>
+        </id> 
+        <properties name="unique_constraint" unique="true">       
+        	<property name="clientId" type="string" column="clientId" not-null="true"/> 
+        	<property name="channel" type="string" column="channel" not-null="true"/> 
+        </properties>        
+        <property name="timestamp" type="timestamp" column="timestamp" not-null="true"/> 
+    </class>                                
+</hibernate-mapping>

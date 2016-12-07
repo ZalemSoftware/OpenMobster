@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="ios_sampleapp">
+   <chapterinfo>
+      <author>
+         <firstname>openmobster</firstname>
+         <surname>at gmail.com</surname>
+         <email>openmobster@gmail.com</email>
+      </author>
+   </chapterinfo>
+   <title>iOS + OpenMobster Sample App</title>
+   <sect1>
+   		<title>Introduction</title>
+   		<para>
+   			This chapter covers the steps involved in running the iOS + OpenMobster based Sample App
+   		</para>
+   </sect1>
+   <sect1>
+   		<title>Prepare the <emphasis role="bold">mobilecloudlib</emphasis> static library</title>
+   		<para>
+   			<itemizedlist>
+   				<listitem>Open the mobilecloudlib XCode project by opening: <emphasis role="bold">iPhone/mobilecloudlib/mobilecloudlib.xcodeproj</emphasis></listitem>
+   				<listitem>Build the project in XCode</listitem>
+   			</itemizedlist>
+   		</para>
+   		<para>
+   			For some reason, building the mobilecloudlib fail to compile if your XCode code location is set to the recommended setting of "Derived Data". You must change this option to "Location Specified By Targets".
+			Please take a look at this thread for details: <ulink url="https://groups.google.com/forum/#!searchin/openmobster-users/mobilecloudlib/openmobster-users/zJhJKbFekLs/WiNWtKfG_RcJ">https://groups.google.com/forum/#!searchin/openmobster-users/mobilecloudlib/openmobster-users/zJhJKbFekLs/WiNWtKfG_RcJ</ulink>
+   		</para>
+   </sect1>
+   <sect1>
+   		<title>Run the Cloud Server</title>
+   		<para>
+   		Go to <emphasis role="bold">iphone/showcase/cloud</emphasis>. Under this directory issue the following command to start the
+   		Cloud Server required by the sample app
+   		<programlisting>
+   		<![CDATA[
+   			mvn -PrunCloud integration-test
+   		]]>
+   		</programlisting>
+   		</para>
+   </sect1>
+   <sect1>
+   	<title>Run the SampleApp</title>
+   	<para>
+   		Open the XCode project located under <emphasis role="bold">iphone/SampleApp</emphasis>. Build the project to make sure there are no errors.
+   		Once the Build is successful, Run the project. If this is the first time running the App, it will present a device activation screen.
+   		This is to securely setup your Cloud account so that you can acess the Enterprise resources in the Cloud. It asks the following information
+   		<programlisting>
+   		<![CDATA[
+   			Cloud IP: The IP address of the Cloud Server
+   			Port: The port that the Cloud Server is running on (1502, by default)
+   			Email Address: Your email address to uniquely identify you with the Cloud
+   			Password: Your password to authenticate with the Cloud
+   		]]>
+   		</programlisting> 
+   		This is a one time activation across all your apps. 
+   	</para>
+   </sect1>
+</chapter>

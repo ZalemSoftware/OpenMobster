@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<deployment xmlns="urn:jboss:bean-deployer:2.0">
+   <bean name="/fuseapp/push" class="com.fuseapp.cloud.StartPush">
+   		<depends>services://MobileObjectMonitor</depends>
+   		<depends>services://MobileServiceMonitor</depends>
+   </bean>
+   
+   <bean name="/fuseapp/demorepo" class="com.fuseapp.cloud.DemoDataRepository"/>
+    
+   <bean name="fuseapp_channel" class="com.fuseapp.cloud.DemoChannel">
+   		<property name="demoRepository"><inject bean="/fuseapp/demorepo"/></property>
+   </bean>  
+   
+   <bean name="/fuseapp/pushtrigger" class="com.fuseapp.cloud.PushTriggerService">
+   		<property name="demoRepository"><inject bean="/fuseapp/demorepo"/></property>
+   		<depends>services://MobileObjectMonitor</depends>
+   		<depends>services://MobileServiceMonitor</depends>
+   </bean>
+</deployment>

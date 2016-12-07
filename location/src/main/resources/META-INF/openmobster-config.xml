@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<deployment xmlns="urn:jboss:bean-deployer:2.0">        
+   <bean name="GeoCoder" 
+   class="org.openmobster.core.location.yahoo.YahooProvider">  	  
+   		<property name="deserializer"><inject bean="org.openmobster.core.location.yahoo.Deserializer"/></property> 
+   </bean> 
+   
+   <bean name="org.openmobster.core.location.yahoo.Deserializer" 
+   class="org.openmobster.core.location.yahoo.Deserializer">
+   </bean> 
+   
+   <bean name="Places" 
+   class="org.openmobster.core.location.google.GooglePlaceProvider">  	  
+   		<property name="deserializer"><inject bean="org.openmobster.core.location.google.Deserializer"/></property> 
+   </bean> 
+   
+   <bean name="org.openmobster.core.location.google.Deserializer" 
+   class="org.openmobster.core.location.google.Deserializer">
+   </bean>   
+   
+   <bean name="org.openmobster.core.location.PayloadHandler" 
+   class="org.openmobster.core.location.PayloadHandler">
+   </bean>                                
+</deployment>

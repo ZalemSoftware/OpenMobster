@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<deployment xmlns="urn:jboss:bean-deployer:2.0">
+   <bean name="mobileBeanRunner" class="org.openmobster.device.agent.test.framework.MobileBeanRunner">
+   		<property name="deviceId">IMEI:4930051</property>
+   		<property name="serverId">http://www.openmobster.org/sync-server</property>
+   		<property name="service">crm_ticket_channel</property>
+   		<property name="user">blah2@gmail.com</property>
+   		<property name="credential">blahblah2</property>
+   		<property name="deviceSyncEngine">
+   			<inject bean="simulator://SyncEngine"/>
+   		</property>
+   		<property name="provisioner">
+   			<inject bean="security://Provisioner"/>
+   		</property>
+   		<property name="deviceDatabase">
+   			<inject bean="mobileObject://MobileObjectDatabase"/>
+   		</property>
+   		<property name="configuration">
+   			<inject bean="/configuration"/>
+   		</property>
+   </bean>   
+   <bean name="/configuration" 
+   class="org.openmobster.device.agent.test.framework.Configuration">
+   </bean>
+</deployment>

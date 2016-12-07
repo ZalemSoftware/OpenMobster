@@ -1,0 +1,25 @@
+<modules>
+	<module>cloud</module>
+	<module>app-android</module>
+	<module>moblet</module>
+</modules>
+	
+<profiles>
+	<profile>
+		<id>android</id>
+		<modules>
+			<module>cloud</module>
+			<module>app-android</module>
+			<module>moblet</module>
+		</modules>
+	</profile>
+		
+	<profile>
+		<id>android-release</id>
+		<modules>
+			<module>cloud</module>
+			<module>app-android</module>
+			<module>moblet</module>
+		</modules>
+	</profile>
+</profiles>

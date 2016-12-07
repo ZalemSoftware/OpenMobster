@@ -1,0 +1,12 @@
+This document covers the various test suites that must pass at 100% before a release
+
+
+Full TestSuite (Server Only)
+----------------------------
+mvn test
+
+
+
+End-to-End Device Integration Tests (Client side must be executed by the Device)
+--------------------------------------------------------------------------------
+device-agent-simulator: mvn -PrunTestCloud test

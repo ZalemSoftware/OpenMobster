@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<moblet-apps>
+	<moblet-app>	    
+	    <name>TestApp</name>
+	    <description>TestApp used for testing Moblet Provisioning</description>
+		<bin-loc>/rimos-4.3.0/testapp.cod</bin-loc>	
+		<config-loc>/rimos-4.3.0/testapp.jad</config-loc>	
+	</moblet-app>
+	<moblet-app>	    
+	    <name>TestApp2</name>
+	    <description>TestApp2 used for testing Moblet Provisioning</description>
+		<bin-loc>/rimos-4.3.0/testapp2.cod</bin-loc>
+		<config-loc>/rimos-4.3.0/testapp2.jad</config-loc>		
+	</moblet-app>
+	<moblet-app>	    
+	    <name>TestApp3</name>
+	    <description>TestApp3 used for testing Moblet Provisioning</description>
+		<bin-loc>/android-2.0/test.apk</bin-loc>		
+	</moblet-app>
+</moblet-apps>

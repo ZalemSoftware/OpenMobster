@@ -1,0 +1,5 @@
+<moblet-app>	
+	<channels>
+		<channel>offlineapp_demochannel</channel>
+	</channels>
+</moblet-app>

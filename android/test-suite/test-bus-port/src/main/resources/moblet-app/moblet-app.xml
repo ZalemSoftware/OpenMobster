@@ -1,0 +1,10 @@
+<moblet-app>
+    <bootstrap>
+		<screen>org.openmobster.core.mobileCloud.android.module.bus.HomeScreen</screen>
+	</bootstrap>
+		    	
+	<commands>
+		<command id="runtestsuite">org.openmobster.core.mobileCloud.android.testsuite.RunTestSuiteCommand</command>
+		<command id="/test/start/pushrpc">org.openmobster.core.mobileCloud.android.module.bus.InvokePushRPC</command>
+	</commands>
+</moblet-app>

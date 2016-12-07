@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+        
+<hibernate-mapping>
+	<class name="org.openmobster.core.synchronizer.server.engine.ChangeLogEntry" table="sync_engine_changelog">
+        <id name="id" column="id">
+            <generator class="native"/>
+        </id>
+        <properties name="changelog_unique_constraint" unique="true">
+	        <property name="target" type="string" column="target" not-null="true" length="100"/>
+	        <property name="nodeId" type="string" column="node_id" not-null="true" length="100"/>
+	        <property name="recordId" type="string" column="record_id" not-null="true" length="100"/>        
+	        <property name="operation" type="string" column="operation" not-null="true" length="100"/>  
+	        <property name="app" type="string" column="app" not-null="true" length="100"/> 
+        </properties>     
+    </class>
+        
+    <!--  Conflict entry -->
+    <class name="org.openmobster.core.synchronizer.server.engine.ConflictEntry" table="sync_engine_conflict_entry">
+        <id name="id" column="id">
+            <generator class="native"/>
+        </id>
+        <properties name="conflict_entry_unique_constraint" unique="true">
+	        <property name="deviceId" type="string" column="deviceId" not-null="true"/>
+	        <property name="channel" type="string" column="channel" not-null="true"/>
+	        <property name="app" type="string" column="app" not-null="true"/>
+	        <property name="oid" type="string" column="oid" not-null="true"/>
+        </properties>       
+        <property name="state" type="binary" column="state" not-null="true" length="1000000000"/>
+    </class>   
+    
+    <!-- AppToChannelAssociation -->
+    <class name="org.openmobster.core.synchronizer.server.engine.AppToChannelAssociation" table="sync_engine_app_to_channel">
+        <id name="oid" column="oid">
+            <generator class="native"/>
+        </id>
+        <properties name="app_assoc_unique_constraint" unique="true">
+        	<property name="deviceId" type="string" column="deviceId" not-null="true"/>
+        	<property name="app" type="string" column="app" not-null="true"/>
+        	<property name="channel" type="string" column="channel" not-null="true"/>
+        </properties>  
+    </class>
+    
+    <!--
+    	Notes: There is only one record for each target device which represents
+    	data/state from the last successful synchronization operation
+    -->
+    <class name="org.openmobster.core.synchronizer.server.engine.Anchor" table="sync_engine_anchor">
+        <id name="id" column="id">
+            <generator class="native"/>
+        </id>
+        <property name="target" type="string" column="target" not-null="true"/>
+        <property name="lastSync" type="string" column="last_sync"/>
+        <property name="nextSync" type="string" column="next_sync"/>
+        <property name="app" type="string" column="app" not-null="true"/>        
+    </class>
+    
+    
+    <class name="org.openmobster.core.synchronizer.server.engine.RecordMap" table="sync_engine_recordmap">
+        <id name="id" column="id">
+            <generator class="native"/>
+        </id>
+        <property name="source" type="string" column="source" not-null="true"/>
+        <property name="target" type="string" column="target" not-null="true"/>
+        <property name="guid" type="string" column="guid" not-null="true"/>
+        <property name="luid" type="string" column="luid" not-null="true"/>        
+    </class>               
+</hibernate-mapping>

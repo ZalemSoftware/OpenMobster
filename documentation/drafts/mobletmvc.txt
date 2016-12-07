@@ -1,0 +1,57 @@
+Title: Moblet MVC Framework
+
+This is a thick client MVC (Model-View-Controller) framework. It is based on a 
+<a href="http://en.wikipedia.org/wiki/Rich_Internet_application">Rich Internet Application</a> design principle.
+At this point in time of evolution of the mobile space, there isn't a commonly adopted GUI development standard across various
+mobile platforms. This results in a lot of App porting activity across platforms. Although this framework
+is not designed for (Write Once, Run Anywhere) approach, it abstracts out a lot of the UI Framework plumbing that would otherwise
+need to be written, ported and maintained by the developer. The framework abstracts out some of the low level services into the container
+such as App bootstrapping, screen navigation, graceful error handling, and internationalization. There are two types of components in this framework that
+use a plugin mechanism and receive call backs to perform activities implemented using native platform API.
+
+The MVC Framework provides the following features/benefit to an App developer:
+
+* An abstraction from the different bootstrapping behavior associated with each native phone platform.
+
+* A Command framework used for Event Handling. Abstracts platform-level details related to Event Dispatch Thread, background processing, etc.
+
+* A Navigation framework used to help with screen navigation needs.
+
+* A portable way to do "Internationalization".
+
+* A context oriented "State Management" system used to handle View level state.
+
+
+Components
+
+	* Screen
+	
+	* Command
+	
+		* LocalCommand
+		
+		* RemoteCommand
+		
+Services
+
+	* Internationalization
+	
+	* Event Handling
+
+    * Navigation
+    
+    
+Tutorial:
+
+	* Simple Home Screen
+	
+	* Simple Remote Command
+	
+	* Simple Local Command
+	
+	* Configuration
+	
+
+More detailed examples located at: 
+	
+		

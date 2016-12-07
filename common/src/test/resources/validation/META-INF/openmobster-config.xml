@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<deployment xmlns="urn:jboss:bean-deployer:2.0">    
+   <bean name="test://ObjectValidator" class="org.openmobster.core.common.validation.ObjectValidator">
+   		<property name="name">Test ObjectValidator</property>
+   		<property name="rulesFile">META-INF/validationRules.xml</property>
+   </bean>              
+</deployment>

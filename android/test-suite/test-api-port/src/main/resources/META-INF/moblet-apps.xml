@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<moblet-apps>
+	<moblet-app>	    
+	    <name>API TestSuite</name>
+	    <description>Tests the API component</description>
+		<bin-loc>/test-api-port-2.0-snapshot-zipped.apk</bin-loc>	
+	</moblet-app>		
+</moblet-apps>

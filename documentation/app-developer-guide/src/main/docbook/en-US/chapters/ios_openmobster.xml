@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="ios_openmobster">
+   <chapterinfo>
+      <author>
+         <firstname>openmobster</firstname>
+         <surname>at gmail.com</surname>
+         <email>openmobster@gmail.com</email>
+      </author>
+   </chapterinfo>
+   <title>iOS + OpenMobster integration</title>
+   <sect1>
+   		<title>Introduction</title>
+   		<para>
+   			As of version 2.2-M1, iOS is fully supported by OpenMobster. Here are some tips related to iOS and OpenMobster integration
+   		</para>
+   </sect1>
+   <sect1>
+   		<title>Prepare the <emphasis role="bold">mobilecloudlib</emphasis> static library</title>
+   		<para>
+   			<itemizedlist>
+   				<listitem>Open the mobilecloudlib XCode project by opening: <emphasis role="bold">iPhone/mobilecloudlib/mobilecloudlib.xcodeproj</emphasis></listitem>
+   				<listitem>Build the project in XCode</listitem>
+   			</itemizedlist>
+   		</para>
+   		<para>
+   			For some reason, building the mobilecloudlib fail to compile if your XCode code location is set to the recommended setting of "Derived Data". You must change this option to "Location Specified By Targets".
+			Please take a look at this thread for details: <ulink url="https://groups.google.com/forum/#!searchin/openmobster-users/mobilecloudlib/openmobster-users/zJhJKbFekLs/WiNWtKfG_RcJ">https://groups.google.com/forum/#!searchin/openmobster-users/mobilecloudlib/openmobster-users/zJhJKbFekLs/WiNWtKfG_RcJ</ulink>
+   		</para>
+   </sect1>
+   <sect1>
+   		<title>Start a View-based App</title>
+   		<para>
+   			<itemizedlist>
+   				<listitem>Go to File>New Project. In the displayed project templates select the <emphasis role="bold">View-based Application</emphasis> and follow the wizard</listitem>
+   			</itemizedlist>
+   		</para>
+   </sect1>
+   <sect1>
+   		<title>Create a Group called <emphasis role="bold">OpenMobster</emphasis></title>
+   		<para>
+   			<itemizedlist>
+   				<listitem>Create a New group named <emphasis role="bold">OpenMobster</emphasis></listitem>
+   				<listitem>From the <emphasis role="bold">mobilecloudlib</emphasis>project, DragnDrop/Copy all the resources located under the <emphasis role="bold">app-bundle</emphasis> group</listitem>
+   			</itemizedlist>
+   		</para>
+   </sect1>
+   <sect1>
+   		<title>Add the libraries and Frameworks</title>
+   		<para>
+   			In the Frameworks group add the following library and Frameworks
+   			<itemizedlist>
+   				<listitem>libmobilecloudlib.a - OpenMobster static library</listitem>
+   				<listitem>CoreData.framework</listitem>
+   				<listitem>CFNetwork.framework</listitem>
+   				<listitem>CoreGraphics.framework</listitem>
+   				<listitem>UIKit.framework</listitem>
+   			</itemizedlist>
+   		</para>
+   </sect1>
+   <sect1>
+   		<title>Add OpenMobster bootstrap code</title>
+   		<para>
+   			Before OpenMobster runtime can be used within an App. It must be bootstrapped and started. The following code shows how this bootstrapping process works.
+   		</para>
+   		<sect2>
+   			<title>The bootstrapping functions</title>
+   			<sect3>
+   				<title>Start Cloud Service</title>
+   				<para>
+   					<programlisting>
+   						<![CDATA[
+-(void)startCloudService
+{
+	@try 
+	{
+		CloudService *cloudService = [CloudService getInstance];
+		[cloudService startup];
+	}
+	@catch (NSException * e) 
+	{
+		//something caused the kernel to crash
+		//stop the kernel
+		[self stopCloudService];
+	}
+}
+   						]]>
+   					</programlisting>
+   				</para>
+   			</sect3>
+   			<sect3>
+   				<title>Stop Cloud Service</title>
+   				<para>
+   					<programlisting>
+   						<![CDATA[
+-(void)stopCloudService
+{
+	@try
+	{
+		CloudService *cloudService = [CloudService getInstance];
+		[cloudService shutdown];
+	}
+	@catch (NSException *e) 
+	{
+		
+	}
+}
+   						]]>
+   					</programlisting>
+   				</para>
+   			</sect3>
+   			<sect3>
+   				<title>Start Device Activation if it is not activated with the Cloud already</title>
+   				<para>
+   					<programlisting>
+   						<![CDATA[
+-(void)startActivation
+{
+	@try 
+	{
+		CloudService *cloudService = [CloudService getInstance];
+		[cloudService forceActivation:self.window.rootViewController];
+	}
+	@catch (NSException * e) 
+	{
+		//something caused the kernel to crash
+		//stop the kernel
+		[self stopCloudService];
+	}
+}
+   						]]>
+   					</programlisting>
+   				</para>
+   			</sect3>
+   			<sect3>
+   				<title>Do a Sync at Startup</title>
+   				<para>
+   					<programlisting>
+   						<![CDATA[
+-(void)sync
+{
+    CommandContext *commandContext = [CommandContext withInit:self.viewController];
+    BackgroundSyncCommand *syncCommand = [BackgroundSyncCommand withInit];
+    [commandContext setTarget:syncCommand];
+    CommandService *service = [CommandService getInstance];
+    [service execute:commandContext]; 
+}
+   						]]>
+   					</programlisting>
+   				</para>
+   			</sect3>
+   		</sect2>
+   		<sect2>
+   			<title>Integrating the bootstrapping function with the App Delegate</title>
+   			<sect3>
+   				<title>- (BOOL) application:(UIApplication*)application didFinishLaunchingWithOptions:(NSDictionary*)launchOptions</title>
+   				<para>
+   				<programlisting>
+   						<![CDATA[
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+    //OpenMobster bootstrapping
+    [self startCloudService];
+    [self sync];
+    
+    self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
+    
+    
+    // Override point for customization after application launch.
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) 
+    {
+        self.viewController = [[[ViewController alloc] initWithNibName:@"ViewController_iPhone" bundle:nil] autorelease];
+    } 
+    else 
+    {
+        self.viewController = [[[ViewController alloc] initWithNibName:@"ViewController_iPad" bundle:nil] autorelease];
+    }
+    
+    //setup the NavigationController
+    self.navigationController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
+	
+	//Add the CloudManager button to the navbar
+	UIBarButtonItem *button = [[UIBarButtonItem alloc] initWithTitle:@"Cloud Manager" style:UIBarButtonItemStyleDone target:self.viewController action:@selector(launchCloudManager:)];
+    
+	self.navigationController.topViewController.navigationItem.leftBarButtonItem = button;
+	[button release];
+    
+    //Add the Create button to the nav bar
+    UIBarButtonItem *create = [[UIBarButtonItem alloc] initWithTitle:@"Create" style:UIBarButtonItemStyleDone target:self.viewController action:@selector(launchCreateBean)];
+    
+	self.navigationController.topViewController.navigationItem.rightBarButtonItem = create;
+	[create release];
+    
+    
+    self.window.rootViewController = self.navigationController;
+    [self.window makeKeyAndVisible];
+    
+    
+    //OpenMobster bootstrapping
+    [self startActivation];
+    
+    //Register the App for Push notifications
+    [[UIApplication sharedApplication] 
+	 registerForRemoteNotificationTypes:
+	 (UIRemoteNotificationTypeAlert | 
+	  UIRemoteNotificationTypeBadge | 
+	  UIRemoteNotificationTypeSound)];
+
+    
+    return YES;
+}
+   						]]>
+   					</programlisting>
+   				</para>
+   			</sect3>
+   			<sect3>
+   				<title>-(void)applicationWillEnterForeground:(UIApplication *)application</title>
+   				<para>
+   					<programlisting>
+   						<![CDATA[
+- (void)applicationWillEnterForeground:(UIApplication *)application
+{
+    /*
+     Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+     */
+    //OpenMobster bootstrapping
+    [self sync];
+    
+    if(!self.pushRegistered)
+    {
+        [[UIApplication sharedApplication] 
+         registerForRemoteNotificationTypes:
+         (UIRemoteNotificationTypeAlert | 
+          UIRemoteNotificationTypeBadge | 
+          UIRemoteNotificationTypeSound)];
+    }
+}
+   						
+   						]]>
+   					</programlisting>
+   				</para>
+   			</sect3>
+   			<sect3>
+   				<title>-(void)applicationWillTerminate:(UIApplication *)application</title>
+   				<para>
+   					<programlisting>
+   						<![CDATA[
+- (void)applicationWillTerminate:(UIApplication *)application
+{
+    /*
+     Called when the application is about to terminate.
+     Save data if appropriate.
+     See also applicationDidEnterBackground:.
+     */
+    //OpenMobster bootstrapping
+    [self stopCloudService];
+}
+   						]]>
+   					</programlisting>
+   				</para>
+   			</sect3>
+   		</sect2>
+   </sect1>
+   <sect1>
+   		<title>Integrating the CloudManager</title>
+   		<para>
+   			As an App Developer you can integrate the CloudManager functionality within your App. The CloudManager is an administrative GUI tool that allows
+   			some provisioning functions. You can activate your device with the Cloud and you can manage the Sync Channels used by your App. This can come in handy when you
+   			want to do some Manual Syncing in case there are issues happening with the automatic Sync process.
+   		</para>
+   		<para>
+   			This GUI layer integration is done by activating the Modal,View,Controller CloudManager component. Here are the integration steps
+   		</para>
+   		<sect2>
+   			<title>Integrate the CloudManager button on the View</title>
+   			<para>
+   				<programlisting>
+   					<![CDATA[
+//setup the NavigationController
+self.navigationController = [[UINavigationController alloc] initWithRootViewController:self.viewController];
+	
+//Add the CloudManager button to the navbar
+UIBarButtonItem *button = [[UIBarButtonItem alloc] initWithTitle:@"Cloud Manager" style:UIBarButtonItemStyleDone target:self.viewController action:@selector(launchCloudManager:)];
+    
+self.navigationController.topViewController.navigationItem.leftBarButtonItem = button;
+[button release];
+   					]]>
+   				</programlisting>
+   			</para>
+   		</sect2>
+   		<sect2>
+   			<title>Implement the action behind the button</title>
+   			<para>
+   				<programlisting>
+   					<![CDATA[
+-(IBAction)launchCloudManager:(id)sender
+{
+    //Launch the CloudManager App
+    [CloudManager modalCloudManager:self];
+}
+   					]]>
+   				</programlisting>
+   			</para>
+   		</sect2>
+   </sect1>
+   <sect1>
+   		<title>Sample App</title>
+   		<para>
+   		In the OpenMobster distribution, you can find an iOS/OpenMobster Sync App under <emphasis role="bold">iphone/SampleApp</emphasis>.
+   		On the Cloud Side, the App to run is located under <emphasis role="bold">iphone/showcase/cloud</emphasis>. You run the Cloud Server using the command
+   		<programlisting>
+   		<![CDATA[
+   			mvn -PrunCloud integration-test
+   		]]>
+   		</programlisting>
+   		</para>
+   </sect1>
+</chapter>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layout>
+    <nodes>
+        <command>
+            <name>help</name>
+            <id>openmobster:help</id>
+        </command>
+
+        <alias>
+            <name>?</name>
+            <command>help</command>
+        </alias>
+
+        <command>
+            <name>exit</name>
+            <id>openmobster:exit</id>
+        </command>
+
+        <alias>
+            <name>quit</name>
+            <command>exit</command>
+        </alias>
+        
+        <!-- OpenMobster Management Commands -->
+        <command>
+            <name>register</name>
+            <id>openmobster:register</id>
+        </command>
+        
+        <command>
+            <name>startadmin</name>
+            <id>openmobster:startadmin</id>
+        </command>
+        
+        <command>
+            <name>configure</name>
+            <id>openmobster:configure</id>
+        </command>
+        
+        <command>
+            <name>show</name>
+            <id>openmobster:show</id>
+        </command>
+        
+        <command>
+            <name>resetpasswd</name>
+            <id>openmobster:resetpasswd</id>
+        </command>
+        
+        <command>
+            <name>deactivate</name>
+            <id>openmobster:deactivate</id>
+        </command>
+        
+        <command>
+            <name>activate</name>
+            <id>openmobster:activate</id>
+        </command>
+        
+        <command>
+            <name>logout</name>
+            <id>openmobster:logout</id>
+        </command>
+    </nodes>
+</layout>

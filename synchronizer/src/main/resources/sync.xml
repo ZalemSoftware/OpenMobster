@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+
+<process-definition name="sync" xmlns="urn:jbpm.org:jpdl-3.2">
+	<start-state>
+    	<transition to="authorize"/>
+    </start-state>
+    
+    <decision name="authorize">
+    	<handler class="org.openmobster.core.synchronizer.server.workflow.DecideAuthorization"/>
+    	<transition name="true" to="initialize"/>
+    	<transition name="false" to="end"/>    	    	
+    </decision>
+    
+    <state name="initialize">
+    	<event type="node-enter">
+    		<action name="enterInitialize" 
+    		class="org.openmobster.core.synchronizer.server.workflow.EnterInitialize"/>
+    	</event>
+    	<transition to="synchronize:mapExchange"/>
+    </state>   
+    
+    <decision name="synchronize:mapExchange">
+    	<handler class="org.openmobster.core.synchronizer.server.workflow.DecideSyncMapExchange"/>
+    	<transition name="synchronize:performMapExchange" to="synchronize:performMapExchange"/>
+    	<transition name="synchronize" to="synchronize"/>    	    	
+    </decision>
+        
+    <state name="synchronize">
+        <event type="node-enter">
+    		<action name="enterInitialize" 
+    		class="org.openmobster.core.synchronizer.server.workflow.EnterSynchronize"/>
+    	</event>
+    	<transition to="synchronize:syncScenario"/>
+    </state>
+    
+    <decision name="synchronize:syncScenario">
+    	<handler class="org.openmobster.core.synchronizer.server.workflow.DecideSyncScenario"/>
+    	<transition name="synchronize:chunkAccepted" to="synchronize:chunkAccepted"/>
+    	<transition name="synchronize:closeChunk" to="synchronize:closeChunk"/>    	
+    	<transition name="synchronize:nextMessage" to="synchronize:nextMessage"/>
+    	<transition name="synchronize:streamSync" to="synchronize:streamSync"/>
+    	<transition name="synchronize:bootSync" to="synchronize:bootSync"/>
+    	<transition name="synchronize:normalSync" to="synchronize:normalSync"/>
+    </decision>
+    
+    <state name="synchronize:performMapExchange">
+    	<event type="node-enter">
+    		<action name="enterPerformMapExchange" 
+    		class="org.openmobster.core.synchronizer.server.workflow.EnterPerformMapExchange"/>
+    	</event>
+    	<transition to="synchronize:endSynchronize"/>
+    </state>
+    
+    <state name="synchronize:chunkAccepted">
+    	<event type="node-enter">
+    		<action name="enterChunkAccepted" 
+    		class="org.openmobster.core.synchronizer.server.workflow.EnterChunkAccepted"/>
+    	</event>
+    	<transition to="synchronize:endSynchronize"/>
+    </state>    
+    
+    <state name="synchronize:closeChunk">
+    	<event type="node-enter">
+    		<action name="enterCloseChunk" 
+    		class="org.openmobster.core.synchronizer.server.workflow.EnterCloseChunk"/>
+    	</event>
+    	<transition to="synchronize:endSynchronize"/>
+    </state>
+    
+    <state name="synchronize:nextMessage">
+    	<event type="node-enter">
+    		<action name="enterNextMessage" 
+    		class="org.openmobster.core.synchronizer.server.workflow.EnterNextMessage"/>
+    	</event>
+    	<transition to="synchronize:endSynchronize"/>
+    </state>
+    
+    <state name="synchronize:streamSync">
+    	<event type="node-enter">
+    		<action name="enterStreamSync" 
+    		class="org.openmobster.core.synchronizer.server.workflow.EnterStreamSync"/>
+    	</event>
+    	<transition to="synchronize:endSynchronize"/>
+    </state>
+    
+    <state name="synchronize:bootSync">
+    	<event type="node-enter">
+    		<action name="enterBootSync" 
+    		class="org.openmobster.core.synchronizer.server.workflow.EnterBootSync"/>
+    	</event>
+    	<transition to="synchronize:endSynchronize"/>
+    </state>
+    
+    <state name="synchronize:normalSync">
+    	<event type="node-enter">
+    		<action name="enterNormalSync" 
+    		class="org.openmobster.core.synchronizer.server.workflow.EnterNormalSync"/>
+    	</event>
+    	<transition to="synchronize:endSynchronize"/>
+    </state>
+    
+    <decision name="synchronize:endSynchronize">
+    	<handler class="org.openmobster.core.synchronizer.server.workflow.DecideEndSynchronize"/>
+    	<transition name="proceed" to="close"/>
+    	<transition name="goback" to="synchronize"/>
+    </decision>
+    
+    <state name="close">
+        <event type="node-enter">
+    		<action name="enterClose" 
+    		class="org.openmobster.core.synchronizer.server.workflow.EnterClose"/>
+    	</event>
+    	<transition to="end"/>
+    </state>
+    
+    <end-state name="end"/>
+</process-definition>

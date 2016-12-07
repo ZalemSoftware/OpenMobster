@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<deployment xmlns="urn:jboss:bean-deployer:2.0">        
+   <!--
+   		Customizable Server Configuration
+   -->
+   <bean name="common://CustomConfig" class="org.openmobster.core.common.CustomConfig">
+   	  <property name="serverName">http://www.openmobster.org/server</property>
+   	  <property name="serverIp">127.0.0.1</property>
+   	  <!--  
+   	  <property name="httpPort">8888</property>
+   	  -->   	     	     	  
+   </bean>                                     
+</deployment>

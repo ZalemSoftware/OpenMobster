@@ -1,0 +1,9 @@
+<moblet-app>
+    <bootstrap>
+		<screen>org.openmobster.core.mobileCloud.android.testsuite.HomeScreen</screen>
+	</bootstrap>
+		    	
+	<commands>
+		<command id="runtestsuite">org.openmobster.core.mobileCloud.android.module.sync.SyncTestSuiteCommand</command>
+	</commands>
+</moblet-app>

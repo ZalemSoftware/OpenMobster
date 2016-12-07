@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<moblet-apps>
+	<!-- Android version -->
+	<moblet-app>	    
+	    <name><appCreator.android.app.name></name>
+	    <description><appCreator.android.app.name></description>
+		<bin-loc>/<appCreator.android.app.artifactId>-<appCreator.project.version>-zipped.apk</bin-loc>	
+	</moblet-app>		
+</moblet-apps>

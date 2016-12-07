@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="android">
+   <chapterinfo>
+      <author>
+         <firstname>openmobster</firstname>
+         <surname>at gmail.com</surname>
+         <email>openmobster@gmail.com</email>
+      </author>
+   </chapterinfo>
+   <title>Android</title>
+   <sect1>
+   		<title>Android</title>
+   		<para>
+   			Support for Google's Android Open Source Platform is coming soon!!!.
+   			It is scheduled for the 2.0-M4 milestone release. See <ulink url='http://code.google.com/p/openmobster/wiki/roadmap'>here</ulink> for more details.
+   		</para>
+   </sect1>
+</chapter>

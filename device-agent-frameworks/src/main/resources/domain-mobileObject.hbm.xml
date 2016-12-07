@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+        
+<hibernate-mapping>
+	<class name="org.openmobster.device.agent.frameworks.mobileObject.MobileObject" table="frameworks_device_mobileObject">
+        <id name="id" column="id">
+            <generator class="native"/>
+        </id> 
+        <version name="version" column="VERSION"/>
+        
+        <properties name="unique_constraint" unique="true">
+	        <property name="storageId" type="string" column="storageId" not-null="true"/>
+	        <property name="recordId" type="string" column="recordId" not-null="true"/>
+        </properties>
+        <property name="serverRecordId" type="string" column="serverRecordId"/>        
+        <property name="createdOnDevice" type="boolean" column="createdOnDevice"/>
+        <property name="proxy" type="boolean" column="proxy"/>        
+        <list name="fields" 
+        table="frameworks_device_mobileObject_field_assoc"
+        cascade="all-delete-orphan"
+        lazy="false"
+        >
+        	<key column="objectId" not-null="true"/>   
+        	<list-index column="array_index"/>     	
+	        <many-to-many class="org.openmobster.device.agent.frameworks.mobileObject.Field"
+	        column="fieldId"
+	        unique="true"/>	        
+    	</list>
+    	<list name="arrayMetaData" 
+        table="frameworks_device_mobileObject_array_metadata_assoc"
+        cascade="all-delete-orphan"
+        lazy="false"
+        >
+        	<key column="objectId" not-null="true"/>
+        	<list-index column="array_index"/>
+	        <many-to-many class="org.openmobster.device.agent.frameworks.mobileObject.ArrayMetaData"
+	        column="arrayMetaDataId"
+	        unique="true"/>	        
+    	</list>       
+    </class>
+    <class name="org.openmobster.device.agent.frameworks.mobileObject.Field" table="frameworks_device_mobileObject_field">
+        <id name="id" column="id">
+            <generator class="native"/>
+        </id> 
+        <property name="uri" type="string" column="uri"/>
+        <property name="name" type="string" column="name"/>
+        <property name="value" type="string" column="value"/>        
+    </class>
+    <class name="org.openmobster.device.agent.frameworks.mobileObject.ArrayMetaData" table="frameworks_device_mobileObject_array_metadata">
+        <id name="id" column="id">
+            <generator class="native"/>
+        </id> 
+        <property name="arrayUri" type="string" column="arrayUri"/>
+        <property name="arrayLength" type="string" column="arrayLength"/>
+        <property name="arrayClass" type="string" column="arrayClass"/>
+    </class>            
+</hibernate-mapping>

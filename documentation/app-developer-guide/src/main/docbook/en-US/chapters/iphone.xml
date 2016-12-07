@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="iphone">
+   <chapterinfo>
+      <author>
+         <firstname>openmobster</firstname>
+         <surname>at gmail.com</surname>
+         <email>openmobster@gmail.com</email>
+      </author>
+   </chapterinfo>
+   <title>iOS</title>
+   <sect1>
+   		<title>iOS</title>
+   		<para>
+   			As of version 2.2-M1, iOS is fully supported by OpenMobster. Here are some tips related to iOS and OpenMobster integration
+   		</para>
+   </sect1>
+   <sect1>
+   		<title>Integration Tips</title>
+   		<itemizedlist>
+   			<listitem>
+   				There is an XCode project called <emphasis>mobilecloudlib</emphasis>. This produces the static library that houses
+   				the entire OpenMobster runtime for iOS. In order to write Apps this library should be linked with the App
+   			</listitem>
+   			<listitem>
+   				To obtain the static library, you must open <emphasis>mobilecloudlib</emphasis> in XCode and do a full build.
+   			</listitem>
+   			<listitem>
+   				<emphasis role="bold">Some tips with build issues</emphasis>: You must make sure that the User Header Path value in your project recursively points to
+   				a valid local directory on your machine. By default, this value is the path on my development machine.
+   			</listitem>
+   		</itemizedlist>
+   </sect1>
+   <sect1>
+   		<title>App Integration</title>
+   		<itemizedlist>
+   			<listitem>
+   				<emphasis role="bold">Step 1</emphasis>: Link libmobilecloudlib.a file
+   				in your project, under Frameworks, do "Add Existing Files", locate the library stored in the build folder of mobilecloudlib. 
+   			</listitem>
+   			<listitem>
+   				<emphasis role="bold">Step 2</emphasis>: Link CFNetwork.Framework and CoreData?.Framework
+   				Under Frameworks, do "Add Existing Frameworks", locate both the frameworks and add them 
+   			</listitem>
+   			<listitem>
+   				<emphasis role="bold">Step 3</emphasis>: Copy Resources
+   				Drag-n-Drop all the resources located under the app-bundle group of mobilecloudlib into the Resources group of your project. 
+   			</listitem>
+   			<listitem>
+   				<emphasis role="bold">Step 4</emphasis>:Integrate via the App Delegate
+   				You can add code to start and stop the Cloud infrastructure within your App delegate object. The code for doing this follows: 
+   				<emphasis role="bold">Start Cloud Service</emphasis>
+   				<programlisting>
+   				<![CDATA[
+   		-(void)startCloudService
+{
+        @try 
+        {
+                Kernel *kernel = [Kernel getInstance];
+                [kernel startup];
+                
+                UIKernel *uiKernel = [UIKernel getInstance];
+                [uiKernel startup:mainView];
+        }
+        @catch (NSException * e) 
+        {
+                //something caused the kernel to crash
+                //stop the kernel
+                [self stopCloudService];
+        }
+}
+   				]]>
+   				</programlisting>
+   				<emphasis role="bold">Stop Cloud Service</emphasis>
+   				<programlisting>
+   				<![CDATA[
+   		-(void)stopCloudService
+{
+        @try
+        {
+                UIKernel *uiKernel = [UIKernel getInstance];
+                [uiKernel shutdown];
+        
+                Kernel *kernel = [Kernel getInstance];
+                [kernel shutdown];
+        }
+        @catch (NSException *e) 
+        {
+                
+        }
+}
+   				]]>
+   				</programlisting>
+   				These two methods are called by various App Delegate methods depending on the life cycle. Here are the various integration points 
+   				<emphasis role="bold">-(BOOL)application:(UIApplication )application didFinishLaunchingWithOptions:(NSDictionary )launchOptions</emphasis>
+   				<programlisting>
+   				<![CDATA[
+   	-(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions 
+{    
+    // Override point for customization after application launch.
+        [window addSubview:mainView.view];
+    [window makeKeyAndVisible];
+        
+        [self startCloudService];
+        
+        return YES;
+}
+   				]]>
+   				</programlisting>
+   				<emphasis role="bold">-(void)applicationWillEnterForeground:(UIApplication )application</emphasis>
+   				<programlisting>
+   				<![CDATA[
+   				/*
+     Called as part of  transition from the background to the inactive state: here you can undo many of the changes made on entering the background.
+     */
+        AppService *appService = [AppService getInstance];
+        [appService start];
+   				]]>
+   				</programlisting>
+   				<emphasis role="bold">-(void)applicationWillTerminate:(UIApplication )application</emphasis>
+   				<programlisting>
+   				<![CDATA[
+   	-(void)applicationWillTerminate:(UIApplication *)application 
+{
+    /*
+     Called when the application is about to terminate.
+     See also applicationDidEnterBackground:.
+     */
+        [self stopCloudService];
+}
+   				]]>
+   				</programlisting>
+   			</listitem>
+   		</itemizedlist>
+   </sect1>
+</chapter>

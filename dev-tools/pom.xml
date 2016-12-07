@@ -1,0 +1,120 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.openmobster.core.dev.tools</groupId>
+	<artifactId>dev-tools</artifactId>
+	<packaging>pom</packaging>
+	<version>2.4-M3.1</version>
+	<name>The OpenMobster Core Platform</name>
+	<url>http://www.openmobster.org</url>
+	
+	<modules>
+	    <module>appCreator</module>
+		<module>dev-cloudServer</module>	
+		<module>android-devcloud</module>
+	</modules>
+	
+	<profiles>
+		<profile>
+			<id>deploy-tools</id>
+			<modules>
+				<module>appCreator</module>
+				<module>dev-cloudServer</module>
+				<module>android-devcloud</module>
+			</modules>
+		</profile>
+	</profiles>
+	
+	<properties>
+		<version.net.rim.api>4.3.0</version.net.rim.api>	
+		<bb.jde.home>${env.RIM_JDE_HOME}
+		</bb.jde.home>
+		<bb.simulator.home>
+			${env.RIM_JDE_HOME}\simulator
+		</bb.simulator.home> 
+		<version.android.api>11</version.android.api> 
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>  
+	</properties>
+	
+	<build>
+		<extensions>
+			<extension>
+				<groupId>org.jvnet.wagon-svn</groupId>
+				<artifactId>wagon-svn</artifactId>
+				<version>1.8</version>
+			</extension>
+		</extensions>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifestEntries>
+							<Built-By>openmobster@gmail.com</Built-By>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.4</version>
+				<inherited>true</inherited>
+				<configuration>
+					<attach>true</attach>
+				</configuration>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+					<artifactId>android-maven-plugin</artifactId>
+					<version>3.8.0</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+	
+	<repositories>
+		<!-- JBoss maven2 repository -->
+		<repository>
+			<id>jboss</id>
+			<url>http://anonsvn.jboss.org/repos/repository.jboss.org/maven2
+			</url>
+		</repository>
+
+		<!-- CodeHaus repository -->
+		<repository>
+			<id>maven-codehaus</id>
+			<name>Public online CodeHaus Maven Repository</name>
+			<url>http://repository.codehaus.org
+			</url>
+		</repository>
+
+		<repository>
+			<id>maven2-repository.dev.java.net</id>
+			<name>Java.net Repository for Maven</name>
+			<url>http://download.java.net/maven/2/
+			</url>
+		</repository>
+	</repositories>
+
+	<distributionManagement>
+		<repository>
+			<uniqueVersion>false</uniqueVersion>
+			<id>openmobster-maven</id>
+			<name>openmobster</name>
+			<url>svn:https://openmobster.googlecode.com/svn/maven2</url>
+			<layout>default</layout>
+		</repository>
+	</distributionManagement>
+</project>

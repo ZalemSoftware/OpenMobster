@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+		<groupId>org.openmobster.core.android</groupId>
+		<artifactId>2_0</artifactId>
+		<version>2.4-M3.1</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+	
+	<groupId>org.openmobster.core.mobileCloud.android.2_0</groupId>	
+	<artifactId>test-suite</artifactId>
+	<name>test-suite</name>
+	<packaging>pom</packaging>
+    
+    <modules>
+		<module>test-framework</module>
+		<module>test-common-port</module>	
+		<module>test-mobileObject-port</module>	
+		<module>test-sync-port</module>	
+		<module>test-bus-port</module>
+		<module>test-connection-port</module>	
+		<module>test-native-framework</module>
+		<module>test-api-port</module>
+		<module>test-cloud-as-service</module>
+		<module>test-real-device</module>
+		<module>testapp</module>
+		<module>test-dm</module>
+		<module>test-performance</module>
+		<module>test-location</module>
+		<module>test-encryption</module>
+	</modules>
+</project>

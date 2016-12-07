@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<server>
+    <!--
+	<loader-repository>
+ 		org.openmobster:openmobster=openmobster
+ 		<loader-repository-config>java2ParentDelegation=true</loader-repository-config>
+ 	</loader-repository>
+ 	-->
+ 	
+    <mbean code="org.openmobster.core.common.deploy.BootLoader" 
+           name="openmobster:service=BootLoader">
+           <!--
+           <depends>openmobster:service=AdminConsole</depends>        
+           -->
+    </mbean>
+</server> 

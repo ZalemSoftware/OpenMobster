@@ -1,0 +1,641 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="pg_reference">
+   <chapterinfo>
+      <author>
+         <firstname>openmobster</firstname>
+         <surname>at gmail.com</surname>
+         <email>openmobster@gmail.com</email>
+      </author>
+   </chapterinfo>
+   <title>PhoneGap: Sync Plugin Reference</title>
+   <sect1>
+   		<title>Introduction</title>
+   		<para>
+   		 	<ulink url="http://www.phonegap.com">PhoneGap</ulink> is an HTML5 app platform that allows you to author native applications with web technologies and get access to APIs and app stores. <emphasis role="bold">PhoneGap</emphasis> leverages web technologies developers already know best... HTML and JavaScript.
+   		 	Starting with <emphasis role="bold">OpenMobster 2.2-M8</emphasis>, you can write offline web apps with synchronization of data using the <emphasis role="bold">OpenMobster Sync Plugin</emphasis> for PhoneGap. The Sync Plugin exposes the native Sync service to the
+   		 	JavaScript layer using the PhoneGap bridge technology. The rest of this chapter will provide a reference guide to the Sync Plugin and how to use it
+   		</para>
+   </sect1>
+   <sect1>
+   		<title>ReadAll - window.plugins.sync.readall</title>
+   		<para>
+   			Reads all the beans stored in the sync channel
+   		</para>
+   		<para>
+   			Returns a JSON array of oids associated with the beans
+   		</para>
+   		<para>
+   			Parameters:
+   			<itemizedlist>
+   				<listitem><emphasis role="bold">channel</emphasis>: The Sync Channel name where the beans are stored</listitem>
+   				<listitem><emphasis role="bold">successCallback:</emphasis>function that will be invoked if this call is successful</listitem>
+   				<listitem><emphasis role="bold">errorCallback:</emphasis>function that will be invoked if this call fails</listitem>
+   			</itemizedlist>
+   		</para>
+   		<para>
+   			Usage Example:
+   			<programlisting>
+   			<![CDATA[
+   			window.plugins.sync.readall(channel,
+				function(jsonArray)
+				{
+					if(jsonArray == '0')
+					{
+						return;
+					}
+					
+					var oids = JSON.parse(jsonArray);
+				},
+				function(error)
+				{
+					alert(error);
+				}
+			);
+   			]]>
+   			</programlisting>
+   		</para>
+   </sect1>
+   <sect1>
+   		<title>Get a Property Value - window.plugins.sync.value</title>
+   		<para>
+   			Reads the value of a property of a bean
+   		</para>
+   		<para>
+   			Returns the value of the property
+   		</para>
+   		<para>
+   			Parameters:
+   			<itemizedlist>
+   				<listitem><emphasis role="bold">channel</emphasis>: The Sync Channel name where the beans are stored</listitem>
+   				<listitem><emphasis role="bold">oid</emphasis>: unique oid of the targeted bean</listitem>
+   				<listitem><emphasis role="bold">property</emphasis>: The property of the bean</listitem>
+   				<listitem><emphasis role="bold">successCallback:</emphasis>function that will be invoked if this call is successful</listitem>
+   				<listitem><emphasis role="bold">errorCallback:</emphasis>function that will be invoked if this call fails</listitem>
+   			</itemizedlist>
+   		</para>
+   		<para>
+   			Usage Example:
+   			<programlisting>
+   			<![CDATA[
+   			window.plugins.sync.value(channel,oid,'property',
+				function(value)
+				{
+					console.log(value);
+				},
+				function(error)
+				{
+					alert(error);
+				}
+			);
+   			]]>
+   			</programlisting>
+   		</para>
+   </sect1>
+   <sect1>
+   		<title>Execute Query Match All - window.plugins.sync.queryByMatchAll</title>
+   		<para>
+   			Queries the Sync Channel for beans such that all name/value pairs from the search criteria have to match
+   		</para>
+   		<para>
+   			Returns a JSON Array of oids of beans that match the criteria
+   		</para>
+   		<para>
+   			Parameters:
+   			<itemizedlist>
+   				<listitem><emphasis role="bold">channel</emphasis>: The Sync Channel name where the beans are stored</listitem>
+   				<listitem><emphasis role="bold">criteria</emphasis>: JSON name/value pairs to match against</listitem>
+   				<listitem><emphasis role="bold">successCallback:</emphasis>function that will be invoked if this call is successful</listitem>
+   				<listitem><emphasis role="bold">errorCallback:</emphasis>function that will be invoked if this call fails</listitem>
+   			</itemizedlist>
+   		</para>
+   		<para>
+   			Usage Example:
+   			<programlisting>
+   			<![CDATA[
+   			window.plugins.sync.queryByMatchAll(channel,{'title':'titleValue','comments':'commentsValue'},
+				function(matchedOids)
+				{
+					if(matchedOids == '0')
+					{
+						alert('No Records Found!!!');
+						return;
+					}
+					
+					var oids = JSON.parse(matchedOids);
+				},
+				function(error)
+				{
+				}
+			);
+   			]]>
+   			</programlisting>
+   		</para>
+   </sect1>
+   <sect1>
+   		<title>Execute Query Match Atleast One - window.plugins.sync.queryByMatchOne</title>
+   		<para>
+   			Queries the Sync Channel for beans such that atleast one of the name/value pairs from the search criteria have to match
+   		</para>
+   		<para>
+   			Returns a JSON Array of oids of beans that match the criteria
+   		</para>
+   		<para>
+   			Parameters:
+   			<itemizedlist>
+   				<listitem><emphasis role="bold">channel</emphasis>: The Sync Channel name where the beans are stored</listitem>
+   				<listitem><emphasis role="bold">criteria</emphasis>: JSON name/value pairs to match against</listitem>
+   				<listitem><emphasis role="bold">successCallback:</emphasis>function that will be invoked if this call is successful</listitem>
+   				<listitem><emphasis role="bold">errorCallback:</emphasis>function that will be invoked if this call fails</listitem>
+   			</itemizedlist>
+   		</para>
+   		<para>
+   			Usage Example:
+   			<programlisting>
+   			<![CDATA[
+   			window.plugins.sync.queryByMatchOne(channel,{'title':'titleValue','comments':'commentsValue'},
+				function(matchedOids)
+				{
+					if(matchedOids == '0')
+					{
+						alert('No Records Found!!!');
+						return;
+					}
+					
+					var oids = JSON.parse(matchedOids);
+				},
+				function(error)
+				{
+				}
+			);
+   			]]>
+   			</programlisting>
+   		</para>
+   </sect1>
+   <sect1>
+   		<title>Execute Query Do Not Match All - window.plugins.sync.queryByNotMatchAll</title>
+   		<para>
+   			Queries the Sync Channel for beans such that instances that do not match all the name/value pairs of the criteria are returned
+   		</para>
+   		<para>
+   			Returns a JSON Array of oids of beans that do not match the criteria
+   		</para>
+   		<para>
+   			Parameters:
+   			<itemizedlist>
+   				<listitem><emphasis role="bold">channel</emphasis>: The Sync Channel name where the beans are stored</listitem>
+   				<listitem><emphasis role="bold">criteria</emphasis>: JSON name/value pairs to match against</listitem>
+   				<listitem><emphasis role="bold">successCallback:</emphasis>function that will be invoked if this call is successful</listitem>
+   				<listitem><emphasis role="bold">errorCallback:</emphasis>function that will be invoked if this call fails</listitem>
+   			</itemizedlist>
+   		</para>
+   		<para>
+   			Usage Example:
+   			<programlisting>
+   			<![CDATA[
+   			window.plugins.sync.queryByNotMatchAll(channel,{'title':'titleValue','comments':'commentsValue'},
+				function(matchedOids)
+				{
+					if(matchedOids == '0')
+					{
+						alert('No Records Found!!!');
+						return;
+					}
+					
+					var oids = JSON.parse(matchedOids);
+				},
+				function(error)
+				{
+				}
+			);
+   			]]>
+   			</programlisting>
+   		</para>
+   </sect1>
+   <sect1>
+   		<title>Execute Query Do Not Match Even One - window.plugins.sync.queryByNotMatchOne</title>
+   		<para>
+   			Queries the Sync Channel for beans such that instances that do not match even one of the name/value pairs of the criteria are returned
+   		</para>
+   		<para>
+   			Returns a JSON Array of oids of beans that do not match the criteria
+   		</para>
+   		<para>
+   			Parameters:
+   			<itemizedlist>
+   				<listitem><emphasis role="bold">channel</emphasis>: The Sync Channel name where the beans are stored</listitem>
+   				<listitem><emphasis role="bold">criteria</emphasis>: JSON name/value pairs to match against</listitem>
+   				<listitem><emphasis role="bold">successCallback:</emphasis>function that will be invoked if this call is successful</listitem>
+   				<listitem><emphasis role="bold">errorCallback:</emphasis>function that will be invoked if this call fails</listitem>
+   			</itemizedlist>
+   		</para>
+   		<para>
+   			Usage Example:
+   			<programlisting>
+   			<![CDATA[
+   			window.plugins.sync.queryByNotMatchOne(channel,{'title':'titleValue','comments':'commentsValue'},
+				function(matchedOids)
+				{
+					if(matchedOids == '0')
+					{
+						alert('No Records Found!!!');
+						return;
+					}
+					
+					var oids = JSON.parse(matchedOids);
+				},
+				function(error)
+				{
+				}
+			);
+   			]]>
+   			</programlisting>
+   		</para>
+   </sect1>
+   <sect1>
+   		<title>Execute Query Match Contains All - window.plugins.sync.queryByContainsAll</title>
+   		<para>
+   			Queries the Sync Channel for beans such that all of the name/value pairs from the search criteria have to match.
+   			The comparison is made such that the criteria value is <emphasis role="bold">contained</emphasis> within the property being matched against.
+   		</para>
+   		<para>
+   			Returns a JSON Array of oids of beans that match the criteria
+   		</para>
+   		<para>
+   			Parameters:
+   			<itemizedlist>
+   				<listitem><emphasis role="bold">channel</emphasis>: The Sync Channel name where the beans are stored</listitem>
+   				<listitem><emphasis role="bold">criteria</emphasis>: JSON name/value pairs to match against</listitem>
+   				<listitem><emphasis role="bold">successCallback:</emphasis>function that will be invoked if this call is successful</listitem>
+   				<listitem><emphasis role="bold">errorCallback:</emphasis>function that will be invoked if this call fails</listitem>
+   			</itemizedlist>
+   		</para>
+   		<para>
+   			Usage Example:
+   			<programlisting>
+   			<![CDATA[
+   			window.plugins.sync.queryByContainsAll(channel,{'title':'title','comments':'comments'},
+				function(matchedOids)
+				{
+					if(matchedOids == '0')
+					{
+						alert('No Records Found!!!');
+						return;
+					}
+					
+					var oids = JSON.parse(matchedOids);
+				},
+				function(error)
+				{
+				}
+			);
+   			]]>
+   			</programlisting>
+   		</para>
+   </sect1>
+   <sect1>
+   		<title>Execute Query Match Contains Atleast One - window.plugins.sync.queryByContainsOne</title>
+   		<para>
+   			Queries the Sync Channel for beans such that atleast one of the name/value pairs from the search criteria have to match.
+   			The comparison is made such that the criteria value is <emphasis role="bold">contained</emphasis> within the property being matched against.
+   		</para>
+   		<para>
+   			Returns a JSON Array of oids of beans that match the criteria
+   		</para>
+   		<para>
+   			Parameters:
+   			<itemizedlist>
+   				<listitem><emphasis role="bold">channel</emphasis>: The Sync Channel name where the beans are stored</listitem>
+   				<listitem><emphasis role="bold">criteria</emphasis>: JSON name/value pairs to match against</listitem>
+   				<listitem><emphasis role="bold">successCallback:</emphasis>function that will be invoked if this call is successful</listitem>
+   				<listitem><emphasis role="bold">errorCallback:</emphasis>function that will be invoked if this call fails</listitem>
+   			</itemizedlist>
+   		</para>
+   		<para>
+   			Usage Example:
+   			<programlisting>
+   			<![CDATA[
+   			window.plugins.sync.queryByContainsOne(channel,{'title':'title','comments':'comments'},
+				function(matchedOids)
+				{
+					if(matchedOids == '0')
+					{
+						alert('No Records Found!!!');
+						return;
+					}
+					
+					var oids = JSON.parse(matchedOids);
+				},
+				function(error)
+				{
+				}
+			);
+   			]]>
+   			</programlisting>
+   		</para>
+   </sect1>
+   <sect1>
+   		<title>Add a New Bean into the Sync Channel - window.plugins.sync.addNewBean</title>
+   		<para>
+   			Adds a New Bean into the Sync Channel. The method returns with a temporary oid to reference this bean by.
+   			A permanent oid is assigned to the bean once it is synchronized with the Cloud 
+   		</para>
+   		<para>
+   			Returns a temporary oid to work with this bean before commit/synchronization
+   		</para>
+   		<para>
+   			Parameters:
+   			<itemizedlist>
+   				<listitem><emphasis role="bold">channel</emphasis>: The Sync Channel name where the beans are stored</listitem>
+   				<listitem><emphasis role="bold">successCallback:</emphasis>function that will be invoked if this call is successful</listitem>
+   				<listitem><emphasis role="bold">errorCallback:</emphasis>function that will be invoked if this call fails</listitem>
+   			</itemizedlist>
+   		</para>
+   		<para>
+   			Usage Example:
+   			<programlisting>
+   			<![CDATA[
+   			window.plugins.sync.addNewBean(channel,
+		function(tempOid)
+		{
+			console.log('Temporary Oid: '+tempOid);
+			
+			//set the title
+			window.plugins.sync.updateBean(channel,tempOid,'title','/test/newbean',
+				function(success)
+				{
+				},
+				function(error){
+					alert('Setting the Title: '+error);
+				}
+			);
+			
+			//insert into a string array
+			window.plugins.sync.insertIntoArray(channel,tempOid,'customers',{'string':'/test/newbean/string/array'},
+				function(success)
+				{
+				},
+				function(error)
+				{
+					alert('InsertIntoStringArray: '+error);
+				}
+			);
+			
+			//insert into an object array
+			window.plugins.sync.insertIntoArray(channel,tempOid,'messages',{'from':'from@test.com','to':'to@test.com','message':'you got mail'},
+				function(success)
+				{
+				},
+				function(error)
+				{
+					alert('InsertIntoObjectArray: '+error);
+				}
+			);
+		},
+		function(error)
+		{
+			alert(error);
+		});
+		
+		//Commit here
+		window.plugins.sync.commit(function(success)
+		{
+			alert('Commit successful');
+		},
+		function(error){});
+   			]]>
+   			</programlisting>
+   		</para>
+   </sect1>
+   <sect1>
+   		<title>Update a Bean in the Sync Channel - window.plugins.sync.updateBean</title>
+   		<para>
+   			Updates the specified property of a bean in the Sync Channel
+   		</para>
+   		<para>
+   			Returns nothing
+   		</para>
+   		<para>
+   			Parameters:
+   			<itemizedlist>
+   				<listitem><emphasis role="bold">channel</emphasis>: The Sync Channel name where the beans are stored</listitem>
+   				<listitem><emphasis role="bold">oid</emphasis>: The unique identifier of the bean</listitem>
+   				<listitem><emphasis role="bold">property</emphasis>: The property of the bean to be updated</listitem>
+   				<listitem><emphasis role="bold">value</emphasis>: The new value of the property</listitem>
+   				<listitem><emphasis role="bold">successCallback:</emphasis>function that will be invoked if this call is successful</listitem>
+   				<listitem><emphasis role="bold">errorCallback:</emphasis>function that will be invoked if this call fails</listitem>
+   			</itemizedlist>
+   		</para>
+   		<para>
+   			Usage Example:
+   			<programlisting>
+   			<![CDATA[
+   			window.plugins.sync.updateBean(channel,oid,'title','title://updated',
+					function(success){
+						window.plugins.sync.value(channel,oid,'title',
+									function(value)
+									{
+										console.log(value);
+									},
+									function(error)
+									{
+										alert('Reading the Title:'+error);
+									}
+								);
+					},
+					function(error){
+						alert('Updating Title: '+error);
+					}
+			);
+			
+			//Commit here
+			window.plugins.sync.commit(function(success)
+			{
+				alert('Commit successful');
+			},
+			function(error){});
+   			]]>
+   			</programlisting>
+   		</para>
+   </sect1>
+   <sect1>
+   		<title>Delete a Bean from the Sync Channel - window.plugins.sync.deleteBean</title>
+   		<para>
+   			Deletes the specified bean from the Sync Channel
+   		</para>
+   		<para>
+   			Returns nothing
+   		</para>
+   		<para>
+   			Parameters:
+   			<itemizedlist>
+   				<listitem><emphasis role="bold">channel</emphasis>: The Sync Channel name where the beans are stored</listitem>
+   				<listitem><emphasis role="bold">oid</emphasis>: The unique identifier of the bean</listitem>
+   				<listitem><emphasis role="bold">successCallback:</emphasis>function that will be invoked if this call is successful</listitem>
+   				<listitem><emphasis role="bold">errorCallback:</emphasis>function that will be invoked if this call fails</listitem>
+   			</itemizedlist>
+   		</para>
+   		<para>
+   			Usage Example:
+   			<programlisting>
+   			<![CDATA[
+   			//delete this bean
+			window.plugins.sync.deleteBean(channel,oid,
+				function(success){
+				},
+				function(error){
+					alert(error);
+				}
+			);
+			
+			//Commit here
+			window.plugins.sync.commit(function(success)
+			{
+				alert('Commit successful');
+			},
+			function(error){});
+   			]]>
+   			</programlisting>
+   		</para>
+   </sect1>
+   <sect1>
+   		<title>Commit the operations with the Sync Channel - window.plugins.sync.commit</title>
+   		<para>
+   			Commits the operation to the Sync Channel. Upon commit the Sync Engine synchronizes the Channel with the Cloud
+   		</para>
+   		<para>
+   			Returns nothing
+   		</para>
+   		<para>
+   			Parameters:
+   			<itemizedlist>
+   				<listitem><emphasis role="bold">successCallback:</emphasis>function that will be invoked if this call is successful</listitem>
+   				<listitem><emphasis role="bold">errorCallback:</emphasis>function that will be invoked if this call fails</listitem>
+   			</itemizedlist>
+   		</para>
+   		<para>
+   			Usage Example:
+   			<programlisting>
+   			<![CDATA[
+   			//commit
+		   	window.plugins.sync.commit(function(success)
+				{
+					alert('Commit successful');
+				},
+				function(error)
+				{
+					alert(error);
+				}
+			);
+   			]]>
+   			</programlisting>
+   		</para>
+   </sect1>
+   <sect1>
+   		<title>Get the Length of an Array/List property - window.plugins.sync.arrayLength</title>
+   		<para>
+   			Retrieves the length/size of an Array/List property of the specified bean
+   		</para>
+   		<para>
+   			Returns the array length
+   		</para>
+   		<para>
+   			Parameters:
+   			<itemizedlist>
+   				<listitem><emphasis role="bold">channel</emphasis>: The Sync Channel name where the beans are stored</listitem>
+   				<listitem><emphasis role="bold">oid</emphasis>: The unique identifier of the bean</listitem>
+   				<listitem><emphasis role="bold">property</emphasis>: The property of the bean</listitem>
+   				<listitem><emphasis role="bold">successCallback:</emphasis>function that will be invoked if this call is successful</listitem>
+   				<listitem><emphasis role="bold">errorCallback:</emphasis>function that will be invoked if this call fails</listitem>
+   			</itemizedlist>
+   		</para>
+   		<para>
+   			Usage Example:
+   			<programlisting>
+   			<![CDATA[
+   			window.plugins.sync.arrayLength(channel,oid,'customers',
+				function(arrayLength)
+				{
+					console.log('ArrayLength: '+arrayLength);
+				},
+				function(error)
+				{
+					alert(error);
+				}
+		    );
+   			]]>
+   			</programlisting>
+   		</para>
+   </sect1>
+   <sect1>
+   		<title>Insert an object into an Array/List property - window.plugins.sync.insertIntoArray</title>
+   		<para>
+   			Inserts an object into the array
+   		</para>
+   		<para>
+   			Returns the new array length after adding the object to the Array/List
+   		</para>
+   		<para>
+   			Parameters:
+   			<itemizedlist>
+   				<listitem><emphasis role="bold">channel</emphasis>: The Sync Channel name where the beans are stored</listitem>
+   				<listitem><emphasis role="bold">oid</emphasis>: The unique identifier of the bean</listitem>
+   				<listitem><emphasis role="bold">property</emphasis>: The property of the bean</listitem>
+   				<listitem><emphasis role="bold">value</emphasis>: The object in JSON format</listitem>
+   				<listitem><emphasis role="bold">successCallback:</emphasis>function that will be invoked if this call is successful</listitem>
+   				<listitem><emphasis role="bold">errorCallback:</emphasis>function that will be invoked if this call fails</listitem>
+   			</itemizedlist>
+   		</para>
+   		<para>
+   			Usage Example:
+   			<programlisting>
+   			<![CDATA[
+   			window.plugins.sync.insertIntoArray(channel,oid,'customers',{'string':'insert'},
+				function(arrayLength)
+				{
+				},
+				function(error)
+				{
+					alert('InsertIntoArray: '+error);
+				}
+			);
+   			]]>
+   			</programlisting>
+   		</para>
+   </sect1>
+   <sect1>
+   		<title>Clear the entries inside an Array/List property - window.plugins.sync.clearArray</title>
+   		<para>
+   			Clears all the entries inside the Array/List property
+   		</para>
+   		<para>
+   			Returns nothing
+   		</para>
+   		<para>
+   			Parameters:
+   			<itemizedlist>
+   				<listitem><emphasis role="bold">channel</emphasis>: The Sync Channel name where the beans are stored</listitem>
+   				<listitem><emphasis role="bold">oid</emphasis>: The unique identifier of the bean</listitem>
+   				<listitem><emphasis role="bold">property</emphasis>: The property of the bean</listitem>
+   				<listitem><emphasis role="bold">successCallback:</emphasis>function that will be invoked if this call is successful</listitem>
+   				<listitem><emphasis role="bold">errorCallback:</emphasis>function that will be invoked if this call fails</listitem>
+   			</itemizedlist>
+   		</para>
+   		<para>
+   			Usage Example:
+   			<programlisting>
+   			<![CDATA[
+   			//clear this array
+			window.plugins.sync.clearArray(channel,oid,'customers',
+				function(success)
+				{
+				},
+				function(error)
+				{
+					alert(error);
+				}
+			);
+   			]]>
+   			</programlisting>
+   		</para>
+   </sect1>
+</chapter>

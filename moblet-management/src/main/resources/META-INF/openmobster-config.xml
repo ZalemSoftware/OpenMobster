@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<deployment xmlns="urn:jboss:bean-deployer:2.0">  
+   <bean name="moblet-management://HibernateManager" class="org.openmobster.core.common.database.HibernateManager">
+   	  <property name="config">moblet-management.cfg.xml</property>
+   </bean>
+   
+   <bean name="moblet-management://deployer" class="org.openmobster.core.moblet.deployment.MobletDeployer"> 
+   		<property name="registry">
+   			<inject bean="moblet-management://registry"/>
+   		</property>    		   		   		
+   </bean> 
+            
+   <bean name="moblet-management://registry" class="org.openmobster.core.moblet.registry.Registry">     		   		   		
+   </bean> 
+   
+   <bean name="moblet-management://appStore" 
+   class="org.openmobster.core.moblet.appStore.AppStore">
+   		<property name="registry">
+   			<inject bean="moblet-management://registry"/>
+   		</property>
+   		<depends>services://MobileObjectMonitor</depends>
+   		<depends>services://MobileServiceMonitor</depends>
+   </bean>                   
+</deployment>

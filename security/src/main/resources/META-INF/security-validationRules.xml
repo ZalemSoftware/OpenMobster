@@ -1,0 +1,42 @@
+<!DOCTYPE form-validation PUBLIC
+     "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.1//EN"
+     "http://jakarta.apache.org/commons/dtds/validator_1_1.dtd">
+     
+<form-validation>
+   <global>
+      <validator name="required"
+                 classname="org.openmobster.core.common.validation.CoreValidator"
+                 method="validateRequired"
+                 methodParams="java.lang.Object,org.apache.commons.validator.Field"
+                 msg=""/>
+      <validator name="email"
+                 classname="org.openmobster.core.common.validation.CoreValidator"
+                 method="validateEmail"
+                 methodParams="java.lang.Object,org.apache.commons.validator.Field"
+                 msg=""/>
+      <validator name="minimumLength"
+                 classname="org.openmobster.core.common.validation.CoreValidator"
+                 method="minimumLength"
+                 methodParams="java.lang.Object,org.apache.commons.validator.Field"
+                 msg=""/>
+   </global>
+   <formset>
+      <form name="org.openmobster.core.security.identity.Identity">
+         <field property="principal" depends="required, email">
+         	   <arg name="required" key="emailRequired"/>
+         	   <arg name="email" key="emailInvalid"/>         	   
+         </field>
+         <field property="credential" depends="required">
+         	   <arg name="required" key="credentialRequired"/>         	   
+         </field>             
+      </form>
+      <form name="org.openmobster.core.security.device.Device">         
+         <field property="identifier" depends="required">
+         	   <arg name="required" key="identifierRequired"/>         	   
+         </field>
+         <field property="identity" depends="required">
+         	   <arg name="required" key="identityRequired"/>         	   
+         </field>             
+      </form>
+   </formset>   
+</form-validation>

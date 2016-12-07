@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+	   <groupId>org.openmobster.core.mobileCloud.android.2_0</groupId>
+	   <artifactId>test-suite</artifactId>
+	   <version>2.4-M3.1</version>
+	   <relativePath>../pom.xml</relativePath>
+	</parent>
+	
+	<groupId>org.openmobster.core.mobileCloud.android.2_0</groupId>	
+    <artifactId>test-real-device</artifactId>
+    <name>test-real-device</name>
+    <packaging>jar</packaging>
+    
+    <profiles>
+    	<profile>
+    		<id>test-api-port</id>
+    		
+    		<dependencies>
+	    		<dependency>
+	    			<groupId>org.openmobster.core.mobileCloud.android.2_0</groupId>
+	        		<artifactId>test-api-port</artifactId>
+	        		<version>${project.version}</version>
+	        		<classifier>bin</classifier>
+	    		</dependency>
+	    		<dependency>
+	    			<groupId>org.openmobster.core.mobileCloud.android.2_0</groupId>
+	        		<artifactId>test-api-port</artifactId>
+	        		<version>${project.version}</version>
+	    		</dependency>
+    		</dependencies>
+    		
+    		<build>
+    			<plugins>
+    				<plugin>
+						<artifactId>maven-assembly-plugin</artifactId>
+						<version>2.2-beta-5</version>
+						<configuration>
+							<descriptors>
+								<descriptor>src/assemble/moblet.xml</descriptor>
+							</descriptors>
+						</configuration>
+						<executions>
+							<execution>
+								<id>moblet</id>
+								<phase>package</phase>
+								<goals>
+									<goal>single</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>install</id>
+								<phase>install</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<tasks>
+										<echo>Installing the CloudSide TestSuite components into a JBoss AS instance</echo>
+										<copy todir="${env.JBOSS_HOME}/server/openmobster/deploy" overwrite="true" file="${basedir}/target/${project.artifactId}-${project.version}-moblet.jar">
+										</copy>
+										
+										<copy todir="${env.JBOSS_HOME}/server/openmobster/deploy" overwrite="true" file="${settings.localRepository}/org/openmobster/core/device-agent-simulator/${project.version}/device-agent-simulator-${project.version}.jar">
+										</copy>
+										<copy todir="${env.JBOSS_HOME}/server/openmobster/deploy" overwrite="true" file="${settings.localRepository}/org/openmobster/core/device-agent-frameworks/${project.version}/device-agent-frameworks-${project.version}.jar">
+										</copy>
+										<copy todir="${env.JBOSS_HOME}/server/openmobster/deploy" overwrite="true" file="${settings.localRepository}/org/openmobster/core/api-cloudConnector/${project.version}/api-cloudConnector-${project.version}.jar">
+										</copy>
+									</tasks>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+    			</plugins>
+    		</build>
+    	</profile>
+    </profiles>
+</project>

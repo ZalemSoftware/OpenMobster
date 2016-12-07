@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<moblet-apps>
+	<!-- Android version -->
+	<moblet-app>	    
+	    <name>fuseapp</name>
+	    <description>fuseapp</description>
+		<bin-loc>/fuseapp-1.0-zipped.apk</bin-loc>	
+	</moblet-app>		
+</moblet-apps>

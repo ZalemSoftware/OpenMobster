@@ -1,0 +1,42 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<parent>
+		<groupId>org.openmobster.core</groupId>
+		<artifactId>core</artifactId>
+		<version>2.4-M3.1</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<modelVersion>4.0.0</modelVersion>
+	<name>push-apn</name>
+	<artifactId>push-apn</artifactId>
+	<packaging>jar</packaging>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-io</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>bouncycastle</groupId>
+			<artifactId>bcprov-jdk16</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javapns</groupId>
+			<artifactId>javapns-jdk15</artifactId>
+		</dependency>
+		
+		<!-- OpenMobster Dependencies -->
+		<dependency>
+			<groupId>org.openmobster.core</groupId>
+			<artifactId>common</artifactId>				
+		</dependency>
+		<dependency>
+			<groupId>org.openmobster.core</groupId>
+			<artifactId>security</artifactId>				
+		</dependency>
+	</dependencies>
+</project>

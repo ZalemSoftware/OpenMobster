@@ -1,0 +1,11 @@
+Supported MobileBean specification
+
+* A POJO or any Java object that implements the MobileBean interface which serves as a Marker Interface
+
+* Must specify a unique id via a Field Level annotation MobileBeanId
+
+* Supports simple and nested properties
+
+* Supports indexed properties like Arrays and Lists for MobileBeans
+
+* mapped properties are not currently supported on both device and server

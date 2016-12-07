@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<deployment xmlns="urn:jboss:bean-deployer:2.0">
+   <!--  Register the MobileChannel -->
+   <bean name="testapp_ticket_channel" class="org.testapp.cloud.TicketChannel">
+   		<property name="ds">
+   	  		<inject bean="/testapp/TicketDS"/>
+   		</property>
+   		<depends>/testapp/bootstrap/data</depends>
+   </bean>
+   
+   <!--  RPC service -->
+   <bean name="/user/profile" class="org.testapp.cloud.MockRPC">
+   		<depends>services://MobileObjectMonitor</depends>
+   		<depends>services://MobileServiceMonitor</depends>
+   </bean>
+   
+   <!-- Storage services based on Hibernate -->
+   <bean name="/testapp/HibernateManager" class="org.openmobster.core.common.database.HibernateManager"/>
+   <bean name="/testapp/TicketDS" class="org.testapp.cloud.TicketDS">
+   	  <property name="hibernateManager">
+   	  	<inject bean="/testapp/HibernateManager"/>
+   	  </property>
+   </bean>
+   
+   <!-- Some Cloud Side bootstrappers used to load up test data, and listen for updates to demo "Cloud Push" -->
+   <bean name="/testapp/bootstrap/data" class="org.testapp.cloud.BootstrapData">
+   		<property name="ds">
+   	  		<inject bean="/testapp/TicketDS"/>
+   		</property>
+   </bean>
+</deployment>

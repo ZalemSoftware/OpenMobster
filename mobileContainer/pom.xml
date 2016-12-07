@@ -1,0 +1,47 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<parent>
+		<groupId>org.openmobster.core</groupId>
+		<artifactId>core</artifactId>
+		<version>2.4-M3.1</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+	
+	<modelVersion>4.0.0</modelVersion>	
+	<name>mobileContainer</name>	
+	<artifactId>mobileContainer</artifactId>	
+	<packaging>jar</packaging>
+	
+	<dependencies>
+	    <dependency>
+			<groupId>org.openmobster.core</groupId>
+			<artifactId>common</artifactId>				
+		</dependency>
+		<dependency>
+			<groupId>org.openmobster.core</groupId>
+			<artifactId>api</artifactId>				
+		</dependency>			    
+		<dependency>
+			<groupId>org.openmobster.core</groupId>
+			<artifactId>services</artifactId>			
+		</dependency>
+		<dependency>
+			<groupId>org.openmobster.core</groupId>
+			<artifactId>mobileObject</artifactId>			
+		</dependency>	
+		<dependency>
+			<groupId>org.openmobster.core</groupId>
+			<artifactId>location</artifactId>			
+		</dependency>																				
+		
+		<!-- test dependency -->
+		<dependency>
+			<groupId>org.openmobster.core</groupId>
+			<artifactId>device-agent-frameworks</artifactId>
+			<scope>test</scope>			
+		</dependency>
+	</dependencies>
+	
+	<!-- build configuration -->	
+	<build>									
+	</build>
+</project>

@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="sample">
+   <chapterinfo>
+      <author>
+         <firstname>Your first name</firstname>
+         <surname>Your last name</surname>
+         <email>your.email@your.domain.com</email>
+      </author>
+   </chapterinfo>
+   <title>Sample chapter</title>
+   <para>This is the beginning of the sample chapter.</para>
+   <sect1>
+      <title>sample section</title>
+      <para>This is the beginning of the sample section. It contains examples of how docbook should be used in the context
+      of a documentation for a Java related product.</para>
+
+      <sect2>
+         <title>Bullet points</title>
+         <programlisting><![CDATA[
+<itemizedlist>
+   <listitem>Item1</listitem>
+   <listitem>Item2</listitem>
+   <listitem>Item3</listitem>
+</itemizedlist>
+]]></programlisting>
+         <para>
+            <itemizedlist>
+               <listitem>Item1</listitem>
+               <listitem>Item2</listitem>
+               <listitem>Item3</listitem>
+            </itemizedlist>
+         </para>
+      </sect2>
+
+      <sect2>
+         <title>Interface or annotation reference</title>
+         <programlisting><![CDATA[
+<interfacename>mypackage.MyInterface</interfacename>
+<interfacename>@MyAnnotation</interfacename>
+]]></programlisting>
+         <para>
+            <interfacename>mypackage.MyInterface</interfacename>
+            <interfacename>@MyAnnotation</interfacename>
+         </para>
+      </sect2>
+
+      <sect2>
+         <title>Class reference</title>
+         <programlisting><![CDATA[
+<classname>mypackage.MyClass</classname>
+]]></programlisting>
+         <para>
+            <classname>mypackage.MyClass</classname>
+         </para>
+      </sect2>
+
+      <sect2>
+         <title>Parameter reference</title>
+         <programlisting><![CDATA[
+<parameter>MyParameter</parameter>
+]]></programlisting>
+         <para>
+            <parameter>MyParameter</parameter>
+         </para>
+      </sect2>
+
+      <sect2>
+         <title>Method referece</title>
+         <programlisting><![CDATA[
+<methodname>myMethod()</methodname>
+]]></programlisting>
+         <para>
+            <methodname>myMethod()</methodname>
+         </para>
+      </sect2>
+
+      <sect2>
+         <title>Exception reference</title>
+         <programlisting><![CDATA[
+<exceptionname>mypackage.MyException</exceptionname>
+]]></programlisting>
+         <para>
+            <exceptionname>mypackage.MyException</exceptionname>
+         </para>
+      </sect2>
+
+      <sect2>
+         <title>A variable name</title>
+         <programlisting><![CDATA[
+<varname>myVariable</varname>
+]]></programlisting>
+         <para>
+            <varname>myVariable</varname>
+         </para>
+      </sect2>
+
+      <sect2>
+         <title>File reference</title>
+         <programlisting><![CDATA[
+<filename>MyFile</filename>
+]]></programlisting>
+         <para>
+            <filename>MyFile</filename>
+         </para>
+      </sect2>
+
+      <sect2>
+         <title>Literal reference</title>
+         <programlisting><![CDATA[
+<literal>null</literal>
+<literal>1</literal>
+<literal>"foo"</literal>
+]]></programlisting>
+         <para>
+            <literal>null</literal>
+            <literal>1</literal>
+            <literal>"foo"</literal>
+         </para>
+      </sect2>
+
+      <sect2>
+         <title>A constant</title>
+         <programlisting><![CDATA[
+<constant>MAX_VALUE</constant>
+]]></programlisting>
+         <para>
+            <constant>MAX_VALUE</constant>
+         </para>
+      </sect2>
+
+      <sect2>
+         <title>Inline code</title>
+         <programlisting><![CDATA[
+<code>System.out.println()</code>
+]]></programlisting>
+         <para>
+            <code>System.out.println()</code>
+         </para>
+      </sect2>
+
+      <sect2>
+         <title>Code or XML with a caption</title>
+         <programlisting>
+&lt;example&gt;
+   &lt;programlisting&gt;&lt;![CDATA[public class MyClass
+{
+}
+]]&gt;&lt;/programlisting&gt;
+   &lt;caption&gt;This is the MyClass class&lt;/caption&gt;
+&lt;/example&gt;
+</programlisting>
+         <para>
+         <example>
+            <programlisting><![CDATA[public class MyClass
+{
+}
+]]></programlisting>
+            <caption>This is the MyClass class</caption>
+         </example>
+         </para>
+      </sect2>
+
+      <sect2>
+         <title>A database name</title>
+         <programlisting><![CDATA[
+<database>MyDatabase</database>
+]]></programlisting>
+         <para>
+            <database>MyDatabase</database>
+         </para>
+      </sect2>
+
+      <sect2>
+         <title>A shell command</title>
+         <programlisting><![CDATA[
+<command>ls -l</command>
+]]></programlisting>
+         <para>
+            <command>ls -l</command>
+         </para>
+      </sect2>
+
+      <sect2>
+         <title>A shell example</title>
+         <programlisting><![CDATA[
+<screen>&lt;![CDATA[openmobster:~/openmobster openmobster$ ls -l
+total 8
+drwxr-xr-x   3 openmobster  openmobster  102 Oct 19 18:14 build
+-rwxr-xr-x   1 openmobster  openmobster  923 Oct 19 17:40 build.xml
+drwxr-xr-x   6 openmobster  openmobster  204 Oct 19 17:42 en
+]]&gt;</screen>
+]]></programlisting>
+         <para>
+            <screen><![CDATA[openmobster:~/openmobster openmobster$ ls -l
+total 8
+drwxr-xr-x   3 openmobster  openmobster  102 Oct 19 18:14 build
+-rwxr-xr-x   1 openmobster  openmobster  923 Oct 19 17:40 build.xml
+drwxr-xr-x   6 openmobster  openmobster  204 Oct 19 17:42 en
+]]></screen>
+         </para>
+      </sect2>
+
+   </sect1>
+
+</chapter>

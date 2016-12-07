@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<deployment xmlns="urn:jboss:bean-deployer:2.0">        
+   <!-- Data Service Server -->
+   <!--
+   		This is the default SSL port of the server. Value = 1500
+   -->
+   <bean name="dataService://Server" class="org.openmobster.core.dataService.server.Server">
+   	  <property name="port">1500</property> 
+   	  
+   	  <!-- Se estas propriedades estiverem definidas, utiliza ssl nas comunicações com os dispositivos. -->
+   	  <property name="keyStoreLocation">${openmobster.ssl.keystore.file}</property> 
+   	  <property name="keyStorePassword">${openmobster.ssl.keystore.password}</property>
+   	  
+   	  <property name="handler"><inject bean="dataService://ServerHandler"/></property>
+   	  
+   	  <property name="payloadFilter">
+   			<inject bean="dataService://PayloadFilter"/>
+   	  </property>
+   	  <property name="requestFilter">
+   			<inject bean="dataService://RequestConstructionFilter"/>
+   	  </property>
+   	  <property name="transactionFilter">
+   			<inject bean="dataService://TransactionFilter"/>
+   	  </property>   	  
+   	  <property name="authenticationFilter">
+   			<inject bean="dataService://AuthenticationFilter"/>
+   	  </property>
+   	  
+   	  <property name="clusterService">
+   			<inject bean="clustering://ClusterService"/>
+   	  </property>
+   </bean>
+   
+   <!--
+   		This is the default non-SSL port of the server. Value=1502
+   -->
+   <bean name="dataService://PlainServer" class="org.openmobster.core.dataService.server.PlainServer">
+   	  <property name="port">1502</property>   	     	    	  
+   	  <property name="handler"><inject bean="dataService://ServerHandler"/></property>
+   	  
+   	  <property name="payloadFilter">
+   			<inject bean="dataService://PayloadFilter"/>
+   	  </property>  
+   	  <property name="requestFilter">
+   			<inject bean="dataService://RequestConstructionFilter"/>
+   	  </property> 	     	  
+   	  <property name="transactionFilter">
+   			<inject bean="dataService://TransactionFilter"/>
+   	  </property>   	  
+   	  <property name="authenticationFilter">
+   			<inject bean="dataService://AuthenticationFilter"/>
+   	  </property>
+   	  
+   	  <property name="clusterService">
+   			<inject bean="clustering://ClusterService"/>
+   	  </property>
+   </bean>
+   
+   <!--  
+   <bean name="dataService://http" class="org.openmobster.core.dataService.http.HttpServer">
+   		<property name="keyStoreLocation">/Users/openmobster/openmobster.keystore</property> 
+   	  	<property name="keyStorePassword">password</property>
+   </bean>
+   -->
+   
+   <!-- Cross Cutting services -->
+   <bean name="dataService://PayloadFilter" class="org.openmobster.core.dataService.server.PayloadFilter">    		  		
+   </bean>
+   <bean name="dataService://RequestConstructionFilter" class="org.openmobster.core.dataService.server.RequestConstructionFilter">    		  		
+   </bean>
+   <bean name="dataService://TransactionFilter" class="org.openmobster.core.dataService.server.TransactionFilter">    		  		
+   </bean>
+   <bean name="dataService://AuthenticationFilter" class="org.openmobster.core.dataService.server.AuthenticationFilter"> 
+   		<property name="deviceController">
+   			<inject bean="security://DeviceController"/>
+   		</property>   		  		
+   </bean>
+   
+   
+   <!-- Data Service ServerHandler -->
+   <bean name="dataService://ServerHandler" class="org.openmobster.core.dataService.server.ServerHandler">         
+   		<property name="commandController">
+   			<inject bean="dataService://CommandController"/>
+   		</property>  
+   		<property name="processorController">
+   			<inject bean="dataService://ProcessorController"/>
+   		</property>  		   		
+   </bean>
+   
+   <!-- CommandController --> 
+   <bean name="dataService://CommandController" class="org.openmobster.core.dataService.server.CommandController">    		
+   		<property name="cometSessionManager">
+   			<inject bean="dataService://CometSessionManager"/>
+   		</property>
+   		<property name="pulseInterval">9</property>  		
+   </bean>
+   
+   <!-- ProcessorController -->
+   <bean name="dataService://ProcessorController" class="org.openmobster.core.dataService.server.ProcessorController">    		  		
+   </bean>
+   
+   <!-- MobileServiceBean Invocation Processor -->
+   <bean name="mobileservice" class="org.openmobster.core.dataService.processor.ServiceInvocationProcessor">		
+   		<property name="mobileContainer">
+			<inject bean="mobileContainer://MobileContainer"/>
+		</property>
+   </bean>
+   
+   <bean name="dataService://ServerEventListener" 
+   class="org.openmobster.core.dataService.event.ServerEventListener">	
+   		<property name="notifier"><inject bean="org.openmobster.core.push.notification.Notifier"/></property>	   		
+   </bean>
+   
+   <bean name="dataService://CometSessionManager" 
+   class="org.openmobster.core.dataService.comet.CometSessionManager">	   		
+   		<property name="deviceController"><inject bean="security://DeviceController"/></property>
+   		<property name="eventManager"><inject bean="common://EventManager"/></property>	
+   		<!-- provide a value in milliseconds. Default: 30000 which sends a socket pulse check every 30 seconds -->
+   		<property name="pulseInterval">9</property>
+   		<property name="clusterService">
+   			<inject bean="clustering://ClusterService"/>
+   	  </property>
+   </bean>  
+   
+   <!-- Processor that hooks into the data service -->
+   <bean name="sync" class="org.openmobster.core.dataService.processor.SyncProcessor">    				
+   		<property name="id">sync</property>
+   		<property name="syncAdapter">
+   			<inject bean="synchronizer://SyncServerAdapter"/>
+   		</property>   		
+   </bean>  
+   
+   <!--  Push RPC Service -->  
+   <bean name="push_rpc" 
+   class="org.openmobster.core.dataService.push.PushRPC">	
+   		<property name="notifier"><inject bean="org.openmobster.core.push.notification.Notifier"/></property>
+   		<property name="deviceController"><inject bean="security://DeviceController"/></property>	 	   		
+   </bean>
+   
+   <!-- LocationProcessor -->
+   <bean name="org.openmobster.core.dataService.processor.LocationProcessor" 
+   class="org.openmobster.core.dataService.processor.LocationProcessor">    				
+   		<property name="id">org.openmobster.core.dataService.processor.LocationProcessor</property>
+   		<property name="mobileContainer">
+			<inject bean="mobileContainer://MobileContainer"/>
+		</property> 
+		<property name="payloadHandler">
+			<inject bean="org.openmobster.core.location.PayloadHandler"/>
+		</property>  		
+   </bean>                          
+</deployment>

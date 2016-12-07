@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<deployment xmlns="urn:jboss:bean-deployer:2.0">
+   <bean name="security://test-suite/HibernateManager" class="org.openmobster.core.common.database.HibernateManager">
+   	  <property name="config">security-hibernate.cfg.xml</property>
+   </bean>
+      
+   <bean name="security://test-suite/IdentityController" class="org.openmobster.core.security.identity.IdentityController">
+   		<property name="hibernateManager"><inject bean="security://test-suite/HibernateManager"/></property>
+   </bean>
+   
+   <bean name="security://test-suite/GroupController" class="org.openmobster.core.security.identity.GroupController">
+   		<property name="hibernateManager"><inject bean="security://test-suite/HibernateManager"/></property>
+   </bean>
+   
+   <bean name="security://test-suite/DeviceController" class="org.openmobster.core.security.device.DeviceController">
+   		<property name="hibernateManager"><inject bean="security://test-suite/HibernateManager"/></property>
+   </bean>      
+</deployment>

@@ -1,0 +1,59 @@
+Title: Mobile RPC (Remote Procedure Call) Development
+
+The MobileService component on the device side is used to make synchronous remote service invocations on registered MobileServerBean instances
+on the Cloud Server.
+
+At this time, this is a very simple request/response based system whose main design goal is to shield the App developer from any low level
+details like making network connections, resolving remote services, marshalling/unmarshalling payload, protocol details, etc.
+
+
+The next iteration of this component will involve introducing more robust features based on a REST-based architecture.
+
+ 
+* Simple Tutorial
+
+	Cloud Side: MobileServiceBean implementation
+	MobileServiceBean is a simple interface with a single "invoke" method that needs to be implemented. This implementation should
+	carry coarse grained business process logic.
+	Sample Code:
+	public Response invoke(Request request) 
+	{	
+		log.info("-------------------------------------------------");
+		log.info(this.getClass().getName()+" successfully invoked...");		
+		
+		Response response = new Response();
+		String[] names = request.getNames();
+		for(String name: names)
+		{
+			String value = request.getAttribute(name);
+			log.info("Name="+name+", Value="+value);
+			response.setAttribute(name, "response://"+value);
+		}		
+		log.info("-------------------------------------------------");
+		
+		return response;
+	}
+	
+	
+	Step2: Provide the META-INF/openmobster-config.xml that will deploy the "MobileServiceBean" instance into the Cloud Server.
+	Sample Configuration:
+	<?xml version="1.0" encoding="UTF-8"?>
+	<deployment xmlns="urn:jboss:bean-deployer:2.0">
+   		<bean name="/demo/mobile-rpc" class="org.openmobster.core.examples.rpc.DemoMobileBeanService"/>
+	</deployment>
+	
+	Step3: Package the the above classes and the corresponding META-INF/openmobster-config.xml into a simple Jar file.
+	
+	Step4: Deploy this jar file into the "deploy" directory of your JBoss AS instance
+	
+	Putting it all together: Entire Example MobileServiceBean is located at: 
+	
+	Device Side: 
+	Sample Invocation code on the device:
+	Request request = new Request("/demo/mobile-rpc");
+	request.setAttribute("param1", "paramValue1");
+	request.setAttribute("param2", "paramValue2");
+		
+	MobileService service = new MobileService();
+	Response response = service.invoke(request);
+	

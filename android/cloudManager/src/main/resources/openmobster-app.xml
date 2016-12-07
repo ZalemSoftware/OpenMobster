@@ -1,0 +1,8 @@
+<app-conf>
+	<encryption>false</encryption>
+	
+	<push>
+		<!-- enable background re-establishment of the Push Socket if its disconnected -->
+		<reconnect/>
+	</push>
+</app-conf>

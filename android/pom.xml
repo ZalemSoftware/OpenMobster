@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.openmobster.core.android</groupId>
+	<artifactId>2_0</artifactId>
+	<version>2.4-M3.1</version>
+	<name>android</name>
+	<packaging>pom</packaging>
+	
+	<properties>
+		<version.android.api>11</version.android.api>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<android.keystore.location>
+			${env.ANDROID_KEYSTORE}
+		</android.keystore.location>
+		<storepass>${env.ANDROID_STORE_PASS}</storepass>
+		<keypass>${env.ANDROID_KEY_PASS}</keypass>
+		<alias>${env.ANDROID_KEYSTORE_ALIAS}</alias>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>android</groupId>
+				<artifactId>android</artifactId>
+				<version>2.0</version>
+				<scope>system</scope>
+				<systemPath>${env.ANDROID_HOME}/platforms/android-${version.android.api}/android.jar</systemPath>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<dependencies>
+		<dependency>
+			<groupId>android</groupId>
+			<artifactId>android</artifactId>
+		</dependency>
+	</dependencies>
+
+	<modules>
+		<module>cloudManager</module>
+		<module>common</module>
+		<module>mobileObject</module>
+		<module>sync</module>
+		<module>bus</module>
+		<module>connection</module>
+		<module>api</module>
+		<module>mobileCloud-runtime</module>
+		<module>moblet-runtime</module>
+		<module>native-framework</module>
+		<module>javascript-bridge</module>
+		<module>dm</module>
+		<module>location</module>
+		
+		<module>device-sdk</module>
+		<module>mobileCloud</module>
+	</modules>
+	
+	<profiles>
+		<profile>
+			<id>deploy-android</id>
+			<modules>
+				<module>device-sdk</module>
+				<module>mobileCloud</module>
+			</modules>
+		</profile>
+		<profile>
+			<id>build-all</id>
+			<modules>
+				<module>test-suite</module>
+			</modules>
+		</profile>
+		<profile>
+			<id>android-release</id>
+			<modules>
+				<module>test-suite</module>
+			</modules>
+		 </profile>
+	</profiles>
+	
+	<build>
+		<plugins>
+	      <plugin>
+	        <groupId>org.apache.maven.plugins</groupId>
+	        <artifactId>maven-compiler-plugin</artifactId>
+	        <configuration>
+	          <source>1.5</source>
+	          <target>1.5</target>
+	        </configuration>
+	      </plugin>
+    	</plugins>
+    	<extensions>
+			<extension>
+				<groupId>org.jvnet.wagon-svn</groupId>
+				<artifactId>wagon-svn</artifactId>
+				<version>1.8</version>
+			</extension>
+		</extensions>
+		
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+					<artifactId>android-maven-plugin</artifactId>
+					<version>3.8.0</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>		
+	</build>
+	
+	<repositories>
+		<!-- JBoss maven2 repository -->
+		<repository>
+			<id>jboss</id>
+			<url>http://anonsvn.jboss.org/repos/repository.jboss.org/maven2
+			</url>
+		</repository>
+
+		<!-- CodeHaus repository -->
+		<repository>
+			<id>maven-codehaus</id>
+			<name>Public online CodeHaus Maven Repository</name>
+			<url>http://repository.codehaus.org
+			</url>
+		</repository>
+
+		<repository>
+			<id>maven2-repository.dev.java.net</id>
+			<name>Java.net Repository for Maven</name>
+			<url>http://download.java.net/maven/2/
+			</url>
+		</repository>
+		
+		<repository>
+			<id>openmobster-maven</id>
+			<name>OpenMobster Maven Repository</name>
+			<url>https://openmobster.googlecode.com/svn/maven2
+			</url>
+		</repository>
+	</repositories>
+	
+	<distributionManagement>
+		<repository>
+			<uniqueVersion>false</uniqueVersion>
+			<id>openmobster-maven</id>
+			<name>openmobster</name>
+			<url>svn:https://openmobster.googlecode.com/svn/maven2</url>
+			<layout>default</layout>
+		</repository>
+	</distributionManagement>	
+</project>

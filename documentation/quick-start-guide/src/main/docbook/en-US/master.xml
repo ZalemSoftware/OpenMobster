@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+      "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<book lang="en">
+   <bookinfo>
+      <title>OpenMobster - Mobile Cloud Platform</title>
+      <subtitle>Quick Start Guide</subtitle>
+      <releaseinfo>2.4</releaseinfo>
+      <author>
+         <firstname>openmobster</firstname>
+         <surname>openmobster</surname>
+         <email>openmobster@gmail.com</email>
+      </author>
+   </bookinfo>
+   <toc/>
+   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="chapters/introduction.xml"/>
+   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="chapters/hellomobster.xml"/> 
+   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="chapters/installation.xml"/>
+   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="chapters/managementConsole.xml"/>
+   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="chapters/concepts.xml"/>
+   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="chapters/architecture.xml"/>      
+</book>

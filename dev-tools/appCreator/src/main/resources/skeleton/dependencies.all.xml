@@ -1,0 +1,18 @@
+			<!--  Android Dependencies -->
+			<dependency>
+				<groupId>android</groupId>
+				<artifactId>android</artifactId>
+				<version>2.0</version>
+				<scope>system</scope>
+				<systemPath>\${env.ANDROID_HOME}/platforms/android-\${version.android.api}/android.jar
+				</systemPath>
+			</dependency>
+			
+			<!-- RIMOS Dependencies -->
+			<dependency>
+		      <groupId>net.rim</groupId>
+		      <artifactId>net_rim_api</artifactId>
+		      <version>4.3.0</version>
+		      <scope>system</scope>
+		      <systemPath>\${env.RIM_JDE_HOME}/lib/net_rim_api.jar</systemPath>
+		    </dependency>

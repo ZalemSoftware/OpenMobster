@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="managementConsole">
+	<chapterinfo>
+		<author>
+			<firstname>openmobster</firstname>
+			<surname>at gmail.com</surname>
+			<email>openmobster@gmail.com</email>
+		</author>
+	</chapterinfo>
+	<title>Management Console</title>
+	<sect1>
+		<para>
+			OpenMobster, comes with a GWT/SmartGWT based GUI Management Console. This Console can be used to administrate users, devices, and push services.
+			This tool will evolve over time to include some management functionality like remote wipe, remote lockdown, etc
+		</para>
+	</sect1>
+	<sect1>
+		<title>GUI Functionality</title>
+		<sect2>
+			<title>Create Account</title>
+			<para>
+			This lets you create an 'Admin' account. This creation has to be approved by another administrator before you can login. 
+			</para>
+		</sect2>
+		<sect2>
+			<title>Devices</title>
+			<para>
+			This lets you manage your devices such activation, deactivation, etc. As the software matures it may add more system level functions like remote wipe, remote lock down, etc. 			
+			</para>
+			<sect3>
+				<title>Activate/De-Activate</title>
+				<para>Activates or Deactivates the 'Device' account. If de-activated, none of the Cloud services will be available to the device. They will be available as soon as the account is activated. </para>
+			</sect3>
+			<sect3>
+				<title>Re-assign</title>
+				<para>De-activates the 'Device' account and makes it available to be assigned to another user. This is so that when a user leaves, his device can be re-assigned to another user. </para>
+			</sect3>
+		</sect2>
+		<sect2>
+			<title>Administrators</title>
+			<para>Used for managing the 'Admin' accounts.</para>
+			<sect3>
+				<title>Activate/De-Activate</title>
+				<para>Activates and De-Activates the 'Admin' account. </para>
+			</sect3>
+		</sect2>
+		<sect2>
+			<title>Push Setup</title>
+			<para>This is used to configure the Apple Push Notification service. As part of the system, a security certificate has to be assigned to an application before messages can be pushed to it.
+			This is where your certificate can be uploaded and assigned to an App. Once this is successful, you can send a test push to your iPhone.</para>
+		</sect2>
+	</sect1>
+</chapter>

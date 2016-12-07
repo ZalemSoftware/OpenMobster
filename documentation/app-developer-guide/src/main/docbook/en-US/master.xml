@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+      "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<book lang="en">
+   <bookinfo>
+      <title>OpenMobster - Mobile Backend as a Service Platform</title>
+      <subtitle>App Developer Guide</subtitle>
+      <releaseinfo>2.4</releaseinfo>
+      <author>
+         <firstname>openmobster</firstname>
+         <surname>at gmail.com</surname>
+         <email>openmobster@gmail.com</email>
+      </author>
+   </bookinfo>
+   <toc/>
+   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="chapters/introduction.xml"/>
+   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="chapters/concepts.xml"/>
+   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="chapters/architecture.xml"/>
+   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="chapters/crud.xml"/> 
+   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="chapters/crudcode.xml"/>
+   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="chapters/appcreator.xml"/> 
+   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="chapters/mobilebean.xml"/>
+   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="chapters/push.xml"/>
+   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="chapters/ios_openmobster.xml"/>
+   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="chapters/ios_sampleapp.xml"/>
+   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="chapters/mobilerpc.xml"/>
+   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="chapters/clustering.xml"/>
+   <xi:include xmlns:xi="http://www.w3.org/2001/XInclude" href="chapters/managementConsole.xml"/>
+</book>

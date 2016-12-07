@@ -1,0 +1,43 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+    	<groupId>org.openmobster.core</groupId>
+   		<artifactId>openmobster-documentation-parent</artifactId>
+   		<version>2.4-SNAPSHOT</version>
+    	<relativePath>../pom.xml</relativePath>
+   	</parent>
+
+	<modelVersion>4.0.0</modelVersion>
+    <artifactId>quick-start-guide</artifactId>
+    <name>Quick_Start_Guide</name>
+    <version>2.4-SNAPSHOT</version>
+    <packaging>jdocbook</packaging>        
+    
+    <build>
+	     <plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>									    										
+					<execution>
+					    <id>documentation-cleanup</id>
+						<phase>process-classes</phase>
+						<configuration>
+							<tasks>								    
+								<echo>Documentation Cleanup</echo>	
+								<delete file="target/docbook/publish/en-US/html/images/community/jbossorglogo.png"/>	
+								<delete file="target/docbook/publish/en-US/html/images/community/community_doc.png"/>
+								<delete file="target/docbook/publish/en-US/html/images/seamframework/seamlogo.png"/>
+								<delete file="target/docbook/publish/en-US/html/images/seamframework/community_doc.png"/>																				       																							
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>				
+			</plugin>
+	     </plugins>
+	</build>
+</project>

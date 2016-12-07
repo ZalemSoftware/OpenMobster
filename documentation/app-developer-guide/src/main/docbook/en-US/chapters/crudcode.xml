@@ -1,0 +1,637 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="crudcode">
+   <chapterinfo>
+      <author>
+         <firstname>openmobster</firstname>
+         <surname>at gmail.com</surname>
+         <email>openmobster@gmail.com</email>
+      </author>
+   </chapterinfo>
+   <title>Show me the Code</title>
+   <sect1>
+   		<para>
+   		A native Mobile App runs within the constraints of its local runtime. A major advantage of this environment is access to local storage for data
+associated with the App. If logic is the nervous system of an App, data is its life blood. Without the data, an App is lifeless. Local Storage
+brings an App to life instantaneously. The closer this data is stored, the faster and better is the performance of the App.
+   		</para>
+   		<para>
+   		A typical Mobile App has the following data-oriented requirements
+   		<itemizedlist>
+   			<listitem>Data originates in the Cloud.</listitem>
+   			<listitem>App related data is synchronized from the Cloud with the local storage over a network connection.</listitem>
+   			<listitem>Any data state changes (add/update/delete) via the App are synchronized with the Cloud.</listitem>
+   			<listitem>Any data state changes (add/update/delete) on the Cloud are pushed/synchronized with the device.</listitem>
+   			<listitem>This data is available to the mobile App even in the event the Cloud is unavailable.</listitem>
+   		</itemizedlist>
+   		The <emphasis role="bold">OpenMobster Cloud Platform</emphasis> uses a "Channel" component on the <emphasis>Cloud-side</emphasis> and 
+   		a <emphasis>MobileBean</emphasis> component on the <emphasis>Device-side</emphasis> to provide the above mentioned 
+   		offline capabilities to an App
+   		</para>
+   </sect1>
+   <sect1>
+   		<title>Tutorial</title>
+   		<sect2>
+   			<title>Cloud-Side: Channel Development</title>
+   			<para>
+   			A Channel serves as a gateway for integrating on-device model/data objects with the
+ 			server-side backend storage systems such as relational databases, content repositories, or 
+    		Enterprise systems like CRMs, ERPs etc. It provides a simple CRUD (Create, Read, Update, and Delete)
+    		interface to expose the backend data. The Channel is specifically designed such that the Developer does
+    		not have to worry about any low-level state management, and synchronization issues.
+   			</para>
+   			<sect3>
+   				<title>Step 1:</title>
+   				<para>
+   				Define a simple MobileBean to represent a data entity being mobilized. This MobileBean should adhere to the MobileBean specification
+    			covered here: <link linkend="mobilebean">Specification</link>
+   				</para>
+   				<para>
+   				<programlisting><![CDATA[
+import java.io.Serializable;
+
+import org.openmobster.cloud.api.sync.MobileBean;
+import org.openmobster.cloud.api.sync.MobileBeanId;
+
+/**
+ * A 'Ticket' instance represents tickets entered into the CRM db managed by the 'TicketDS' datasource
+ * 
+ * It is also marked as a 'MobileBean' instance so that it can be managed by the 'Sync' + 'Push' engines of the mobile platform
+ * 
+ * @author openmobster@gmail.com
+ */
+public class Ticket implements MobileBean,Serializable 
+{
+	private static final long serialVersionUID = -13825574505549274L;
+	
+	private long id; //oid
+
+	@MobileBeanId
+	private String ticketId; //uniquely identifies the ticket to the mobile engine..not to be confused with oid
+	
+	private String title;
+	private String comment;
+	private String customer;
+	private String specialist;
+	
+	public Ticket()
+	{
+		
+	}
+
+	public long getId()
+	{
+		return id;
+	}
+
+	public void setId(long id)
+	{
+		this.id = id;
+	}
+	
+	public String getTicketId()
+	{
+		return ticketId;
+	}
+
+	public void setTicketId(String ticketId)
+	{
+		this.ticketId = ticketId;
+	}
+
+	public String getTitle()
+	{
+		return title;
+	}
+
+	public void setTitle(String title)
+	{
+		this.title = title;
+	}
+
+	public String getComment()
+	{
+		return comment;
+	}
+
+	public void setComment(String comment)
+	{
+		this.comment = comment;
+	}
+
+	public String getCustomer()
+	{
+		return customer;
+	}
+
+	public void setCustomer(String customer)
+	{
+		this.customer = customer;
+	}
+
+	public String getSpecialist()
+	{
+		return specialist;
+	}
+
+	public void setSpecialist(String specialist)
+	{
+		this.specialist = specialist;
+	}
+}
+]]></programlisting>
+  				</para>
+   			</sect3>
+   			<sect3>
+   				<title>Step 2:</title>
+   				<para>
+   				Provide a Channel implementation that exposes this MobileBean via a CRUD interface.
+   				</para>
+   				<para>
+   				<programlisting><![CDATA[
+@ChannelInfo(uri="crm_ticket_channel", mobileBeanClass="org.crud.cloud.crm.Ticket")
+public class TicketChannel implements Channel
+   				]]></programlisting>
+   				</para>
+   				<sect4>
+   					<title>bootup</title>
+   					<para>
+   					This method provides a subset of the "MobileBean" instances associated with the said device. 
+		They provide just enough information for an App to be functional. This helps with avoiding very long synchronization
+		sessions. The other beans are loaded on-demand from there on
+		<programlisting><![CDATA[
+public List<? extends MobileBean> bootup()
+{
+	//Register this device with the NewTicketDetector
+	ExecutionContext context = ExecutionContext.getInstance();
+	Device device = context.getDevice();
+	this.newTicketDetector.load(device);
+			
+	List<Ticket> bootup = new ArrayList<Ticket>();
+	
+	List<Ticket> all = this.ds.readAll();
+	if(all != null && !all.isEmpty())
+	{
+		bootup.add(all.get(0));
+	}
+	
+	return bootup; 
+}
+   				]]></programlisting>
+   					</para>
+   				</sect4>
+   				<sect4>
+   					<title>readAll</title>
+   					<para>This method provides all the "MobileBean" instances associated with the said device.
+   					<programlisting><![CDATA[
+/**
+* Reads all the instances stored in the db
+*/
+public List<? extends MobileBean> readAll()
+{
+	return this.ds.readAll();
+}
+   				]]></programlisting>
+   					</para>
+   				</sect4>
+   				<sect4>
+   					<title>read</title>
+   					<para>
+   					This method loads the particular "MobileBean" instance in question.
+   					   					<programlisting><![CDATA[
+/**
+* Reads a specific ticket instance based on the unique 'ticketId'
+*/
+public MobileBean read(String ticketId)
+{
+	return this.ds.readByTicketId(ticketId);
+}
+   				]]></programlisting>
+   					</para>
+   				</sect4>
+   				<sect4>
+   					<title>create</title>
+   					<para>
+   					Creates a new instance of a "MobileBean" within the backend data service. This happens when a new instance is created
+		on the device and synchronized back with the Cloud. It returns the unique id generated by the server and associated with this bean.
+		   					   					<programlisting><![CDATA[
+/**
+ * Adds a new ticket created on the device to the backend db
+ */
+public String create(MobileBean mobileBean)
+{
+	//Get the device adding a new ticket to the system
+	ExecutionContext context = ExecutionContext.getInstance();
+	Device device = context.getDevice();
+	
+	//Store the new ticket in the database
+	Ticket local = (Ticket)mobileBean;
+	String syncid=this.ds.create(local);
+	
+	//Signal to the NewBeanDetector that a new ticket was added to the system,
+	//this will push this ticket to other devices
+	newTicketDetector.addSyncId(device,syncid);
+	
+	return syncid;
+}
+   				]]></programlisting>
+   					</para>
+   				</sect4>
+   				<sect4>
+   					<title>update</title>
+   					<para>
+   					Synchronizes the updated state of a bean from the device with the state on the Cloud.
+   					<programlisting><![CDATA[
+/**
+ * Synchronizes device side update with the backend db
+ */
+public void update(MobileBean mobileBean)
+{
+	Ticket local = (Ticket)mobileBean;
+	
+	Ticket stored = this.ds.readByTicketId(local.getTicketId());
+	local.setId(stored.getId());
+	
+	this.ds.update(local);
+}
+   				]]></programlisting>
+   					</para>
+   				</sect4>
+   				<sect4>
+   					<title>delete</title>
+   					<para>
+   					Deletes a bean instance that is user confirmed to be deleted from the device.
+   					<programlisting><![CDATA[
+/**
+ * Deletes any instances that are deleted on the device side
+ */
+public void delete(MobileBean mobileBean)
+{
+	Ticket local = (Ticket)mobileBean;
+	this.ds.delete(local);
+}
+   				]]></programlisting>
+   					</para>
+   				</sect4>
+   				<sect4>
+   					<title>scanForNew</title>
+   					<para>
+   					Scans the backend database looking for new entries added to the system. If new instances are found, the new data is pushed
+   					down to the respective devices immediately. This makes sure the data on the devices is always current with respect to the backend
+   					<programlisting><![CDATA[
+/**
+ * 'Pushes' any new instances that are created in the db down to the device in real time
+ */
+public String[] scanForNew(Device device, Date lastScanTimestamp)
+{
+	Set<String> newBeans = newTicketDetector.scan(device);
+	if(newBeans != null && !newBeans.isEmpty())
+	{
+		return newBeans.toArray(new String[0]); 
+	}		
+	return null;
+}
+   				]]></programlisting>
+   					</para>
+   				</sect4>
+   			</sect3>
+   			<sect3>
+   				<title>Step 3:</title>
+   				<para>
+   				Provide the META-INF/openmobster-config.xml that will deploy the "Channel" into the Cloud Server.
+   				<programlisting><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+
+<deployment xmlns="urn:jboss:bean-deployer:2.0">
+   <!--  Register the MobileChannel -->
+   <bean name="crm_ticket_channel" class="org.crud.cloud.crm.TicketChannel">
+   		<property name="ds">
+   	  		<inject bean="/crm/TicketDS"/>
+   		</property>
+   		<depends>/crm/bootstrap/data</depends>
+   </bean>
+   
+   <!-- Storage services based on Hibernate -->
+   <bean name="/crm/HibernateManager" class="org.openmobster.core.common.database.HibernateManager">
+   		<property name="config">crud.cfg.xml</property>
+   </bean>
+   <bean name="/crm/TicketDS" class="org.crud.cloud.crm.hibernate.TicketDS">
+   	  <property name="hibernateManager">
+   	  	<inject bean="/crm/HibernateManager"/>
+   	  </property>
+   </bean>
+   
+   <!-- Some Cloud Side bootstrappers used to load up test data, and listen for updates to demo "Cloud Push" -->
+   <bean name="/crm/bootstrap/data" class="org.crud.cloud.crm.bootstrap.BootstrapData">
+   		<property name="ds">
+   	  		<inject bean="/crm/TicketDS"/>
+   		</property>
+   </bean>
+   
+   <bean name="/asyc/load/spinners" class="org.crud.cloud.crm.bootstrap.AsyncLoadSpinners">
+   		<depends>services://MobileObjectMonitor</depends>
+   		<depends>services://MobileServiceMonitor</depends>
+   </bean>
+   
+   <bean name="/start/push" class="org.crud.cloud.crm.bootstrap.StartPush">
+   		<depends>services://MobileObjectMonitor</depends>
+   		<depends>services://MobileServiceMonitor</depends>
+   </bean>
+</deployment>
+   				]]></programlisting>
+   				</para>
+   			</sect3>
+   			<sect3>
+   				<title>Step 4:</title>
+   				<para>
+   				Package the the above classes and the corresponding META-INF/openmobster-config.xml into a simple <emphasis>jar</emphasis> file.
+   				</para>
+   			</sect3>
+   			<sect3>
+   				<title>Step 5:</title>
+   				<para>
+   				Deploy this jar file into the "deploy" directory of your JBoss AS instance
+   				</para>
+   			</sect3>
+   			<sect3>
+   				<title>Putting it all together</title>
+   				<para>
+   				 	The end-to-end Channel Example is located in the binary distribution at: 
+   				 	<emphasis role='bold'>Samples/crud/cloud</emphasis>
+   				</para>
+   			</sect3>
+   		</sect2>
+   		<sect2>
+   			<title>App/Device-Side Programming</title>
+   			<para>
+   				On the device side, you build your App on top of the OpenMobster Device SDK. The SDK provides the runtime engine and an API to
+   				integrate with the mobilized data and services. This tutorial will cover the various steps needed to integrate with the Device SDK.
+   			</para>
+   			<sect3>
+   			    <title>Step 1: Bootstrap the SDK runtime and services</title>
+   			    <para>
+   			        <programlisting><![CDATA[
+@Override
+protected void onStart()
+{
+	super.onStart();
+	
+	//Bootstrap the OpenMobster Service in the main activity of your App
+	CloudService.getInstance().start(this);
+}
+   			        ]]></programlisting>
+   			        Before you can use the services in the OpenMobster SDK, you must bootstrap the service. You must bootstrap the OpenMobster SDK 
+   			        in the <emphasis role='bold'>onStart</emphasis> method of your App's Main Activity.
+   			    </para>
+   			</sect3>
+   			<sect3>
+   			    <title>Step 2: Perform Activation with the Cloud Server</title>
+   			    <para>
+   			        <programlisting><![CDATA[
+@Override
+protected void onResume()
+{
+	super.onResume();
+	
+	//Check to make sure the App is activated with the OpenMobster Backend
+	boolean isDeviceActivated = CloudService.getInstance().isDeviceActivated();
+	if(!isDeviceActivated)
+	{						
+		this.startDeviceActivation();
+		return;
+	}
+	
+	this.showTicket();
+}
+   			        ]]></programlisting>
+   			        Once the SDK is bootstrapped, you must make sure the App is activated with the Cloud Server. For security reasons, only 
+   			        Apps activated with the Cloud Server are allowed to access the Cloud Data Services. Hence, in your <emphasis role='bold'>onResume</emphasis>
+   			        of the Main Activity, you must perform App Activation process if the App has not been activated with the Cloud Server.
+   			    </para>
+   			</sect3>
+   			<sect3>
+   			    <title>Step 3: Start accessing the mobilized data</title>
+   			    <para>
+   			        <programlisting><![CDATA[
+public void showTicket()
+{
+	//Read all the CRM Ticket instances synced locally with the device
+	if(MobileBean.isBooted("crm_ticket_channel"))
+	{			
+		activeBeans = MobileBean.readAll("crm_ticket_channel");
+		
+		ArrayList<HashMap<String, String>> mylist = new ArrayList<HashMap<String, String>>();
+		if(activeBeans != null && activeBeans.length>0)
+		{
+			for(MobileBean local:activeBeans)
+			{
+				HashMap<String, String> map = new HashMap<String, String>();				
+				String customer = local.getValue("customer");
+				String title = local.getValue("title");
+				
+				if(customer.length() > 25)
+				{
+					customer = customer.substring(0, 22)+"...";
+				}
+				
+				if(title.length() > 25)
+				{
+					title = title.substring(0, 22)+"...";
+				}
+				
+				map.put("customer", customer);
+				map.put("title", title);
+				mylist.add(map);
+			}
+		}
+		
+		SimpleAdapter ticketAdapter = new SimpleAdapter(HomeScreen.this, mylist,R.layout.ticket_row,new String[] {"customer", "title"}, new int[] {R.id.customer,R.id.title});
+	    listView.setAdapter(ticketAdapter);		 
+	    listView.setOnItemClickListener(new MyItemClickListener(activeBeans));
+	}
+	else
+	{
+		//Tickets not found...put up a Sync in progress message and wait for data to be downloaded 
+		//from the Backend
+		if(!HomeScreen.syncInProgress && !HomeScreen.syncComplete)
+		{
+			HomeScreen.syncInProgress = true;
+			SyncInProgressAsyncTask task = new SyncInProgressAsyncTask();
+			task.execute();
+		}
+	}
+}
+   			        ]]></programlisting>
+   			        On the device side, the mobilized data is accessible via the <emphasis role='bold'>org.openmobster.android.api.sync.MobileBean</emphasis> component.
+	The device-side MobileBean is a generic component which exposes a Cloud-side MobileBean information through 
+	a robust interface. Device-side MobileBean component semantic are covered here:<link linkend="mobilebean">Specification</link>
+   			    </para>
+   			    <para>
+   			        <emphasis role='bold'>readAll:</emphasis> Returns all MobileBean instances associated with a channel. Chances are some of the instances are only proxies that will be
+		loaded seamlessly when they are really needed <emphasis>on-demand</emphasis>. This process happens behind the scenes and there is nothing special a programmer needs to do.
+   			    </para>
+   			    <para>
+   			        <emphasis role='bold'>getValue:</emphasis> Reads the value associated with a field/property of an instance of a bean. A property expression is provided to access
+		this information.
+   			    </para>
+   			</sect3>
+   			<sect3>
+   			    <title>Step 4: Save a MobileBean instance to be synchronized with the Cloud</title>
+   			    <para>
+   			        <programlisting><![CDATA[
+@Override
+protected Void doInBackground(Void... arg0)
+{
+	message = handler.obtainMessage();		
+	try{
+		mobileBean.save();
+		message.what = 1;
+	}catch(Exception ex){
+		
+	}
+	return null;
+}
+   			        ]]></programlisting>
+   			     You can modify/add to your local store of MobileBean instances using the <emphasis role='bold'>save</emphasis> method. This is a 
+   			     local operation and is permitted even when the device is offline without any network coverage. This method integrates with the
+   			     low-level Sync Engine and makes sure instances are synchronized with the Cloud whenever a network connection is active.  	
+   			    </para>
+   			</sect3>
+   			<sect3>
+   			    <title>Step 5: Delete a MobileBean instance to be synchronized with the Cloud</title>
+   			    <para>
+   			        <programlisting><![CDATA[
+@Override
+protected Void doInBackground(Void... arg0)
+{
+	message = handler.obtainMessage();		
+	try{
+		mobileBean.delete();
+		message.what = 1;
+	}catch(Exception ex){
+		
+	}
+	return null;
+}
+   			        ]]></programlisting>
+   			     You can delete MobileBean instances from your local store using the <emphasis role='bold'>delete</emphasis> method. This is a 
+   			     local operation and is permitted even when the device is offline without any network coverage. This method integrates with the
+   			     low-level Sync Engine and makes sure instances are synchronized with the Cloud whenever a network connection is active.  	
+   			    </para>
+   			</sect3>
+   			<sect3>
+   			    <title>Step 5: Proper configuration in AndroidManifest.xml</title>
+   			    <para>
+   			        <programlisting><![CDATA[
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.crud.android.screen"
+    android:versionCode="1"
+    android:versionName="1.0-snapshot" >
+
+    <application
+        android:icon="@drawable/icon"
+        android:label="@string/app_name" >
+        <activity
+            android:name="org.crud.android.screen.HomeScreen"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
+		<activity android:name="org.crud.android.screen.UpdateTicketScreen" >
+        </activity>
+        <activity android:name="org.crud.android.screen.NewTicketScreen" >
+        </activity>
+        
+        <!-- OpenMobster SDK related components -->
+        <receiver android:name="org.openmobster.core.mobileCloud.api.ui.framework.push.PushBroadcastReceiver" >
+            <intent-filter>
+                <action android:name="org.crud.android.screen" />
+            </intent-filter>
+        </receiver>
+        
+        <receiver android:name="org.openmobster.core.mobileCloud.push.StartSyncBroadcastReceiver" >
+            <intent-filter>
+                <action android:name="org.openmobster.sync.start" />
+            </intent-filter>
+        </receiver>
+        <service
+            android:name="org.openmobster.core.mobileCloud.push.StartSync"
+            android:exported="false" >
+        </service>
+
+        <receiver android:name="org.openmobster.core.mobileCloud.push.NetworkStartupBroadcastReceiver" >
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+        <service
+            android:name="org.openmobster.core.mobileCloud.push.StartNetwork"
+            android:exported="false" >
+        </service>
+
+        <receiver android:name="org.openmobster.core.mobileCloud.android.module.connection.ActivatePushSocket" >
+        </receiver>
+        <service
+            android:name="org.openmobster.core.mobileCloud.android.module.connection.BackgroundActivatePushSocket"
+            android:exported="false" >
+        </service>
+        
+        <receiver android:name="org.openmobster.core.mobileCloud.android.module.connection.DeadSocketDetector">
+            <intent-filter>
+                    <action android:name="org.crud.android.screen" />
+            </intent-filter>
+        </receiver>
+        <service android:name="org.openmobster.core.mobileCloud.android.module.connection.DeadSocketService" android:exported="false">
+    	</service>
+    </application>
+
+    <!-- Permissions required by the OpenMobster SDK -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+    <uses-sdk android:minSdkVersion="11" />
+</manifest> 
+   			        ]]></programlisting>
+   			    </para>
+   			</sect3>
+   			<sect3>
+   			    <title>Step 6: Proper configuration in openmobster-app.xml</title>
+   			    <para>
+   			        <programlisting><![CDATA[
+<app-conf>
+	<encryption>false</encryption>
+	
+	<push>
+		<launch-activity-class>org.crud.android.screen.HomeScreen</launch-activity-class>
+		<icon-name>push</icon-name>
+		<!-- enable background re-establishment of the Push Socket if its disconnected -->
+		<reconnect/>
+	</push>
+		
+	<channels>
+		<channel name='crm_ticket_channel'>
+			<sync-push-message>You have {0} CRM Ticket Update(s)</sync-push-message>
+		</channel>
+	</channels>
+</app-conf>
+   			        ]]></programlisting>
+   			    </para>
+   			</sect3>
+   			<sect3>
+   				<title>Putting it all together</title>
+   				<para>
+   				 	The end-to-end Sample App is located in the binary distribution at: 
+   				 	<emphasis role='bold'>Samples/crud/app-android</emphasis>
+   				</para>
+   			</sect3>
+   		</sect2>
+   </sect1>
+</chapter>

@@ -1,0 +1,22 @@
+<moblet-app>
+    <bootstrap>
+    	<screen>org.crud.android.screen.HomeScreen</screen>
+    </bootstrap>
+    
+	<commands>	
+		<command id="/create/ticket">org.crud.android.command.CreateTicket</command>	
+		<command id="/update/ticket">org.crud.android.command.UpdateTicket</command>
+		<command id="/delete/ticket">org.crud.android.command.DeleteTicket</command>
+		
+		<command id="/channel/bootup/helper">org.crud.android.command.ChannelBootupHelper</command>		
+		<command id="/async/load/spinners">org.crud.android.command.AsyncLoadSpinners</command>
+		<command id="/reset/channel">org.crud.android.command.ResetChannel</command>
+		<command id="/demo/push">org.crud.android.command.DemoPush</command>
+		<command id="/plain/push">org.crud.android.command.PlainPush</command>	
+	</commands>
+	
+	<screens>
+		<screen id="/new/ticket">org.crud.android.screen.NewTicketScreen</screen>
+		<screen id="/update/ticket">org.crud.android.screen.UpdateTicketScreen</screen>
+	</screens>					
+</moblet-app>

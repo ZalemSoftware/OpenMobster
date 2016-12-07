@@ -1,0 +1,26 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+	<item android:id="@+id/item1"
+      android:title="Exit" />
+	<item android:id="@+id/item2"
+      android:title="Local Command" />
+   	<item android:id="@+id/item3"
+      android:title="Local System Error" />
+    <item android:id="@+id/item4"
+      android:title="Local App Error" />
+    <item android:id="@+id/item5"
+      android:title="Remote Command" />
+   	<item android:id="@+id/item6"
+      android:title="Remote System Error" />
+    <item android:id="@+id/item7"
+      android:title="Remote App Error" />
+    <item android:id="@+id/item8"
+      android:title="Remote Timeout" />
+    <item android:id="@+id/item9"
+      android:title="Async Command" />
+    <item android:id="@+id/item10"
+      android:title="Trigger Push" />
+    <item android:id="@+id/item11"
+      android:title="View Error Log" />
+    <item android:id="@+id/item11"
+      android:title="Clear Error Log" />  
+</menu>             

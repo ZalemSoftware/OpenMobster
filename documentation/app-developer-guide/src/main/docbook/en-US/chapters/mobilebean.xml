@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="mobilebean">
+   <chapterinfo>
+      <author>
+         <firstname>openmobster</firstname>
+         <surname>at gmail.com</surname>
+         <email>openmobster@gmail.com</email>
+      </author>
+   </chapterinfo>
+   <title>MobileBean</title>
+   <sect1>
+   		<title>MobileBean</title>
+   		 <para>
+			MobileBean is a <emphasis>managed</emphasis> Mobile Component which carries the state of the domain object that it represents on the server. It is
+   			propagated from the Cloud Server to the mobile device via its corresponding <emphasis role="bold">Channel</emphasis> on the server. The Mobile Data Framework shields
+   			the App developer from state management issues like, offline access, receiving push notifications related to state changes on the server,
+       		synchronizing locally modified beans back with the server, etc.
+   		 </para>
+   		 <para>
+   		 	The concept of a MobileBean applies to both sides of the world, Cloud-Side as well as Device-Side. 
+   		 </para>
+   </sect1>
+   <sect1>
+   		<title>Cloud-Side</title>
+   		<para>
+   		On the Cloud-Side the MobileBean is a simple Java Object that implements the <interfacename>org.openmobster.cloud.api.sync.MobileBean</interfacename> interface.
+   		The MobileBean is processed by its corresponding <emphasis>Channel</emphasis>. Through the channel instances of these beans are serialized into wire format
+   		and propagated to their respective devices. In order to be successfully serialized/deserialized, they should follow the proper specification.
+   		</para>
+   		<sect2>
+   			<title>Specification</title>
+   			<para>
+   				<itemizedlist>
+   					<listitem>
+   						The system successfully processes the following properties of a bean: 
+   						<emphasis>Simple Property</emphasis>, <emphasis>Nested Property</emphasis>, <emphasis>One-Dimensional Array property</emphasis>, and Parameterized <interfacename>java.util.List</interfacename> properties of <emphasis role="bold">Concrete Types</emphasis>. 
+   					</listitem>
+   					<listitem>
+   						<emphasis>Array Properties</emphasis> <emphasis role="bold">MUST NOT</emphasis> contain <emphasis>Null</emphasis> elements.
+   					</listitem>
+   					<listitem>
+   						<emphasis role="Bold">MUST</emphasis> contain an empty constructor
+   					</listitem>
+   					<listitem>
+   						<emphasis role="Bold">MUST</emphasis> contain provide public get and set methods for each one of its properties
+   					</listitem>
+   				</itemizedlist>
+   			</para>
+   		</sect2>
+   </sect1>
+   <sect1>
+   		<title>Device-Side</title>
+   		<para>
+   		On the Device-Side the MobileBeans from a channel are made accessible via the <emphasis>Mobile Data Framework</emphasis>. The generic
+   		<interfacename>org.openmobster.android.api.sync.MobileBean</interfacename> component is used to extract the state associated 
+   		with each instance. It provides various state-oriented operations. The individual properties of a bean are accessed using simple and intuitive
+   		expressions.
+   		</para>
+   		<sect2>
+   			<title>Accessing a Simple Property</title>
+   			<para>
+   				For a simple property <emphasis role="bold">myName</emphasis> on a bean, the following expression is used:
+   				<programlisting><![CDATA[
+MobileBean.getValue("myName");
+   				]]></programlisting>
+   			</para>
+   		</sect2>
+   		<sect2>
+   			<title>Accessing a Nested Property</title>
+   			<para>
+   				For a nested property <emphasis role="bold">myAddress.myStreet</emphasis> on a bean, the following expression is used:
+   				<programlisting><![CDATA[
+MobileBean.getValue("myAddress.myStreet");
+   				]]></programlisting>
+   			</para>
+   		</sect2>
+   		<sect2>
+   			<title>Accessing an Indexed Property (One-Dimensional Array or a java.util.List)</title>
+   			<para>
+   				For an indexed property <emphasis role="bold">"myName" on the "third element" of an Array or List named "users"</emphasis> on a bean, the following expression is used:
+   				<programlisting><![CDATA[
+MobileBean.getValue("users[2].myName");
+   				]]></programlisting>
+   			</para>
+   		</sect2>
+   		<sect2>
+   			<title>Iterating through an Indexed Property (One-Dimensional Array or a java.util.List)</title>
+   			<para>
+   				<programlisting><![CDATA[
+private void iterateEmails(MobileBean mobileBean)
+{
+		BeanList emails = mobileBean.readList("emails");
+		for(int index=0; index<emails.size(); index++)
+		{
+			BeanListEntry email = emails.getEntryAt(index);
+			System.out.println(email.getProperty("from"));
+			System.out.println(email.getProperty("to"));
+			System.out.println(email.getProperty("subject"));
+			System.out.println(email.getProperty("message"));
+		}
+}
+   				]]></programlisting>
+   			</para>
+   		</sect2>
+   		<para>
+   			In the background, the state of all device-side MobileBean instances is tracked by the <emphasis>OfflineApp service</emphasis>. Any state updates are automatically
+   			synchronized back with its Cloud-Side channel using the appropriate synchronization mode. As far as the App developer is concerned, they 
+   			just update this state locally and go about their business. 
+   		</para>
+   </sect1>
+</chapter>

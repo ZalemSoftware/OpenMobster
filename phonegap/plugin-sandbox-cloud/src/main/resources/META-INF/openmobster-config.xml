@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<deployment xmlns="urn:jboss:bean-deployer:2.0">
+
+	<bean name="phonegap_channel" class="org.openmobster.core.phonegap.plugin.sandbox.cloud.PhoneGapChannel">
+		<property name="objectStore">
+			<inject bean="store"/>
+		</property>
+	</bean>
+	
+	<bean name="store" class="org.openmobster.core.phonegap.plugin.sandbox.cloud.Store">
+	</bean>
+</deployment>

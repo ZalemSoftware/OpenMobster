@@ -1,0 +1,17 @@
+<app-conf>
+	<encryption>false</encryption>
+	
+	<push>
+		<launch-activity-class><appCreator.android.main.groupId>.screen.HomeScreen</launch-activity-class>
+		<icon-name>push</icon-name>
+		<!-- enable background re-establishment of the Push Socket if its disconnected -->
+		<reconnect/>
+	</push>
+		
+	<channels>
+		<channel name='crm_ticket_channel'>
+			<sync-push-message>You have {0} CRM Ticket Update(s)</sync-push-message>
+		</channel>
+	</channels>
+	
+</app-conf>

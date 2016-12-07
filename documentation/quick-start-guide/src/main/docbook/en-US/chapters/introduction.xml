@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="introduction">
+   <chapterinfo>
+      <author>
+         <firstname>openmobster</firstname>
+         <surname>at gmail.com</surname>
+         <email>openmobster@gmail.com</email>
+      </author>
+   </chapterinfo>
+   <title>Introduction to OpenMobster - Mobile Cloud Platform</title>
+   <para><emphasis role="bold">OpenMobster</emphasis> is an <emphasis>open source</emphasis> platform for integrating Mobile Apps (on-device apps) with <emphasis>"Cloud"</emphasis> services</para> 
+   <para>It provides the following features:</para>
+   <sect1>
+   		<title>Seamless App State/Data Synchronization</title>
+   		<para>
+   		 Cloud data is made available inside an App's <emphasis>local storage</emphasis>. This allows the App
+   		 to function seamlessly in both <emphasis>online</emphasis> as well as <emphasis>offline</emphasis> modes.    		  
+   		 The data is automatically synchronized with the Cloud service based on local state changes. These state changes
+         are auto detected and does not require any device-side sync-related programming on the part of the developer.
+   		</para>
+   </sect1>
+   <sect1>
+   		<title>Comet-style Push Notifications</title>
+   		<para>
+   		 <ulink url="http://en.wikipedia.org/wiki/Comet_%28programming%29">Comet</ulink> is an umbrella term for pushing state changes to an App from the server,
+  instead of an App proactively requesting it. The <emphasis>Push</emphasis> mechanism uses pure network/socket based approach instead of clunky methodologies
+  like sending sms alerts or email alerts. The Push notifications happen inside the App's execution environment.</para> 
+   </sect1>
+   <sect1>
+   		<title>Simple Mobile RPC (Remote Procedure Call)</title>
+   		<para>
+   			Provides a simple way of exposing your server-side coarse grained business services. These services are invoked via a simple RPC mechanism without
+  any low-level programming like http-client code, client side REST library, etc on the part of the App developer. There is a simple
+  RPC API that is used for making these calls.
+   		</para>
+   </sect1>
+   <sect1>
+   		<title>Management Console</title>
+   		<para>
+   		A <emphasis>Management Console</emphasis> is provided to administrate the Cloud Server. It provides security, and account provisioning features. Over time the console will carry device management features like remote wipe, remote tracking, remote lock-down, etc. 
+   		</para>
+   </sect1>
+</chapter>

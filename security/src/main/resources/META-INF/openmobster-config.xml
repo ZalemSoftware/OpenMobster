@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<deployment xmlns="urn:jboss:bean-deployer:2.0">
+   <bean name="security://HibernateManager" class="org.openmobster.core.common.database.HibernateManager">
+   	  <property name="config">security-hibernate.cfg.xml</property>
+   </bean>
+      
+   <bean name="security://IdentityController" class="org.openmobster.core.security.identity.IdentityController">
+   		<property name="hibernateManager"><inject bean="security://HibernateManager"/></property>   		
+   </bean>
+   
+   <bean name="security://GroupController" class="org.openmobster.core.security.identity.GroupController">
+   		<property name="hibernateManager"><inject bean="security://HibernateManager"/></property>
+   </bean>
+   
+   <bean name="security://DeviceController" class="org.openmobster.core.security.device.DeviceController">
+   		<property name="hibernateManager"><inject bean="security://HibernateManager"/></property>
+   </bean>
+   
+   <bean name="security://PushAppController" class="org.openmobster.core.security.device.PushAppController">
+   		<property name="hibernateManager"><inject bean="security://HibernateManager"/></property>
+   </bean>
+   
+   <bean name="security://AndroidPushAppController" class="org.openmobster.core.security.device.AndroidPushAppController">
+   		<property name="hibernateManager"><inject bean="security://HibernateManager"/></property>
+   </bean>
+   
+   <bean name="security://Provisioner" class="org.openmobster.core.security.Provisioner">
+   		<property name="identityController"><inject bean="security://IdentityController"/></property>
+   		<property name="deviceController"><inject bean="security://DeviceController"/></property>
+   		<property name="groupController"><inject bean="security://GroupController"/></property>
+   		<property name="domainValidator"><inject bean="security://DomainValidator"/></property>
+   		<property name="eventManager"><inject bean="common://EventManager"/></property>
+   </bean> 
+   
+   <bean name="security://DomainValidator" class="org.openmobster.core.common.validation.ObjectValidator">
+   		<property name="name">Security Domain Validator</property>
+   		<property name="rulesFile">META-INF/security-validationRules.xml</property>
+   </bean>     
+</deployment>

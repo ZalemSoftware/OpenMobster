@@ -1,0 +1,104 @@
+Device Platforms
+
+Currently, there are two approaches to Mobile App Development. Each with their advantages and disadvantages.
+
+* Native App Development
+  Native App Development involves developing the App using the programming language and APIs provided by the native platform. It provides the most
+  flexible approach to implementing complicated functionality and provide the best user experience possible. Here are some of the advantages
+  of developing a native app.
+  	* Advantages
+  	  * Best user experience with respect to response times and intuitive user interaction
+  	  * Accessiblity to low level hardware, and sensors to truly take advantage of a mobile computer that is aware of its surroundings
+  	  * Offline access to critical data even in the event of network failure
+  	  * Provide intuitive push based notifications as the state of an App changes remotely
+  	  
+  	  Disadvantages
+  	  * Managing an App codebase across multiple programming languages and platform APIs
+  	  * No write once, run everywhere convenience for programmers
+  	  * Some platforms may require a slightly tedious approval process before installation on an actual device
+  
+  Here is a list of some of the popular smartphone platforms available in the market
+  
+  	* Blackberry: 
+  		* Programming Language: Java
+  		* Operating System: RIMOS (Proprietary/Open API)
+  	
+  	* Google Android:
+  	    * Programming Language: Java
+  	    * Operating System: Android (Open Source, Apache 2.0 License)
+  	    
+  	* iPhone:
+  	    * Programming Language: Objective-C
+  	    * Operating System: Mac OSX (Proprietary/Open API)
+  	
+  	* Palm:
+  	    * Programming Language: HTML, CSS, and Javascript
+  	    * Operating System: Webos (Open Source, Mozilla License)
+  	    
+  	* Windows Mobile:
+  	    * Programming Language: C#
+  	    * Operating System: Windows Mobile (Proprietary/Open API)
+  	    
+  	* Symbian
+  	    * Programming Language: C++
+  	    * Operating System: Symbian OS (Open Source, Eclipse Public License)
+  	    
+  	    
+ * Web App Development
+   Web App Development involves accessing the Mobile App via a native browser located on the device. Programming can be done using standard web
+   technologies like HTML, CSS, and Javascript
+   	* Advantages
+   	  * No need to maintain a different codebase for each platform. 
+   	  * Write Once, Run Anywhere flexibility for developer
+   	  * No app approval process needed
+   	  * Does not require any special serverside infrastructure like the OpenMobster Mobile Cloud Platform
+   	
+   	* Disadvantages
+   	  * Not a very good user experience. The network latency on a desktop does not map equally to a mobile device. Users need information
+   	  quick. Even a delay of 5 seconds can standout like a sore thumb. 
+   	  * Web apps don't have the native look and feel which makes the user experience un-intuitive. Plus, each browser renders its content
+   	   differently depending on the device, which can further add to frustration
+   	  * Does not allow access to all the low level services of the mobile platform that can deliver true innovation.
+   	  * Some access via javascript and/or browser plugin is available, but it can never replicate the natural feel of accessing the low level 
+   	     API
+   	  * No offline access to critical data in the event of a network outage
+   	  
+ 
+ In other words, whether to use the native approach or the web based approach is purely a business requirement. For simple apps that only
+ need to access data via a dumb terminal, native approach is overkill. For complex apps that fully utilize the power of the underlying platform, 
+ a native app is the best route.
+ 
+ 
+ The OpenMobster Mobile Cloud Platform aims to deliver the low level infrastructure that provides services needed to build easy to use, innovative
+ native apps. It takes away the hardwork of writing middleware infrastructure, so that the app developer can focus their development effort on
+ implementing their business requirements. 
+ 
+ Here are some of the ways, OpenMobster tries to solve some of the disadvantages of native app development
+ 
+ * The pluggable nature of the Mobile MVC framework makes it easier to port an app across multiple platforms. Most of the GUI level plumbing
+ is provided by the Mobile Cloud runtime. Only thing that requires porting are the Screen and Command components that are implemented using
+ the native programming language/API
+ 
+ * Having a consistent messaging spec across all the device level components. This makes the API features lot more consistent and only thing that
+ varies across platform code is the syntax of the programming languge
+ 
+ * Provide the same exact framework API in case where the programming languages are the same. For instance, Blackberry OS and Google Android are 
+ based on the same 'Java' programming language. In that case the API of the various frameworks have the same exact syntax. This cuts down the
+ porting effort dramatically. Only code that would require porting is the code that uses the low level platform API.
+ 
+ 
+ Back to the Future:
+ 
+ The ideal scenario would be to have a standard API/programming language across all platform for native apps. This is highly impractical considering
+ we still have not achieved this in a desktop environment, and a mobile computer has many differenting factors that prevent this from happening
+ 
+ However, what is possible are native apps that use HTML, and CSS for the GUI presentation layer, and Javascript for event handling code. This
+ is in fact possible in theory with HTML5. HTML5 aims at providing a standard for developing cross platform native apps, with all the features
+ and services that are desirable for a native app. However, this is still
+ an on-going effort at the spec level. HTML5 based native apps are probably a couple of years away from fruition.
+ 
+ 
+ 
+ 
+  	  
+  

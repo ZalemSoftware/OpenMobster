@@ -1,0 +1,33 @@
+<assembly
+	xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
+	<id>bin</id>
+	
+	<formats>
+		<format>jar</format>
+	</formats>
+	
+	<includeBaseDirectory>false</includeBaseDirectory>
+	
+	<dependencySets>
+		<dependencySet>
+			<includes>
+			    <include>org.openmobster.core.mobileCloud.android.2_0:api</include>
+			    <include>org.openmobster.core.mobileCloud.android.2_0:common</include>
+			    <include>org.openmobster.core.mobileCloud.android.2_0:mobileObject</include>
+			    <include>org.openmobster.core.mobileCloud.android.2_0:bus</include>
+			    <include>org.openmobster.core.mobileCloud.android.2_0:connection</include>
+				<include>org.openmobster.core.mobileCloud.android.2_0:moblet-runtime</include>
+				<include>org.openmobster.core.mobileCloud.android.2_0:native-framework</include>
+				<include>org.openmobster.core.mobileCloud.android.2_0:javascript-bridge</include>
+				<include>org.openmobster.core.mobileCloud.android.2_0:location</include>
+				
+			    <include>org.openmobster.core.mobileCloud.android.2_0:mobileCloud-runtime</include>
+			    <include>org.openmobster.core.mobileCloud.android.2_0:sync</include>
+			    <include>org.openmobster.core.mobileCloud.android.2_0:dm</include>
+			</includes>
+			<unpack>true</unpack>
+		</dependencySet>
+	</dependencySets>
+</assembly>

@@ -1,0 +1,39 @@
+<!DOCTYPE form-validation PUBLIC
+     "-//Apache Software Foundation//DTD Commons Validator Rules Configuration 1.1//EN"
+     "http://jakarta.apache.org/commons/dtds/validator_1_1.dtd">
+     
+<form-validation>
+   <global>
+      <validator name="required"
+                 classname="org.openmobster.core.common.validation.CoreValidator"
+                 method="validateRequired"
+                 methodParams="java.lang.Object,org.apache.commons.validator.Field"
+                 msg=""/>
+      <validator name="email"
+                 classname="org.openmobster.core.common.validation.CoreValidator"
+                 method="validateEmail"
+                 methodParams="java.lang.Object,org.apache.commons.validator.Field"
+                 msg=""/>
+      <validator name="minimumLength"
+                 classname="org.openmobster.core.common.validation.CoreValidator"
+                 method="minimumLength"
+                 methodParams="java.lang.Object,org.apache.commons.validator.Field"
+                 msg=""/>
+   </global>
+   <formset>
+      <form name="test.openmobster.core.common.validation.TestBean">
+         <field property="principal" depends="required, email, minimumLength">
+         	   <arg name="required" key="emailRequired"/>
+         	   <arg name="email" key="emailInvalid"/>
+         	   <arg name="minimumLength" key="emailInvalidLength"/>
+         	   <var>
+         	   		<var-name>minimumLength</var-name>
+         	   		<var-value>100</var-value>
+         	   </var>
+         </field>
+         <field property="credential" depends="required">
+         	   <arg name="required" key="credentialRequired"/>         	   
+         </field>             
+      </form>
+   </formset>   
+</form-validation>

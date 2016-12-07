@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<deployment xmlns="urn:jboss:bean-deployer:2.0">
+   <bean name="/console/HibernateManager" class="org.openmobster.core.common.database.HibernateManager">
+   	  <property name="config">console-server.cfg.xml</property>
+   </bean>
+   
+   <!-- Console Commands -->
+   <bean name="/console/consoleService" class="org.openmobster.core.console.server.domain.ConsoleService">
+   		<property name="hibernateManager"><inject bean="/console/HibernateManager"/></property>
+   </bean>
+   
+   <bean name="/console/registerCommand" class="org.openmobster.core.console.server.RegisterCommand">
+       <property name="provisioner"><inject bean="security://Provisioner"/></property>
+   </bean>   
+   
+   <bean name="/console/showUsersCommand" class="org.openmobster.core.console.server.ShowUsersCommand">
+       <property name="provisioner"><inject bean="security://Provisioner"/></property>
+   </bean>   
+   
+   <bean name="/console/activateCommand" class="org.openmobster.core.console.server.ActivateCommand">
+       <property name="provisioner"><inject bean="security://Provisioner"/></property>
+   </bean>  
+   
+   <bean name="/console/deactivateCommand" class="org.openmobster.core.console.server.DeactivateCommand">
+       <property name="provisioner"><inject bean="security://Provisioner"/></property>
+   </bean>  
+   
+    <bean name="/console/resetPasswdCommand" class="org.openmobster.core.console.server.ResetPasswordCommand">
+       <property name="provisioner"><inject bean="security://Provisioner"/></property>
+   </bean>
+   
+   <!-- Commands for processing ErrorLogs from the devices -->      
+   <bean name="/console/errorlog" class="org.openmobster.core.console.server.ErrorLogCommand">
+   		 <property name="provisioner"><inject bean="security://Provisioner"/></property>
+   </bean>
+</deployment>

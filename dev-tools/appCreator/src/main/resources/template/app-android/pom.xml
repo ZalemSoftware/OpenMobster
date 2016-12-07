@@ -1,0 +1,319 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<!-- User Provided -->
+	<parent>
+		<groupId>
+			org.crud
+		</groupId>
+		<artifactId>
+			crud
+		</artifactId>
+		<version>
+			1.0
+		</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<groupId>
+		org.crud.android.app
+	</groupId>
+	<name>
+		crud
+	</name>
+	<artifactId>
+		crud
+	</artifactId>
+	<packaging>apk</packaging>
+	
+	<properties>
+		<android.keystore.location>
+			${env.ANDROID_KEYSTORE}
+		</android.keystore.location>
+		<storepass>${env.ANDROID_STORE_PASS}</storepass>
+		<keypass>${env.ANDROID_KEY_PASS}</keypass>
+		<alias>${env.ANDROID_KEYSTORE_ALIAS}</alias>
+	</properties>
+
+	<dependencies>
+		<!--
+			DO NOT MODIFY: Required by the OpenMobster Mobile Cloud Platform
+		-->
+		<dependency>
+			<groupId>android</groupId>
+			<artifactId>android</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.openmobster.core.mobileCloud.android.2_0
+			</groupId>
+			<artifactId>device-sdk</artifactId>
+		</dependency>
+
+		<!-- 
+			More Dependencies can be added here 
+		-->
+	</dependencies>
+
+	<!--
+		DO NOT MODIFY: Required by the OpenMobster Mobile Cloud Platform
+	-->
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+				</configuration>
+			</plugin>
+
+			<!--  Android App preparation..Simulator mode -->
+			<plugin>
+				<groupId>com.jayway.maven.plugins.android.generation2
+				</groupId>
+				<artifactId>android-maven-plugin</artifactId>
+				<configuration>
+					<sdk>
+						<path>${env.ANDROID_HOME}</path>
+						<platform>${version.android.api}</platform>
+					</sdk>
+					<deleteConflictingFiles>true</deleteConflictingFiles>
+				</configuration>
+				<extensions>true</extensions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins
+				</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>package</id>
+						<phase>package</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<tasks>
+								<echo>Assembling Android App
+								</echo>
+								<jar file="${basedir}/target/${project.artifactId}-${project.version}-bin.jar">
+									<fileset dir="${basedir}/target">
+										<include name="**/*.apk" />
+									</fileset>
+								</jar>
+							</tasks>
+						</configuration>
+					</execution>
+					<execution>
+						<id>install</id>
+						<phase>install</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<tasks>
+								<echo>Installing Android App
+								</echo>
+								<copy todir="${settings.localRepository}/org/crud/android/app/${project.artifactId}/${project.version}" overwrite="true" file="${basedir}/target/${project.artifactId}-${project.version}-bin.jar">
+								</copy>
+							</tasks>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+    <!--
+    	This profile build produces a fully packaged Android App ready for publishing 
+     -->
+	<profiles>
+		<profile>
+			<id>android-release</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins
+						</groupId>
+						<artifactId>maven-compiler-plugin
+						</artifactId>
+						<configuration>
+							<source>1.5</source>
+							<target>1.5</target>
+						</configuration>
+					</plugin>
+
+					<plugin>
+						<groupId>org.apache.maven.plugins
+						</groupId>
+						<artifactId>maven-jarsigner-plugin
+						</artifactId>
+						<version>1.2</version>
+						<executions>
+							<execution>
+								<id>signing</id>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+								<phase>package</phase>
+								<inherited>false</inherited>
+								<configuration>
+									<archiveDirectory />
+									<includes>
+										<include>target/*.apk</include>
+									</includes>
+									<keystore>${android.keystore.location}
+									</keystore>
+									<storepass>${storepass}</storepass>
+									<keypass>${keypass}</keypass>
+									<alias>${alias}</alias>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+					<plugin>
+						<groupId>com.jayway.maven.plugins.android.generation2
+						</groupId>
+						<artifactId>android-maven-plugin</artifactId>
+						<configuration>
+							<sdk>
+								<path>${env.ANDROID_HOME}</path>
+								<platform>${version.android.api}
+								</platform>
+							</sdk>
+							<deleteConflictingFiles>true</deleteConflictingFiles>
+							<sign>
+								<debug>false</debug>
+							</sign>
+						</configuration>
+						<extensions>true</extensions>
+					</plugin>
+
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<version>1.1.1</version>
+						<executions>
+							<execution>
+								<id>zipalign</id>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+								<phase>package</phase>
+								<configuration>
+									<executable>${env.ANDROID_HOME}/tools/zipalign
+									</executable>
+									<arguments>
+										<argument>-f</argument>
+										<argument>4</argument>
+										<argument>target/${project.build.finalName}.apk
+										</argument>
+										<argument>target/${project.build.finalName}-zipped.apk
+										</argument>
+									</arguments>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
+					<plugin>
+						<groupId>org.apache.maven.plugins
+						</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>package</id>
+								<phase>package</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<tasks>
+										<echo>Assembling Android App
+								</echo>
+										<jar file="${basedir}/target/${project.artifactId}-${project.version}-bin.jar">
+											<fileset dir="${basedir}/target">
+												<include name="**/*.apk" />
+											</fileset>
+										</jar>
+									</tasks>
+								</configuration>
+							</execution>
+							<execution>
+								<id>install</id>
+								<phase>install</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<tasks>
+										<echo>Installing Android App
+								</echo>
+										<copy todir="${settings.localRepository}/org/crud/android/app/${project.artifactId}/${project.version}" overwrite="true" file="${basedir}/target/${project.artifactId}-${project.version}-bin.jar">
+										</copy>
+									</tasks>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		
+		<profile>
+			<id>app-hot-deploy</id>
+			<build>
+				<plugins>
+					<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<configuration>
+						<source>1.5</source>
+						<target>1.5</target>
+					</configuration>
+				</plugin>
+
+				<!--  Android App preparation..Simulator mode -->
+				<plugin>
+					<groupId>com.jayway.maven.plugins.android.generation2
+					</groupId>
+					<artifactId>android-maven-plugin</artifactId>
+					<configuration>
+						<sdk>
+							<path>${env.ANDROID_HOME}</path>
+							<platform>${version.android.api}</platform>
+						</sdk>
+						<deleteConflictingFiles>true</deleteConflictingFiles>
+					</configuration>
+					<extensions>true</extensions>
+				</plugin>
+				
+				<plugin>
+					<groupId>org.apache.maven.plugins
+					</groupId>
+					<artifactId>maven-antrun-plugin</artifactId>
+					<executions>
+						<execution>
+							<phase>install</phase>
+							<goals>
+								<goal>run</goal>
+							</goals>
+							<configuration>
+								<tasks> 
+									<echo>Hot Deploying the Android App....</echo>
+									<exec dir="." executable="${env.ANDROID_HOME}/platform-tools/adb">
+										<arg line="install -r ${basedir}/target/${project.artifactId}-${project.version}.apk" />
+									</exec>
+								</tasks>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+			  </plugins>
+			</build>
+		</profile>
+	</profiles>
+</project>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<deployment xmlns="urn:jboss:bean-deployer:2.0">
+    <bean name="/cloudConnector/securityConfig" class="org.openmobster.cloudConnector.api.SecurityConfig">
+   	  <property name="keyStoreLocation">/openmobster/openmobster.keystore</property> 
+   	  <!--  
+   	  <property name="keyStorePassword"></property>
+   	  -->
+   </bean>          
+   
+	<bean name="console://ConsoleShell" class="org.openmobster.core.console.cmdline.shell.ConsoleShell">
+		<property name="consoleBranding"><inject bean="console://Branding"/></property>
+		<property name="commandRegistry"><inject bean="console://CommandRegistry"/></property>
+	</bean>
+	
+	<bean name="console://VersionLoader" class="org.openmobster.core.console.cmdline.shell.ConsoleVersionLoader">
+		<property name="version"></property>
+	</bean>
+	
+	<bean name="console://Branding" class="org.openmobster.core.console.cmdline.shell.ConsoleBranding">
+		<property name="versionLoader"><inject bean="console://VersionLoader"/></property>
+	</bean>
+	
+	<bean name="console://CommandRegistry" class="org.apache.geronimo.gshell.registry.DefaultCommandRegistry"/>
+	
+	
+	<!-- All the Console Command Layer -->
+	<bean name="console://CommandRepository" class="org.openmobster.core.console.cmdline.shell.commands.CommandRepository">
+		<incallback method="notifyCommand"/>
+		<property name="consoleShell"><inject bean="console://ConsoleShell"/></property>
+	</bean>
+	
+	<bean name="console://ConsoleSession" class="org.openmobster.core.console.cmdline.shell.commands.ConsoleSession">
+		<depends>console://ConsoleShell</depends>
+	</bean>
+	
+	<bean name="console://Help" class="org.openmobster.core.console.cmdline.shell.commands.HelpCommand">
+		<depends>console://CommandRepository</depends>
+		<depends>console://ConsoleSession</depends>
+		<property name="protected">false</property>
+	</bean>
+	
+	<bean name="console://Exit" class="org.openmobster.core.console.cmdline.shell.commands.ExitCommand">
+		<depends>console://CommandRepository</depends>
+		<depends>console://ConsoleSession</depends>
+		<property name="protected">false</property>
+	</bean>
+	
+	<bean name="console://StartAdmin" class="org.openmobster.core.console.cmdline.shell.commands.StartAdminCommand">
+		<depends>console://CommandRepository</depends>
+		<depends>console://ConsoleSession</depends>
+		<property name="protected">false</property>
+	</bean>
+	
+	<bean name="console://Configure" class="org.openmobster.core.console.cmdline.shell.commands.ConfigureCommand">
+		<depends>console://CommandRepository</depends>
+		<depends>console://ConsoleSession</depends>
+		<property name="protected">false</property>
+	</bean>
+	
+	<bean name="console://Logout" class="org.openmobster.core.console.cmdline.shell.commands.LogoutCommand">
+		<depends>console://CommandRepository</depends>
+		<depends>console://ConsoleSession</depends>
+		<property name="protected">true</property>
+	</bean>
+	
+	<bean name="console://RegisterMobster" class="org.openmobster.core.console.cmdline.shell.commands.RegisterMobsterCommand">
+		<depends>console://CommandRepository</depends>
+		<depends>console://ConsoleSession</depends>
+		<property name="protected">true</property>
+	</bean>
+	
+	<bean name="console://Show" class="org.openmobster.core.console.cmdline.shell.commands.ShowCommand">
+		<depends>console://CommandRepository</depends>
+		<depends>console://ConsoleSession</depends>
+		<property name="protected">true</property>
+	</bean>
+	
+	<bean name="console://ResetPasswd" class="org.openmobster.core.console.cmdline.shell.commands.ResetPasswdCommand">
+		<depends>console://CommandRepository</depends>
+		<depends>console://ConsoleSession</depends>
+		<property name="protected">true</property>
+	</bean>
+	
+	<bean name="console://Deactivate" class="org.openmobster.core.console.cmdline.shell.commands.DeactivateCommand">
+		<depends>console://CommandRepository</depends>
+		<depends>console://ConsoleSession</depends>
+		<property name="protected">true</property>
+	</bean>
+	
+	<bean name="console://Activate" class="org.openmobster.core.console.cmdline.shell.commands.ActivateCommand">
+		<depends>console://CommandRepository</depends>
+		<depends>console://ConsoleSession</depends>
+		<property name="protected">true</property>
+	</bean>
+</deployment>

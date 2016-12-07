@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache>
+  <diskStore path="cache/openmobster/security"/>
+
+ <defaultCache
+	maxElementsInMemory="0"
+	eternal="false"
+	timeToIdleSeconds="0"
+	timeToLiveSeconds="0"
+	overflowToDisk="false" />
+	
+ <cache name="org.hibernate.cache.UpdateTimestampsCache"   
+        maxElementsInMemory="10000"  
+        eternal="true"  
+        timeToIdleSeconds="0"  
+        timeToLiveSeconds="0"  
+        overflowToDisk="true"/>
+          
+ <cache name="org.hibernate.cache.StandardQueryCache"   
+        maxElementsInMemory="10000"  
+        eternal="false"  
+        timeToIdleSeconds="1800"  
+        timeToLiveSeconds="3600"  
+        overflowToDisk="true"/>
+
+ <cache
+    name="org.openmobster.core.security.device.Device"
+    maxElementsInMemory="10000"
+    eternal="false"
+    timeToIdleSeconds="1800"
+    timeToLiveSeconds="3600"
+    overflowToDisk="false"
+ />
+ 
+ <cache
+    name="org.openmobster.core.security.device.Device.attributes"
+    maxElementsInMemory="10000"
+    eternal="false"
+    timeToIdleSeconds="1800"
+    timeToLiveSeconds="3600"
+    overflowToDisk="false"
+ />
+ 
+ <cache
+    name="org.openmobster.core.security.device.DeviceAttribute"
+    maxElementsInMemory="10000"
+    eternal="false"
+    timeToIdleSeconds="1800"
+    timeToLiveSeconds="3600"
+    overflowToDisk="false"
+ />
+ 
+ <cache
+    name="org.openmobster.core.security.identity.Identity"
+    maxElementsInMemory="10000"
+    eternal="false"
+    timeToIdleSeconds="1800"
+    timeToLiveSeconds="3600"
+    overflowToDisk="false"
+ />
+ <cache
+    name="org.openmobster.core.security.identity.Identity.attributes"
+    maxElementsInMemory="10000"
+    eternal="false"
+    timeToIdleSeconds="1800"
+    timeToLiveSeconds="3600"
+    overflowToDisk="false"
+ />
+ 
+ <cache
+    name="org.openmobster.core.security.identity.IdentityAttribute"
+    maxElementsInMemory="10000"
+    eternal="false"
+    timeToIdleSeconds="1800"
+    timeToLiveSeconds="3600"
+    overflowToDisk="false"
+ />
+ 
+ <cache
+    name="org.openmobster.core.security.identity.Identity.groups"
+    maxElementsInMemory="10000"
+    eternal="false"
+    timeToIdleSeconds="1800"
+    timeToLiveSeconds="3600"
+    overflowToDisk="false"
+ />
+ 
+ <cache
+    name="org.openmobster.core.security.identity.Group"
+    maxElementsInMemory="10000"
+    eternal="false"
+    timeToIdleSeconds="1800"
+    timeToLiveSeconds="3600"
+    overflowToDisk="false"
+ />
+ 
+ <cache
+    name="org.openmobster.core.security.identity.Group.attributes"
+    maxElementsInMemory="10000"
+    eternal="false"
+    timeToIdleSeconds="1800"
+    timeToLiveSeconds="3600"
+    overflowToDisk="false"
+ />
+ 
+ <cache
+    name="org.openmobster.core.security.identity.Group.members"
+    maxElementsInMemory="10000"
+    eternal="false"
+    timeToIdleSeconds="1800"
+    timeToLiveSeconds="3600"
+    overflowToDisk="false"
+ />
+ 
+ <cache
+    name="org.openmobster.core.security.identity.GroupAttribute"
+    maxElementsInMemory="10000"
+    eternal="false"
+    timeToIdleSeconds="1800"
+    timeToLiveSeconds="3600"
+    overflowToDisk="false"
+ />
+</ehcache>

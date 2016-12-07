@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="installation">
+	<chapterinfo>
+		<author>
+			<firstname>openmobster</firstname>
+			<surname>at gmail.com</surname>
+			<email>openmobster@gmail.com</email>
+		</author>
+	</chapterinfo>
+	<title>Production Mode Installation</title>
+	<sect1>
+		<title>Cloud-Side: Installation</title>
+		<sect2>
+			<title>Install Cloud Server</title>
+			<para>
+				<itemizedlist>
+					<listitem>
+						<emphasis role="bold">Step 1:</emphasis>
+						Download and install JBoss-5.1.0.GA from
+						<ulink url="http://www.jboss.org/jbossas/downloads/">here</ulink>
+					</listitem>
+					<listitem>
+						<emphasis role="bold">Step 2:</emphasis>
+						Copy
+						<emphasis>openmobster</emphasis>
+						to the JBoss AS
+						<emphasis>server</emphasis>
+						directory.
+						<emphasis>openmobster</emphasis>
+						is a pre-configured/optimized instance for the OpenMobster Cloud
+						Server
+					</listitem>
+					<listitem>
+						<emphasis role="bold">Step 3:</emphasis>
+						In the case of using MySQL5 as the database, modify
+						openmobster-ds.xml according to your own MySql5 instance
+					</listitem>
+					<listitem>
+						<emphasis role="bold">Step 4:</emphasis>
+						Start the JBoss AS instance with the OpenMobster binary installed
+						using: run -c openmobster -b "a real IP address"
+						<para>
+							<emphasis>Note:</emphasis>
+							A real IP address like "192.168.0.1" or something like that is
+							needed for the mobile device to be able to connect to
+							the server.
+							Even in the case of a simulation environment, the device's
+							browser does not connect to a loopback address like
+							"localhost" or
+							"127.0.0.1"
+						</para>
+					</listitem>
+					<listitem>
+						<emphasis role="bold">Step 5:</emphasis>
+						Verify the Cloud Server installation by typing in:
+						http://{cloudserverIp}:{port}/o
+					</listitem>
+				</itemizedlist>
+			</para>
+		</sect2>
+		<sect2>
+			<title>Provision a Device</title>
+			<para>
+				<itemizedlist>
+					<listitem>
+						<emphasis role="bold">Start the Management Console:</emphasis>
+						Execute openmobster.sh or openmobster.bat located under
+						cloudConsole/bin
+					</listitem>
+					<listitem>
+						<emphasis role="bold">Setup 'Root' User:</emphasis>
+						If this the first time being used, use the configure command:
+						configure -a {cloudServer Ip Address} -po 1502 -u root -p
+						{whatever root password you can remember}
+						<para>
+							<emphasis>Note:</emphasis>
+							This is the user who is allowed to use the
+							<emphasis role="bold">Management Console</emphasis>
+							, not to be confused with other accounts that will be created.
+							The accounts that will be created are the actual users that will
+							connect to the "Cloud Server" via their Mobile Apps loaded on
+							their respective devices.
+						</para>
+					</listitem>
+					<listitem>
+						<emphasis role="bold">Login to the Cloud Server as 'Root' for
+							Management functions:</emphasis>
+						startadmin -u root -p {whatever password was setup}
+					</listitem>
+					<listitem>
+						<emphasis role="bold">Setup a 'User' account used by Mobile
+							Apps:</emphasis>
+						register -u {email of the user being registered} -p {whatever
+						password that you want to associate with this account}
+					</listitem>
+				</itemizedlist>
+			</para>
+		</sect2>
+	</sect1>
+	<sect1>
+		<title>Device-Side: Installation</title>
+		<para>
+			<emphasis role="bold">Mobile Cloud</emphasis>
+			infrastructure runtimes
+			<emphasis>MUST</emphasis>
+			be installed on each device, before the device can integrate with
+			the
+			"Cloud Server". Think of them as bootstrap binaries.
+		</para>
+		<para>
+			Each mobile platform will have its corresponding set of
+			artifacts that must be first installed on the device. 
+       </para>
+		<para>
+			The current version consists of
+			<emphasis role="bold">Blackberry RIM OS 4.3.0+ support</emphasis>
+		</para>
+		<sect2>
+			<title>Blackberry Installation</title>
+			<para>
+				There are two ways to install the Blackberry binaries:
+				<emphasis>Over-The-Air (OTA)</emphasis>
+				, or
+				<emphasis>Desktop Sync</emphasis>
+			</para>
+			<sect3>
+				<title>Over-The-Air (OTA)</title>
+				<para>
+					If you have a
+					<emphasis>Cloud Server</emphasis>
+					running and accessible from the Internet, you can simply download
+					these binaries from the built-in browser
+					of the device.
+				</para>
+				<para>
+					Download the following and follow the instructions provided by the
+					device:
+					<itemizedlist>
+						<listitem>
+							http://{cloudServer IP}:{cloudServer
+							port}/o/apps/rimos/430/MobileCloud.jad
+						</listitem>
+						<listitem>
+							http://{cloudServer IP}:{cloudServer
+							port}/o/apps/rimos/430/CloudManager.jad
+						</listitem>
+					</itemizedlist>
+				</para>
+			</sect3>
+			<sect3>
+				<title>Desktop Sync</title>
+				<para>
+					If you want to install it via desktop synchronization, just install
+					the following 'alx' files.
+					<itemizedlist>
+						<listitem>
+							blackberry-4.3.0/bin/MobileCloud.alx
+						</listitem>
+						<listitem>
+							blackberry-4.3.0/bin/CloudManager.alx
+						</listitem>
+					</itemizedlist>
+				</para>
+			</sect3>
+			<sect3>
+				<title>Device Activation</title>
+				<para>
+					<itemizedlist>
+						<listitem>
+							<emphasis role="bold">Step 1:</emphasis>
+							Launch the 'CloudManager' app.
+						</listitem>
+						<listitem>
+							<emphasis role="bold">Step 2:</emphasis>
+							Select the 'Activate' function.
+						</listitem>
+						<listitem>
+							<emphasis role="bold">Step 3:</emphasis>
+							Follow the wizard and provide the appropriate values
+							<itemizedlist>
+								<listitem>
+									<emphasis>Server :</emphasis>
+									IP Address of the Cloud Server
+								</listitem>
+								<listitem>
+									<emphasis>Email :</emphasis>
+									The user id that was used to register the user via the
+									Management Console
+								</listitem>
+								<listitem>
+									<emphasis>Password:</emphasis>
+									The password that was used to register the user via the
+									Management Console
+								</listitem>
+							</itemizedlist>
+						</listitem>
+					</itemizedlist>
+				</para>
+			</sect3>
+			<sect3>
+				<title>Installing Examples</title>
+				<para>
+					Using your
+					<emphasis>CloudManager App</emphasis>
+					, install the deployed Apps/Moblets using the
+					<emphasis>App Store</emphasis>
+					function.
+					The platform comes bundled with a couple of sample apps that
+					demonstrate
+					the Offline and RPC functions.
+				</para>
+				<para>
+					<emphasis role='bold'>Note:</emphasis>
+					<emphasis>Using the "App Store" function on a Device Simulator
+					</emphasis>
+				</para>
+				<para>
+					This applies only in a simulator setup. The browser on the
+					Simulator
+					needs an "MDS" service to connect to the internet.
+					This is provided
+					within the RIM SDK under the "RIM_JDE_HOME/MDS" directory. In a real
+					world scenario, the MDS service is provided seamlessly
+					by your carrier
+					along with your data plan. The following things should be kept in
+					mind on a Simulator:
+					<itemizedlist>
+						<listitem>
+							The OpenMobster Cloud Server must be bound to a real IP address and
+							not 127.0.0.1 or localhost. You can do this with the following
+							JBoss AS command:
+							run.bat -c openmobster -b 192.168.1.107
+				</listitem>
+						<listitem>
+							The MD5 service should be running. This is done by running the
+							RIM_JDE_HOME/MDS/run.bat
+				</listitem>
+						<listitem>
+							When you activate your device using the "CloudManager App", input
+							192.168.1.107 as the IP address of the cloud server
+				</listitem>
+						<listitem>
+						</listitem>
+					</itemizedlist>
+					<emphasis>Note:</emphasis>
+					192.168.1.107 is used as an example. Your would be something else.
+					You can find it by "ipconfig" command on the DOS prompt.
+				</para>
+			</sect3>
+			<sect3>
+				<title>Blackberry Signing Process</title>
+				<para>
+					Blackberry has a selected set of APIs which require "signing" the
+					binary (.cod) before installing it on the device. The
+					<emphasis>OpenMobster</emphasis>
+					binaries makes use of these APIs, and hence requires "signing"
+					before installing it on the device. For more information about the
+					"signing" process:
+					<ulink
+						url="http://na.blackberry.com/eng/developers/javaappdev/codekeys.jsp">Signing Process</ulink>
+				</para>
+				<para>
+					Code Signing is not required for installing/testing Apps in a
+					simulation environment. In fact all the
+					<emphasis>OpenMobster</emphasis>
+					binaries have been
+					thoroughly tested on a 4.3.0 OS simulator. All
+					tests have passed without any
+					errors, warnings, or crashes.
+				</para>				
+				<para>
+					As of 2.0-M3 community release, all
+					<emphasis>OpenMobster</emphasis>
+					Blackberry binaries have been signed and tested on an actual
+					BlackBerry device. The device used was the BlackBerry Curve 8330 running on the Sprint
+					CDMA network.
+				</para>
+			</sect3>
+		</sect2>
+	</sect1>
+</chapter>

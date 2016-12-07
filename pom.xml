@@ -1,0 +1,810 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.openmobster.core</groupId>
+	<artifactId>core</artifactId>
+	<packaging>pom</packaging>
+	<version>2.4-M3.1</version>
+	<name>The OpenMobster Core Platform</name>
+	<url>http://www.openmobster.org</url>
+
+	<scm>
+		<connection>
+			scm:svn:https://openmobster.googlecode.com/svn/trunk
+		</connection>
+	</scm>
+
+	<modules>
+		<module>api</module>
+		<module>api-cloudConnector</module>
+		<module>common</module>
+		<module>services</module>
+		<module>synchronizer</module>
+		<module>dataService</module>
+		<module>mobileObject</module>
+		<module>mobileContainer</module>
+		<module>deviceService</module>
+		<module>security</module>
+		<module>agent-provisioning</module>
+		<module>moblet-management</module>
+		<module>console</module>
+		<module>console-server</module>
+		<module>device-agent-simulator</module>
+		<module>device-agent-frameworks</module>
+		<module>server-testsuite</module>
+		<module>testdrive-server</module>
+		<module>sar</module>
+		<module>cloud-sdk</module>
+		<module>push-apn</module>
+		<module>location</module>
+		<module>d2d</module>
+		<module>android</module>
+		<module>phonegap</module>
+		<module>clustering</module>
+  </modules>
+
+	<profiles>
+	    <!-- used to build only the *codebase* -->
+		<profile>
+			<id>build</id>
+			<modules>
+				<module>dev-tools</module>
+				<module>binary-release</module>
+			</modules>
+		</profile>
+		<!-- used to build everything including codebase,documentation, etc -->
+		<profile>
+			<id>build-all</id>
+			<modules>
+				<module>dev-tools</module>
+				<module>documentation</module>
+				<module>binary-release</module>
+			</modules>
+		</profile>
+		<!-- used to do an android release resulting binaries located under binary-release/target -->
+		<profile>
+			<id>android-release</id>
+			<modules>
+				<module>dev-tools</module>
+				<module>documentation</module>
+				<module>binary-release</module>
+			</modules>
+		</profile>
+		<!--  used for deploying cloud artifacs only -->
+		<profile>
+			<id>deploy-cloud</id>
+			<modules>
+				<module>api</module>
+				<module>api-cloudConnector</module>
+				<module>common</module>
+				<module>services</module>
+				<module>synchronizer</module>
+				<module>dataService</module>
+				<module>mobileObject</module>
+				<module>mobileContainer</module>
+				<module>deviceService</module>
+				<module>security</module>
+				<module>agent-provisioning</module>
+				<module>moblet-management</module>
+				<module>console</module>
+				<module>console-server</module>
+				<module>device-agent-simulator</module>
+				<module>device-agent-frameworks</module>
+				<module>server-testsuite</module>
+				<module>testdrive-server</module>
+				<module>sar</module>
+				<module>cloud-sdk</module>
+				<module>push-apn</module>
+				<module>location</module>
+				<module>d2d</module>
+				<module>clustering</module>
+			</modules>
+		</profile>
+	</profiles>
+
+	<properties>
+		<!-- test framework -->
+		<version.junit.junit>3.8.2</version.junit.junit>
+
+		<!-- Standard spec dependencies -->
+		<version.javax.servlet>2.4</version.javax.servlet>
+
+		<!-- JBoss stack dependencies -->
+		<version.jboss-microcontainer>2.0.4.GA
+		</version.jboss-microcontainer>
+		<version.jboss.common.core>2.2.1.GA
+		</version.jboss.common.core>
+		<version.jboss.appserver>5.1.0.GA</version.jboss.appserver>
+		<version.jbpm.jpdl>3.3.1.GA</version.jbpm.jpdl>
+		<!-- FIXME: need to upgrade to 2.0.0.GA, but the client API has changed -->
+		<version.org.hornetq>2.0.0.BETA5</version.org.hornetq>
+
+		<!-- Database dependencies -->
+		<version.mysql-connector-java>5.1.6
+		</version.mysql-connector-java>
+
+		<!-- Console Framework dependencies -->
+		<version.org.apache.geronimo.gshell>1.0-alpha-1
+		</version.org.apache.geronimo.gshell>
+
+		<!-- low-level dependencies -->
+		<version.beanutils.beanutils>1.7.0</version.beanutils.beanutils>
+		<version.log4j.log4j>1.2.15</version.log4j.log4j>
+		<version.hibernate.hibernate>3.2.6.ga
+		</version.hibernate.hibernate>
+		<version.hsqldb.hsqldb>1.8.0.7</version.hsqldb.hsqldb>
+		<version.commons-codec.commons-codec>1.4
+		</version.commons-codec.commons-codec>
+		<version.commons-validator>1.3.1</version.commons-validator>
+		<version.oro>2.0.8</version.oro>
+		<version.org.apache.mina>2.0.7</version.org.apache.mina>
+		<version.org.slf4j>1.4.3</version.org.slf4j>
+		<version.xstream>1.3.1</version.xstream>
+		<version.json-simple>1.1</version.json-simple>
+		<version.ehcache>1.2.3</version.ehcache>
+		<version.jgroups>3.2.3.Final</version.jgroups>
+		<version.netty>3.5.10.Final</version.netty>
+
+		<!--
+			runtime low-level dependencies to be deployed within the JBoss
+			Application Server
+		-->
+		<version.commons-digester>1.6</version.commons-digester>
+		<version.xpp3>1.1.3.4.O</version.xpp3>
+
+		<!-- Local Development Environment properties -->
+		<server.dir>
+			/openmobster/appServers/jboss-${version.jboss.appserver}/server/openmobster
+		</server.dir>
+		<server.home>/openmobster/appServers/jboss-${version.jboss.appserver}
+		</server.home>
+		
+		<!-- Push-APN component JavaAPNs dependencies -->
+		<version.commons.lang>2.6</version.commons.lang>
+		<version.commons.io>1.4</version.commons.io>
+		<version.bouncycastle>146</version.bouncycastle>
+		<version.javapns>165</version.javapns>
+		
+		<!-- HttpClient 4.1.2 dependecies -->
+		<version.commons.logging>1.1.1</version.commons.logging>
+		<!-- commons-codec taken care of -->
+		<version.httpcore>4.1.2</version.httpcore>
+		<version.httpclient>4.1.2</version.httpclient>
+		
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- test framework -->
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>${version.junit.junit}</version>
+			</dependency>
+
+			<!-- Standard Spec dependencies -->
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>servlet-api</artifactId>
+				<version>${version.javax.servlet}</version>
+			</dependency>
+
+			<!-- JBoss Stack dependencies -->
+			<dependency>
+				<groupId>org.jboss</groupId>
+				<artifactId>jboss-common-core</artifactId>
+				<version>${version.jboss.common.core}
+				</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.microcontainer</groupId>
+				<artifactId>jboss-kernel</artifactId>
+				<version>${version.jboss-microcontainer}
+				</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jbpm.jbpm3</groupId>
+				<artifactId>jbpm-jpdl</artifactId>
+				<version>${version.jbpm.jpdl}</version>
+			</dependency>
+
+			<!-- Message Bus related dependencies -->
+			<dependency>
+				<groupId>org.hornetq</groupId>
+				<artifactId>hornetq-core</artifactId>
+				<version>${version.org.hornetq}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.hornetq</groupId>
+				<artifactId>hornetq-core-client</artifactId>
+				<version>${version.org.hornetq}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.hornetq</groupId>
+				<artifactId>hornetq-jms</artifactId>
+				<version>${version.org.hornetq}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.hornetq</groupId>
+				<artifactId>hornetq-jms-client</artifactId>
+				<version>${version.org.hornetq}</version>
+			</dependency>
+
+			<!-- Database dependencies -->
+			<dependency>
+				<groupId>mysql</groupId>
+				<artifactId>mysql-connector-java</artifactId>
+				<version>${version.mysql-connector-java}
+				</version>
+			</dependency>
+
+			<!-- Console Framework dependencies -->
+			<dependency>
+				<groupId>org.apache.geronimo.gshell
+				</groupId>
+				<artifactId>gshell-cli</artifactId>
+				<version>${version.org.apache.geronimo.gshell}
+				</version>
+			</dependency>
+
+			<!-- low-level dependencies -->
+			<dependency>
+				<groupId>log4j</groupId>
+				<artifactId>log4j</artifactId>
+				<version>${version.log4j.log4j}</version>
+				<exclusions>
+			        <exclusion>
+			            <groupId>com.sun.jmx</groupId>
+			            <artifactId>jmxri</artifactId>
+			        </exclusion>
+			        <exclusion>
+			            <groupId>com.sun.jdmk</groupId>
+			            <artifactId>jmxtools</artifactId>
+			        </exclusion>
+			    </exclusions>
+			</dependency>
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate</artifactId>
+				<version>${version.hibernate.hibernate}
+				</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-codec</groupId>
+				<artifactId>commons-codec</artifactId>
+				<version>${version.commons-codec.commons-codec}
+				</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-validator</groupId>
+				<artifactId>commons-validator</artifactId>
+				<version>${version.commons-validator}
+				</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-beanutils</groupId>
+				<artifactId>commons-beanutils</artifactId>
+				<version>${version.beanutils.beanutils}
+				</version>
+			</dependency>
+			<dependency>
+				<groupId>oro</groupId>
+				<artifactId>oro</artifactId>
+				<version>${version.oro}</version>
+			</dependency>
+			<dependency>
+				<groupId>hsqldb</groupId>
+				<artifactId>hsqldb</artifactId>
+				<version>${version.hsqldb.hsqldb}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.mina</groupId>
+				<artifactId>mina-core</artifactId>
+				<version>${version.org.apache.mina}
+				</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${version.org.slf4j}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-jdk14</artifactId>
+				<version>${version.org.slf4j}</version>
+			</dependency>
+			<dependency>
+			    <groupId>org.jgroups</groupId>
+			    <artifactId>jgroups</artifactId>
+			    <version>${version.jgroups}</version>
+		    </dependency>
+		    <dependency>
+			    <groupId>io.netty</groupId>
+			    <artifactId>netty</artifactId>
+			    <version>${version.netty}</version>
+		  	</dependency>
+			
+			<!-- XStream and its dependencies -->
+			<dependency>
+				<groupId>com.thoughtworks.xstream</groupId>
+				<artifactId>xstream</artifactId>
+				<version>${version.xstream}</version>
+			</dependency>
+			<dependency>
+			    <groupId>com.googlecode.json-simple</groupId>
+			    <artifactId>json-simple</artifactId>
+			    <version>${version.json-simple}</version>
+			</dependency>
+
+			<!--
+				runtime low-level dependencies to be deployed within the JBoss
+				Application Server
+			-->
+			<dependency>
+				<groupId>xpp3</groupId>
+				<artifactId>xpp3_min</artifactId>
+				<version>${version.xpp3}</version>
+			</dependency>
+
+			<!-- openmobster dependencies -->
+			<dependency>
+				<groupId>org.openmobster.core</groupId>
+				<artifactId>api</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openmobster.core</groupId>
+				<artifactId>common</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openmobster.core</groupId>
+				<artifactId>dataService</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openmobster.core</groupId>
+				<artifactId>device-agent-frameworks
+				</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openmobster.core</groupId>
+				<artifactId>device-agent-simulator
+				</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openmobster.core</groupId>
+				<artifactId>deviceService</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openmobster.core</groupId>
+				<artifactId>restfulServer</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openmobster.core</groupId>
+				<artifactId>openmobster-sar</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openmobster.core</groupId>
+				<artifactId>security</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openmobster.core</groupId>
+				<artifactId>services</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openmobster.core</groupId>
+				<artifactId>synchronizer</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openmobster.core</groupId>
+				<artifactId>agent-provisioning</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openmobster.core</groupId>
+				<artifactId>mobileObject</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openmobster.core</groupId>
+				<artifactId>mobileContainer</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openmobster.core</groupId>
+				<artifactId>moblet-management</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openmobster.core</groupId>
+				<artifactId>api-cloudConnector</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openmobster.core</groupId>
+				<artifactId>console</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openmobster.core</groupId>
+				<artifactId>console-server</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openmobster.core</groupId>
+				<artifactId>push-apn</artifactId>
+				<version>${project.version}</version>				
+			</dependency>
+			<dependency>
+				<groupId>org.openmobster.core</groupId>
+				<artifactId>location</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openmobster.core</groupId>
+				<artifactId>d2d</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openmobster.core</groupId>
+				<artifactId>clustering</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			
+			<!-- Push-APN component JavaAPNs dependencies -->
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang</artifactId>
+				<version>${version.commons.lang}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>${version.commons.io}</version>
+			</dependency>
+			<dependency>
+				<groupId>bouncycastle</groupId>
+				<artifactId>bcprov-jdk16</artifactId>
+				<version>${version.bouncycastle}</version>
+			</dependency>
+			<dependency>
+				<groupId>javapns</groupId>
+				<artifactId>javapns-jdk15</artifactId>
+				<version>${version.javapns}</version>
+			</dependency>
+			
+			<!-- HttpClient 4.1.2 related dependencies -->
+			<dependency>
+		      <groupId>org.apache.httpcomponents</groupId>
+		      <artifactId>httpclient</artifactId>
+		      <version>${version.httpclient}</version>
+		    </dependency>
+			<dependency>
+		      <groupId>org.apache.httpcomponents</groupId>
+		      <artifactId>httpcore</artifactId>
+		      <version>${version.httpcore}</version>
+		    </dependency>
+		    <!-- commons-codec taken care of -->
+		    <dependency>
+		      <groupId>commons-logging</groupId>
+		      <artifactId>commons-logging</artifactId>
+		      <version>${version.commons.logging}</version>
+		    </dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.microcontainer</groupId>
+			<artifactId>jboss-kernel</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss</groupId>
+			<artifactId>jboss-common-core</artifactId>
+		</dependency>
+
+		<!-- Message Bus related dependencies -->
+		<dependency>
+			<groupId>org.hornetq</groupId>
+			<artifactId>hornetq-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.hornetq</groupId>
+			<artifactId>hornetq-core-client</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.hornetq</groupId>
+			<artifactId>hornetq-jms</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.hornetq</groupId>
+			<artifactId>hornetq-jms-client</artifactId>
+		</dependency>
+
+		<!-- XStream dependencies -->
+		<dependency>
+			<groupId>com.thoughtworks.xstream</groupId>
+			<artifactId>xstream</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.googlecode.json-simple</groupId>
+			<artifactId>json-simple</artifactId>
+			<version>${version.json-simple}</version>
+		</dependency>
+
+		<!-- test dependencies -->
+		<dependency>
+			<groupId>hsqldb</groupId>
+			<artifactId>hsqldb</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+		    <!--  
+			<plugin>
+				<groupId>org.apache.maven.plugins
+						</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>validate</phase>
+						<configuration>
+							<tasks>
+								<property environment="env" />
+								<fail message="RIM_JDE_HOME environment variable must be set to the home directory of the Blackberry JDE Environment. For instance, when using the eclipse JDE plugin, it could look something like: C:\projects\eclipse\plugins\net.rim.eide.componentpack4.5.0_4.5.0.16\components">
+									<condition>
+										<and>
+											<os family="windows" />
+											<not>
+												<isset property="env.RIM_JDE_HOME" />
+											</not>
+										</and>
+									</condition>
+								</fail>
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			-->
+			<!-- using java5 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifestEntries>
+							<Built-By>openmobster@gmail.com</Built-By>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<inherited>false</inherited>
+				<groupId>com.mycila.maven-license-plugin
+				</groupId>
+				<artifactId>maven-license-plugin</artifactId>
+				<configuration>
+					<header>${basedir}/licensing/header.txt
+					</header>
+					<failIfMissing>true</failIfMissing>
+					<aggregate>true</aggregate>
+					<includes>
+						<include>**/*.java</include>
+					</includes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.4</version>
+				<inherited>true</inherited>
+				<configuration>
+					<attach>true</attach>
+				</configuration>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.0-beta-10-20091219.191259-9
+				</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.6.1</version>
+				<configuration>
+					<aggregate>true</aggregate>
+					<groups>
+						<group>
+							<title>Public API for App Developers - Cloud SDK (Cloud-Side Components)</title>
+							<packages>
+								org.openmobster.cloud.api.*
+							</packages>
+						</group>
+						<group>
+							<title>Public API for App Developers - Android SDK (Device-Side Components)</title>
+							<packages>
+								org.openmobster.android.api.*
+							</packages>
+						</group>
+					</groups>
+				</configuration>
+			</plugin>
+		</plugins>
+		<extensions>
+			<extension>
+				<groupId>org.jvnet.wagon-svn</groupId>
+				<artifactId>wagon-svn</artifactId>
+				<version>1.8</version>
+			</extension>
+		</extensions>
+	</build>
+
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.6.1</version>
+				<configuration>
+					<aggregate>true</aggregate>
+					<groups>
+						<group>
+							<title>Public API for App Developers - Cloud SDK (Cloud-Side Components)</title>
+							<packages>
+								org.openmobster.cloud.api.*
+							</packages>
+						</group>
+						<group>
+							<title>Public API for App Developers - Android SDK (Device-Side Components)</title>
+							<packages>
+								org.openmobster.android.api.*
+							</packages>
+						</group>
+					</groups>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
+
+	<repositories>
+		<repository>
+			<id>jboss</id>
+			<url>http://anonsvn.jboss.org/repos/repository.jboss.org/maven2
+			</url>
+		</repository>
+
+		<repository>
+			<id>maven-codehaus</id>
+			<name>Public online CodeHaus Maven Repository</name>
+			<url>http://repository.codehaus.org
+			</url>
+		</repository>
+
+		<repository>
+			<id>maven2-repository.dev.java.net</id>
+			<name>Java.net Repository for Maven</name>
+			<url>http://download.java.net/maven/2/
+			</url>
+		</repository>
+
+		<repository>
+			<id>apache-snapshots</id>
+			<name>Apache Repository</name>
+			<url>https://repository.apache.org/content/groups/snapshots
+			</url>
+		</repository>
+
+		<repository>
+			<id>apache-public</id>
+			<name>Apache Repository</name>
+			<url>https://repository.apache.org/content/groups/public
+			</url>
+		</repository>
+		
+		<repository>
+			<id>openmobster-maven</id>
+			<name>OpenMobster Maven Repository</name>
+			<url>https://openmobster.googlecode.com/svn/maven2
+			</url>
+		</repository>
+	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>java.net maven repository</id>
+			<url>http://download.java.net/maven/2/
+			</url>
+		</pluginRepository>
+		<pluginRepository>
+			<id>mc-release</id>
+			<name>Local Maven repository of releases</name>
+			<url>http://mc-repo.googlecode.com/svn/maven2/releases
+			</url>
+		</pluginRepository>
+		<pluginRepository>
+			<id>jboss</id>
+			<name>JBoss Repository</name>
+			<url>http://anonsvn.jboss.org/repos/repository.jboss.org/maven2
+			</url>
+		</pluginRepository>
+		<pluginRepository>
+			<id>apache-snapshots</id>
+			<name>Apache Repository</name>
+			<url>https://repository.apache.org/content/groups/snapshots
+			</url>
+		</pluginRepository>
+		<pluginRepository>
+			<id>apache-public</id>
+			<name>Apache Repository</name>
+			<url>https://repository.apache.org/content/groups/public
+			</url>
+		</pluginRepository>
+	</pluginRepositories>
+
+	<distributionManagement>
+		<repository>
+			<uniqueVersion>false</uniqueVersion>
+			<id>openmobster-maven</id>
+			<name>openmobster</name>
+			<url>svn:https://openmobster.googlecode.com/svn/maven2
+			</url>
+			<layout>default</layout>
+		</repository>
+	</distributionManagement>
+</project>

@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="offlineapp">
+   <chapterinfo>
+      <author>
+         <firstname>openmobster</firstname>
+         <surname>at gmail.com</surname>
+         <email>openmobster@gmail.com</email>
+      </author>
+   </chapterinfo>
+   <title>Sync App Development</title>
+   <sect1>
+   		<para>
+   		A native Mobile App runs within the constraints of its local runtime. A major advantage of this environment is access to local storage for data
+associated with the App. If logic is the nervous system of an App, data is its life blood. Without the data, an App is lifeless. Local Storage
+brings an App to life instantaneously. The closer this data is stored, the faster and better is the performance of the App.
+   		</para>
+   		<para>
+   		A typical Mobile App has the following data-oriented requirements
+   		<itemizedlist>
+   			<listitem>Data originates in the Cloud.</listitem>
+   			<listitem>App related data is synchronized from the Cloud with the local storage over a network connection.</listitem>
+   			<listitem>Any data state changes (add/update/delete) via the App are synchronized with the Cloud.</listitem>
+   			<listitem>Any data state changes (add/update/delete) on the Cloud are pushed/synchronized with the device.</listitem>
+   			<listitem>This data is available to the mobile App even in the event the Cloud is unavailable.</listitem>
+   		</itemizedlist>
+   		The <emphasis role="bold">OpenMobster Cloud Platform</emphasis> uses a "Channel" component on the <emphasis>Cloud-side</emphasis> and 
+   		a <emphasis>MobileBean</emphasis> component on the <emphasis>Device-side</emphasis> to provide the above mentioned 
+   		offline capabilities to an App
+   		</para>
+   </sect1>
+   <sect1>
+   		<title>Tutorial</title>
+   		<sect2>
+   			<title>Cloud-Side: Channel Development</title>
+   			<para>
+   			A Channel serves as a gateway for integrating on-device model/data objects with the
+ 			server-side backend storage systems such as relational databases, content repositories, or 
+    		Enterprise systems like CRMs, ERPs etc. It provides a simple CRUD (Create, Read, Update, and Delete)
+    		interface to expose the backend data. The Channel is specifically designed such that the Developer does
+    		not have to worry about any low-level state management, and synchronization issues.
+   			</para>
+   			<sect3>
+   				<title>Step 1:</title>
+   				<para>
+   				Define a simple MobileBean to represent a data entity being mobilized. This MobileBean should adhere to the MobileBean specification
+    			covered here: <link linkend="mobilebean">Specification</link>
+   				</para>
+   				<para>
+   				<programlisting><![CDATA[
+import java.util.List;
+import org.openmobster.cloud.api.sync.MobileBean;
+import org.openmobster.cloud.api.sync.MobileBeanId;
+public class DemoBean implements MobileBean 
+{
+	@MobileBeanId
+	private String beanId;
+	
+	private String demoString; //used to demonstrate mobilizing a simple property of type 'String'
+	
+	private String[] demoArray; //used to demonstrate mobilizing of an indexed property that is an 'array'
+	
+	private List<String> demoList; //used to demonstrate mobilizing an indexed property that is a 'list'
+	
+	public DemoBean()
+	{
+		
+	}
+
+	public String getBeanId()
+	{
+		return beanId;
+	}
+
+	public void setBeanId(String beanId)
+	{
+		this.beanId = beanId;
+	}
+
+	public String getDemoString()
+	{
+		return demoString;
+	}
+
+	public void setDemoString(String demoString)
+	{
+		this.demoString = demoString;
+	}
+
+	public String[] getDemoArray()
+	{
+		return demoArray;
+	}
+
+	public void setDemoArray(String[] demoArray)
+	{
+		this.demoArray = demoArray;
+	}
+
+	public List<String> getDemoList()
+	{
+		return demoList;
+	}
+
+	public void setDemoList(List<String> demoList)
+	{
+		this.demoList = demoList;
+	}
+}
+]]></programlisting>
+  				</para>
+   			</sect3>
+   			<sect3>
+   				<title>Step 2:</title>
+   				<para>
+   				Provide a Channel implementation that exposes this MobileBean via a CRUD interface.
+   				</para>
+   				<para>
+   				<programlisting><![CDATA[
+@ChannelInfo(uri="/offlineapp/demochannel", 
+             mobileBeanClass="org.openmobster.core.examples.offlineapp.DemoBean")
+public class DemoChannel implements Channel
+   				]]></programlisting>
+   				</para>
+   				<sect4>
+   					<title>bootup</title>
+   					<para>
+   					This method provides a subset of the "MobileBean" instances associated with the said device. 
+		They provide just enough information for an App to be functional. This helps with avoiding very long synchronization
+		sessions. The other beans are loaded on-demand from there on
+		<programlisting><![CDATA[
+public List<? extends MobileBean> bootup() 
+{
+	List<MobileBean> list = new ArrayList<MobileBean>();
+	
+	//Just get only the top 5 beans to bootup the service on device side
+	//This decision is App-specific
+	for(int i=0; i<5; i++)
+	{
+		DemoBean bean = this.demoRepository.getData().get(""+i);
+		list.add(bean);
+	}
+	
+	return list;
+}
+   				]]></programlisting>
+   					</para>
+   				</sect4>
+   				<sect4>
+   					<title>readAll</title>
+   					<para>This method provides all the "MobileBean" instances associated with the said device.
+   					<programlisting><![CDATA[
+public List<? extends MobileBean> readAll() 
+{		
+	List<MobileBean> list = new ArrayList<MobileBean>();
+	
+	//Get All the Beans associated with this Channel for this Device
+	Set<String> beanIds = this.demoRepository.getData().keySet();
+	for(String beanId: beanIds)
+	{
+		list.add(this.demoRepository.getData().get(beanId));
+	}
+	
+	return list;
+}
+   				]]></programlisting>
+   					</para>
+   				</sect4>
+   				<sect4>
+   					<title>read</title>
+   					<para>
+   					This method loads the particular "MobileBean" instance in question.
+   					   					<programlisting><![CDATA[
+public MobileBean read(String id) 
+{		
+	return this.demoRepository.getData().get(id);
+}
+   				]]></programlisting>
+   					</para>
+   				</sect4>
+   				<sect4>
+   					<title>create</title>
+   					<para>
+   					Creates a new instance of a "MobileBean" within the backend data service. This happens when a new instance is created
+		on the device and synchronized back with the Cloud. It returns the unique id generated by the server and associated with this bean.
+		   					   					<programlisting><![CDATA[
+public String create(MobileBean mobileBean) 
+{
+	DemoBean newBean = (DemoBean)mobileBean;
+	
+	//Generate a new unique bean Id. This bean was created on the Device and is being
+	//synchronized with the backend cloud service
+	String newBeanId = String.valueOf(this.getDemoRepository().getData().size());
+	newBean.setBeanId(newBeanId);
+	
+	this.demoRepository.getData().put(newBeanId, newBean);
+	
+	return newBeanId;
+}
+   				]]></programlisting>
+   					</para>
+   				</sect4>
+   				<sect4>
+   					<title>update</title>
+   					<para>
+   					Synchronizes the updated state of a bean from the device with the state on the Cloud.
+   					<programlisting><![CDATA[
+public void update(MobileBean mobileBean) 
+{
+	DemoBean updatedBean = (DemoBean)mobileBean;
+	
+	this.demoRepository.getData().put(updatedBean.getBeanId(), updatedBean);
+}
+   				]]></programlisting>
+   					</para>
+   				</sect4>
+   				<sect4>
+   					<title>delete</title>
+   					<para>
+   					Deletes a bean instance that is user confirmed to be deleted from the device.
+   					<programlisting><![CDATA[
+public void delete(MobileBean mobileBean) 
+{		
+	DemoBean deletedBean = (DemoBean)mobileBean;
+	this.demoRepository.getData().remove(deletedBean.getBeanId());
+}
+   				]]></programlisting>
+   					</para>
+   				</sect4>
+   			</sect3>
+   			<sect3>
+   				<title>Step 3:</title>
+   				<para>
+   				Provide the META-INF/openmobster-config.xml that will deploy the "Channel" into the Cloud Server.
+   				<programlisting><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+
+<deployment xmlns="urn:jboss:bean-deployer:2.0">
+   <bean name="/offlineapp/demorepo" class="org.openmobster.core.examples.offlineapp.DemoDataRepository"/>
+    
+   <bean name="/offlineapp/demochannel" class="org.openmobster.core.examples.offlineapp.DemoChannel">
+   		<property name="demoRepository"><inject bean="/offlineapp/demorepo"/></property>
+   </bean>  
+</deployment>
+   				]]></programlisting>
+   				</para>
+   			</sect3>
+   			<sect3>
+   				<title>Step 4:</title>
+   				<para>
+   				Package the the above classes and the corresponding META-INF/openmobster-config.xml into a simple <emphasis>jar</emphasis> file.
+   				</para>
+   			</sect3>
+   			<sect3>
+   				<title>Step 5:</title>
+   				<para>
+   				Deploy this jar file into the "deploy" directory of your JBoss AS instance
+   				</para>
+   			</sect3>
+   			<sect3>
+   				<title>Putting it all together</title>
+   				<para>
+   				 	The end-to-end Channel Example is located in the binary distribution at: 
+   				 	<emphasis role='bold'>Samples/offlineapp/cloud</emphasis>
+   				</para>
+   			</sect3>
+   		</sect2>
+   		<sect2>
+   			<title>App/Device-Side: MobileBean component</title>
+   			<para>
+   			On the device side, this data is accessible via the <emphasis role='bold'>org.openmobster.android.api.sync.MobileBean</emphasis> component.
+	The device-side MobileBean is a generic component which exposes a Cloud-side MobileBean information through 
+	a robust interface. Device-side MobileBean component semantic are covered here:<link linkend="mobilebean">Specification</link>
+   			</para>
+   			<para>
+   			Here are some simple methods to access a MobileBean on the device
+   			<itemizedlist>
+   				<listitem>
+   				readAll: Returns all MobileBean instances associated with a channel. Chances are some of the instances are only proxies that will be
+		loaded seamlessly when they are really needed <emphasis>on-demand</emphasis>. This process happens behind the scenes and there is nothing special a programmer needs to do.
+		<programlisting><![CDATA[
+MobileBean[] demoBeans = MobileBean.readAll("/offlineapp/demochannel");	
+actions = new Vector();
+int size = demoBeans.length;
+for(int i=0; i<size; i++)
+{
+	if(!demoBeans[i].isProxy())
+	{
+		actions.addElement(demoBeans[i].getValue("demoString"));
+	}
+	else
+	{
+		actions.addElement(demoBeans[i].getId()+": proxyState");
+	}
+}
+   				]]></programlisting>
+   				</listitem>
+   				<listitem>
+   				getValue: Reads the value associated with a field/property of an instance of a bean. A property expression is provided to access
+		this information.
+		<programlisting><![CDATA[
+demoBeans[i].getValue("demoString");
+   				]]></programlisting>
+   				This particular method call reads the "demoString" property of the corresponding Cloud-Side MobileBean instance covered earlier.
+   				</listitem>
+   				<listitem>
+   				setValue: Updates the field/property of an instance of a bean. A property expression and its value are provided.
+   				<programlisting><![CDATA[
+demoBeans[i].setValue("demoString", "new updated value");
+   				]]></programlisting>
+   				</listitem>
+   			</itemizedlist>
+   			For a more detailed coverage of the MobileBean usage, please see some example code in the binary distribution located at:
+   			<emphasis role='bold'>Samples/offlineapp/app-android</emphasis>
+   			</para>
+   		</sect2>
+   </sect1>
+</chapter>

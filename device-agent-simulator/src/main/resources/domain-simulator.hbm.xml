@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+        
+<hibernate-mapping>
+	<class name="org.openmobster.device.agent.service.database.ChangeLogTable" table="sync_engine_client_changelog">
+        <id name="id" column="id">
+            <generator class="native"/>
+        </id>
+        <property name="record" type="serializable" column="record"/>
+    </class>
+    
+    <class name="org.openmobster.device.agent.service.database.AnchorTable" table="sync_engine_client_anchor">
+        <id name="id" column="id">
+            <generator class="native"/>
+        </id>
+        <property name="record" type="serializable" column="record"/>
+    </class>
+    
+    <class name="org.openmobster.device.agent.service.database.RecordMapTable" table="sync_engine_client_recordmap">
+        <id name="id" column="id">
+            <generator class="native"/>
+        </id>
+        <property name="record" type="serializable" column="record"/>
+    </class>
+   
+    <class name="org.openmobster.device.agent.service.database.SyncErrorTable" table="sync_engine_client_error">
+        <id name="id" column="id">
+            <generator class="native"/>
+        </id>
+        <property name="record" type="serializable" column="record"/>
+    </class>                
+</hibernate-mapping>

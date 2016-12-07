@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="managementConsole">
+	<chapterinfo>
+		<author>
+			<firstname>openmobster</firstname>
+			<surname>at gmail.com</surname>
+			<email>openmobster@gmail.com</email>
+		</author>
+	</chapterinfo>
+	<title>Management Console</title>
+	<sect1>
+		<para>
+			The current version of the platform comes with a command line management tool called the <emphasis role='bold'>Management Console</emphasis>.
+			At this point in time, it provides security and account provisioning related functions. In the future, this tool will be enhanced with other
+			management functions like device management, remote wipe, remote lock-down, tracking, etc. A GWT-based GUI interface is also
+			on the project roadmap.
+		</para>
+	</sect1>
+	<sect1>
+		<title>Console Commands</title>
+		<sect2>
+			<title>Configure</title>
+			<para>
+			This command initializes the console for use with the Cloud Server. It registers the 'Administrator/Root' user who will
+			be allowed to use this tool to manage the Cloud Server. 
+			</para>
+			<para>
+				Usage:
+			<programlisting><![CDATA[
+				
+configure -a <cloudServer Ip Address> -po 1502 -u root -p <whatever root password you can remember>		
+		]]></programlisting>
+			</para>
+			<para>
+			    Command line options:
+				<itemizedlist>
+					<listitem>
+						<emphasis role='bold'>-a</emphasis>: IP address of the Cloud Server. <emphasis role='bold'>(Required)</emphasis>
+					</listitem>
+					<listitem>
+						<emphasis role='bold'>-po</emphasis>: Cloud Server Port. The port out-of-the-box is 1502. <emphasis role='bold'>(Required)</emphasis> 
+					</listitem>
+					<listitem>
+						<emphasis role='bold'>-u</emphasis>: Username to be associated with the Administrator. <emphasis role='bold'>(Required)</emphasis> 
+					</listitem>
+					<listitem>
+						<emphasis role='bold'>-p</emphasis>: Password for this account. <emphasis role='bold'>(Required)</emphasis>
+					</listitem>
+				</itemizedlist>
+			</para>
+			<para>
+				<emphasis role='bold'>Note:</emphasis> This is an administration account. This should not be confused with Cloud accounts provisioned to end users who 
+				will be registering their respective devices to gain mobile access to cloud services.
+			</para>
+		</sect2>
+		<sect2>
+			<title>Start Cloud Administration</title>
+			<para>
+			This command is used by the Cloud Administrator to successfully authenticate and gain access to Cloud Management functions.			
+			</para>
+			<para>
+				Usage:
+			<programlisting><![CDATA[
+				
+startadmin -u root -p <whatever password was setup>		
+		]]></programlisting>
+			</para>
+			<para>
+			    Command line options:
+				<itemizedlist>
+					<listitem>
+						<emphasis role='bold'>-u</emphasis>: Username that is associated with the Administrator. <emphasis role='bold'>(Required)</emphasis> 
+					</listitem>
+					<listitem>
+						<emphasis role='bold'>-p</emphasis>: Password. <emphasis role='bold'>(Required)</emphasis>
+					</listitem>
+				</itemizedlist>
+			</para>
+		</sect2>
+		<sect2>
+			<title>Register a New User</title>
+			<para>
+			This command is used by the Cloud Administrator to provision a new user account. The user can then
+			provision their mobile device via the CloudManager app installed on their device, using this account.			
+			</para>
+			<para>
+				Usage:
+			<programlisting><![CDATA[
+				
+register -u <email of the user being registered> -p <whatever password that you want to associate with this account>		
+		]]></programlisting>
+			</para>
+			<para>
+			    Command line options:
+				<itemizedlist>
+					<listitem>
+						<emphasis role='bold'>-u</emphasis>: Unique 'username' for a new account. Typically this uniqueness can be managed better by using their email as their username. <emphasis role='bold'>(Required)</emphasis> 
+					</listitem>
+					<listitem>
+						<emphasis role='bold'>-p</emphasis>: Password to be associated with this new account. <emphasis role='bold'>(Required)</emphasis>
+					</listitem>
+				</itemizedlist>
+			</para>
+		</sect2>
+		<sect2>
+			<title>List all the registered users</title>
+			<para>
+			This command is used by the Cloud Administrator to get a list of all the 
+			registered users.			
+			</para>
+			<para>
+				Usage:
+			<programlisting><![CDATA[
+				
+show users		
+		]]></programlisting>
+			</para>
+		</sect2>
+		<sect2>
+			<title>Deactivate a user account</title>
+			<para>
+			This command is used by the Cloud Administrator to make the account inaccessible, but <emphasis role='bold'>does not</emphasis> delete any data.			
+			</para>
+			<para>
+				Usage:
+			<programlisting><![CDATA[
+				
+deactivate -u <user account>		
+		]]></programlisting>
+			</para>
+			<para>
+			    Command line options:
+				<itemizedlist>
+					<listitem>
+						<emphasis role='bold'>-u</emphasis>: Unique 'username' of the account being deactivated. <emphasis role='bold'>(Required)</emphasis> 
+					</listitem>
+				</itemizedlist>
+			</para>
+		</sect2>
+		<sect2>
+			<title>Activate a user account</title>
+			<para>
+			This command is used by the Cloud Administrator to activate a user account. It makes the account accessible again if it were deactivated			
+			</para>
+			<para>
+				Usage:
+			<programlisting><![CDATA[
+				
+activate -u <user account>		
+		]]></programlisting>
+			</para>
+			<para>
+			    Command line options:
+				<itemizedlist>
+					<listitem>
+						<emphasis role='bold'>-u</emphasis>: Unique 'username' of the account being activated. <emphasis role='bold'>(Required)</emphasis> 
+					</listitem>
+				</itemizedlist>
+			</para>
+		</sect2>
+	</sect1>
+</chapter>

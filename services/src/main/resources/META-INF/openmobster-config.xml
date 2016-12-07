@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<deployment xmlns="urn:jboss:bean-deployer:2.0">
+	<bean name="services://HibernateManager" class="org.openmobster.core.common.database.HibernateManager">
+   	  <property name="config">hibernate-services.cfg.xml</property>
+    </bean>
+            
+	<bean name="services://MobileObjectMonitor" class="org.openmobster.core.services.MobileObjectMonitor">
+   	  <incallback method="notify"/> 
+   	  <property name="hibernateManager">
+   	  	<inject bean="services://HibernateManager"/>
+   	  </property>
+   	  <property name="deviceController">
+   	  	<inject bean="security://DeviceController"/>
+   	  </property> 
+   	  <property name="clusterService">
+   	  	<inject bean="clustering://ClusterService"/>
+   	  </property>
+   	  <depends>HornetQServer</depends>  	 
+   	  <depends>common://EventManager</depends>  
+   </bean>
+   
+   <bean name="services://MobileServiceMonitor" class="org.openmobster.core.services.MobileServiceMonitor">
+   	  <incallback method="notify"/>   	  
+   </bean> 
+   
+   <bean name="org.openmobster.core.services.LocationServiceMonitor" class="org.openmobster.core.services.LocationServiceMonitor">
+   	  <incallback method="notify"/>   	  
+   </bean>
+   
+   <!--  Comet service for server generated events -->
+   <bean name="services://CometService" class="org.openmobster.core.services.CometService">
+   		<incallback method="notifyChannelEventListener"/>
+   		<incallback method="notifyNetworkEventListener"/>   	  
+   </bean>
+   
+   <!-- Deploy the MockMobileService -->
+   <bean name="services://PingMobileBeanService" class="org.openmobster.core.services.PingMobileBeanService">
+   		<depends>services://MobileObjectMonitor</depends>
+   		<depends>services://MobileServiceMonitor</depends>
+   </bean>                   
+</deployment>

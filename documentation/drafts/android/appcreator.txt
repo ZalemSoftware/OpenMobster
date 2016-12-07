@@ -1,0 +1,49 @@
+OpenMobster Cloud Platform provides a Maven based tool called AppCreator. AppCreator can be used by App developers to quickly develop, unit test, and debug mobile cloud apps written
+on using the OpenMobster libraries. It greatly improves developer productivity by allowing them to quickly write and test components inside the development environment. There is no need
+to fire up any App Server for running the Cloud. App Server integration is also provided when its time to deploy the Mobile App into production.
+
+Some productivity features of AppCreator:
+
+* Uses maven profiles to develop components for multiple mobile platforms within the same project
+
+* In-VM unit testing as well as integration testing of Cloud components
+
+* Development Mode device side runtimes
+
+* Maven based repository management downloads latest libraries from remote repositories. Easy upgrades to the development environment
+
+* Not an IDE. Eclipse is the IDE of choice. But maven works fully with other IDEs like IntelliJ.
+
+Using the AppCreator:
+
+* java -jar appCreator.jar
+
+* AppCreation wizard prompts are self-explanatory
+
+* Generates a multi-module maven project.
+
+* Structure of the Maven-project
+	* cloud
+
+	* app-android
+	
+	* app-rimos
+	
+	* moblet
+	
+* Some useful Maven commands:
+
+	
+* AppCreator In Action
+
+	* Create an App
+	
+	* Start the Cloud
+	
+	* Start the Android Emulator
+	
+	* Install the Sample Android Offline App
+	
+	* Activate the device with the Cloud
+	
+	* Launch OfflineApp

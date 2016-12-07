@@ -1,0 +1,27 @@
+Download the latest Android Software Development Kit from here: Download link
+
+Quick Installation Instructions can be found here: link
+
+Detailed Installation Instructions can be found here: link
+
+
+Once the SDK is installed, some useful commands used at development time:
+
+Create a virtual device for the emulator:
+android create avd --name droid --target android-5
+
+Creates a virtual device named droid with an Android platform API version 5 compliance
+
+
+Emulate a SDCARD:
+mksdcard -l openmobster 1024M /Users/openmobster/.android/avd/openmobster
+
+Creates an sdcard of size 1024M at the specified location on the filesystem
+
+
+Start the emulator:
+emulator -avd droid -sdcard .android/avd/openmobster
+
+
+Start the ddms daemon used for installing apps into the emulator from the commandline: More Details here: link
+ddms

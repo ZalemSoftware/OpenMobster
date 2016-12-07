@@ -1,0 +1,54 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<parent>
+		<groupId>org.openmobster.core</groupId>
+		<artifactId>core</artifactId>
+		<version>2.4-M3.1</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+	
+	<modelVersion>4.0.0</modelVersion>	
+	<name>security</name>	
+	<artifactId>security</artifactId>	
+	<packaging>jar</packaging>
+	
+	<dependencies>
+	    <dependency>
+			<groupId>org.openmobster.core</groupId>
+			<artifactId>common</artifactId>				
+		</dependency>				
+	</dependencies>
+	
+	<!-- build configuration -->
+	<build>									
+	 </build>
+	 
+	 <profiles>
+		<profile>
+			<id>hot-deploy</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<version>1.3</version>
+						<executions>
+							<execution>
+								<id>install-deployment-artifact</id>
+								<phase>install</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<tasks>
+										<echo>Installing Deployment Artifacts...</echo>
+										<copy file="${basedir}/target/${project.artifactId}-${project.version}.jar" todir="/Users/openmobster/projects/openmobster/runtime/jboss-5.1.0.GA/server/openmobster/deploy/openmobster.last" />
+									</tasks>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+</project>

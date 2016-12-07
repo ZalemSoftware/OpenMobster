@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="crud">
+	<chapterinfo>
+		<author>
+			<firstname>openmobster</firstname>
+			<surname>at gmail.com</surname>
+			<email>openmobster@gmail.com</email>
+		</author>
+	</chapterinfo>
+	<title>Get Started: CRUD App in Action</title>
+	<sect1>
+		<para>
+			In the spirit of confidence building when using a new technology,
+			lets start with seeing a sample app in action. We will
+			call it the
+			<emphasis role='bold'>CRUD</emphasis> (Create/Read/Update/Delete) App.
+		</para>
+		<sect2>
+			<title>System Requirements</title>
+			<sect3>
+				<title>Cloud Server</title>
+				<para>
+					<itemizedlist>
+						<listitem>Java SE JDK v6.0</listitem>
+						<listitem><ulink url="http://www.jboss.org/jbossas/downloads/">JBoss AS version 5.1.0.GA</ulink></listitem>
+					</itemizedlist>
+				</para>
+			</sect3>
+			<sect3>
+				<title>Android Device</title>
+				<para>
+					<itemizedlist>
+						<listitem>API Level 11 and higher</listitem>
+						<listitem>2 Devices</listitem>
+					</itemizedlist>
+				</para>
+			</sect3>
+		</sect2>
+	</sect1>
+	<sect1>
+		<title>Installation</title>
+		<sect2>
+		    <title>Download OpenMobster</title>
+		    <para>
+		        <itemizedlist>
+		            <listitem>Download <ulink url="https://code.google.com/p/openmobster/downloads/list">OpenMobster Binary Distribution</ulink></listitem>
+		            <listitem>Unzip the distribution</listitem>
+		            <listitem>Check the Cloud Server is found under <emphasis>cloudServer/hsqldb</emphasis> and <emphasis>cloudServer/mysql5</emphasis></listitem>
+		            <listitem>Check that the CRUD Sample App is found under: <emphasis>Samples/CRUD.apk</emphasis></listitem>
+		        </itemizedlist>
+		    </para>
+		</sect2>
+		<sect2>
+			<title>Install Cloud Server</title>
+			<para>
+				<itemizedlist>
+					<listitem>
+						<emphasis role="bold">Step 1:</emphasis>
+						Download and install JBoss-5.1.0.GA from
+						<ulink url="http://www.jboss.org/jbossas/downloads/">here</ulink>
+					</listitem>
+					<listitem>
+						<emphasis role="bold">Step 2:</emphasis>
+						Copy
+						<emphasis>cloudServer/hsqdb/openmobster</emphasis>
+						to the JBoss AS
+						<emphasis>server</emphasis>
+						directory.
+						<emphasis>cloudServer/hsqldb/openmobster</emphasis>
+						is a pre-configured/optimized instance for the OpenMobster Cloud
+						Server
+					</listitem>
+					<listitem>
+						<emphasis role="bold">Step 3:</emphasis>
+						Start the JBoss AS instance with the OpenMobster binary installed
+						using: run -c openmobster -b "a real IP address"
+						<para>
+							<emphasis>Note:</emphasis>
+							A real IP address like "192.168.0.1" or something like that is
+							needed for the mobile device to be able to connect to
+							the server.
+							Even in the case of a simulation environment, the device's
+							browser does not connect to a loopback address like
+							"localhost" or
+							"127.0.0.1"
+						</para>
+					</listitem>
+					<listitem>
+						<emphasis role="bold">Step 5:</emphasis>
+						Verify the Cloud Server installation by typing in:
+						http://{cloudserverIp}/o
+					</listitem>
+				</itemizedlist>
+			</para>
+		</sect2>
+		<sect2>
+		    <title>Install CRUD App on 2 devices</title>
+		    <para>
+		        <itemizedlist>
+		            <listitem>
+		                Step 1: Locate the CRUD App in the OpenMobster distribution under: <emphasis>Samples/CRUD.apk</emphasis>
+		            </listitem>
+		            <listitem>
+		                Step 2: Install the CRUD App on the device connected to your computer using: <emphasis>adb install -r CRUD.apk</emphasis>
+		            </listitem>
+		            <listitem>
+		                Step 3: Repeat Step 2 on the other device as well
+		            </listitem>
+		        </itemizedlist>
+		    </para>
+		</sect2>
+	</sect1>
+	<sect1>
+	    <title>App Activation</title>
+	    <para>
+	        For security purposes, every OpenMobster based App must be first activated successfully with the Cloud Server. 
+	        When the CRUD App is started on each device, it brings up the App Activation Dialog. You must provide the following information:
+	        <itemizedlist>
+	            <listitem>
+	                <emphasis role='bold'>Server: </emphasis> The IP or Domain name of the Cloud Server
+	            </listitem>
+	            <listitem>
+	                <emphasis role='bold'>Port: </emphasis> Port of the Cloud Server. [Default: 1502]
+	            </listitem>
+	            <listitem>
+	                <emphasis role='bold'>Email: </emphasis> The email address you want to associate to uniquely identify you with the system
+	            </listitem>
+	            <listitem>
+	                <emphasis role='bold'>Password: </emphasis> A password to be used for authentication with the system
+	            </listitem>
+	        </itemizedlist>
+	        In case of two devices, you will do an activation on both devices. You can use the same email address on both devices, or 
+	        you can input a different email address for each device. Either way, your data will be replicated across both devices.
+	    </para>
+	</sect1>
+	<sect1>
+	    <title>CRUD App Features</title>
+	    <para>
+	        Here is a list of what to expect from the CRUD App functionality
+	        <itemizedlist>
+	            <listitem>
+	                <emphasis role='bold'>Enteprise Data Sync: </emphasis> On the Cloud Side, data stored in a HSQDLB database is mobilized and 
+	                synced with the App. All the CRUD (Create/Read/Update/Delete) operations on the App data is synced back to the Cloud database.
+	            </listitem>
+	            <listitem>
+	                <emphasis role='bold'>Enteprise Data Push: </emphasis> In case of multi-device access, data changes made on one device are automatically
+	                and silently pushed to other devices.
+	            </listitem>
+	            <listitem>
+	                <emphasis role='bold'>Offline Workflow Support: </emphasis> The App Data is fully available even when a network connection is not available
+	                between the device and the Cloud Server. All the CRUD (Create/Read/Update/Delete) functions are available when the device is offline.
+	                In case, the device is disconnected, the Sync Engine queues all data changes to be synchronized back with the Cloud database as soon as a network
+	                connection is established with the Cloud Server. 
+	            </listitem>
+	        </itemizedlist>
+	    </para>
+	</sect1>
+	<sect1>
+	    <title>CRUD App Help</title>
+	    <para>
+	        <itemizedlist>
+	            <listitem>
+	                <emphasis role='bold'>The data was pushed from one device to another, but the new data is not showing up?</emphasis>
+	                This is a screen refresh issue. The App does not refresh the screen automatically to keep the coding simple to follow.
+	                You can refresh your screen manually from the Option in the App Menu. 	            
+	            </listitem>
+	            <listitem>
+	                <emphasis role='bold'>How do I 'Create' a new ticket?</emphasis>
+	                The "New Ticket" option is available in the App Menu.
+	            </listitem>
+	            <listitem>
+	                <emphasis role='bold'>How do I 'Update' a ticket?</emphasis> 
+	                The "Update" option is available when you click the ticket to be updated in the list
+	            </listitem>
+	            <listitem>
+	                <emphasis role='bold'>How do I 'Delete' a ticket?</emphasis> 
+	                The "Delete" option is available when you click the ticket to be deleted from the list
+	            </listitem>
+	        </itemizedlist>
+	    </para>
+	</sect1>
+</chapter>

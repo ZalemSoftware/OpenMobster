@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="mobilerpc">
+   <chapterinfo>
+      <author>
+         <firstname>openmobster</firstname>
+         <surname>at gmail.com</surname>
+         <email>openmobster@gmail.com</email>
+      </author>
+   </chapterinfo>
+   <title>Mobile RPC (Remote Procedure Call) Development</title>
+   <para>
+   The <emphasis>MobileService</emphasis> component on the Device-side is used to make synchronous remote service invocations on registered <emphasis>MobileServerBean</emphasis> instances
+on the Cloud Server.
+   </para>
+   <para>
+   At this time, this is a very simple request/response based system whose main design goal is to shield the App developer from any low level
+details like making network connections, security, resolving remote services, marshalling/unmarshalling payload, protocol details, etc.
+   </para>
+   <para>
+   The next iteration of this component will involve introducing more robust features based on a REST-based architecture.
+   </para>
+   <sect1>
+   		<title>Cloud-Side: MobileServiceBean implementation</title>
+   		<para>
+   		MobileServiceBean is a simple interface <interfacename>org.openmobster.cloud.api.rpc.MobileServiceBean</interfacename> with a single "invoke" method. 
+   		This implementation should carry coarse grained business process logic.
+		<programlisting><![CDATA[
+@ServiceInfo(uri="/demo/mobile-rpc")
+public class DemoMobileBeanService implements MobileServiceBean
+{
+	private static Logger log = Logger.getLogger(DemoMobileBeanService.class);
+	
+	public DemoMobileBeanService()
+	{
+		
+	}
+	
+	public Response invoke(Request request) 
+	{	
+		log.info("-------------------------------------------------");
+		log.info(this.getClass().getName()+" successfully invoked...");		
+		
+		Response response = new Response();
+		String[] names = request.getNames();
+		for(String name: names)
+		{
+			String value = request.getAttribute(name);
+			log.info("Name="+name+", Value="+value);
+			response.setAttribute(name, "response://"+value);
+		}		
+		log.info("-------------------------------------------------");
+		
+		return response;
+	}
+}
+		]]></programlisting>
+   		</para>
+   </sect1>
+   <sect1>
+   		<title>Cloud-Side: Configuration</title>
+   		<para>
+   		Provide the META-INF/openmobster-config.xml that will deploy the "MobileServiceBean" instance into the Cloud Server.
+   		<programlisting><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+
+<deployment xmlns="urn:jboss:bean-deployer:2.0">
+	<bean name="/demo/mobile-rpc" class="org.openmobster.core.examples.rpc.DemoMobileBeanService"/>
+</deployment>
+		]]></programlisting>
+   		</para>
+   </sect1>
+   <sect1>
+   		<title>Cloud-Side: Packaging and Deployment</title>
+   		<para>
+	   		<itemizedlist>
+	   			<listitem>Packaging: Package the the above classes and the corresponding META-INF/openmobster-config.xml into a simple <emphasis>jar</emphasis> file.</listitem>
+	   			<listitem>Deployment: Deploy this jar file into the "deploy" directory of your JBoss AS instance.</listitem>
+	   		</itemizedlist>
+   		</para>
+   </sect1>
+   <sect1>
+   		<title>Putting it altogether</title>
+   		<para>
+   		Entire MobileServiceBean Example is located at: 
+   			<emphasis>src/dev-tools/sampleApps/rpcdemo/cloud</emphasis> and
+   			<emphasis>AppCreator/sampleApps/rpcdemo/cloud</emphasis>
+   		</para>
+   </sect1>
+   <sect1>
+   		<title>App/Device-Side: Invoking the MobileServiceBean</title>
+   		<para>
+   		On the device side inside a Moblet, the remote "MobileServiceBean" instance can be invoked using the <interfacename>org.openmobster.android.api.rpc.MobileService</interfacename>
+   		component
+   		<programlisting><![CDATA[
+Request request = new Request("/demo/mobile-rpc");
+request.setAttribute("param1", "paramValue1");
+request.setAttribute("param2", "paramValue2");
+		
+MobileService service = new MobileService();
+Response response = service.invoke(request);
+		]]></programlisting>
+   		</para>
+   </sect1>
+</chapter>

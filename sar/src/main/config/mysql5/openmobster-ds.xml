@@ -1,0 +1,12 @@
+<datasources>
+	<local-tx-datasource>
+		<jndi-name>openmobster-ds</jndi-name>
+		<connection-url>jdbc:mysql://localhost:3306/openmobster?useServerPrepStmts=false&amp;jdbcCompliantTruncation=false</connection-url>
+		<driver-class>com.mysql.jdbc.Driver</driver-class>
+		<user-name>openmobster</user-name>
+		<password>openmobster</password>
+		
+		<min-pool-size>50</min-pool-size>
+        <max-pool-size>500</max-pool-size>
+	</local-tx-datasource>
+</datasources>

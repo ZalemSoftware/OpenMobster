@@ -1,0 +1,12 @@
+<datasources>
+	<local-tx-datasource>
+		<jndi-name>openmobster-ds</jndi-name>
+		<connection-url>jdbc:hsqldb:${jboss.server.data.dir}${/}openmobster${/}openmobsterdb</connection-url>
+		<driver-class>org.hsqldb.jdbcDriver</driver-class>
+		<user-name>sa</user-name>
+		<password><![CDATA[]]></password>
+		
+		<min-pool-size>50</min-pool-size>
+        <max-pool-size>500</max-pool-size>
+	</local-tx-datasource>
+</datasources>

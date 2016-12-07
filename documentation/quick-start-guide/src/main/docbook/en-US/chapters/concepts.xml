@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="concepts">
+   <chapterinfo>
+      <author>
+         <firstname>openmobster</firstname>
+         <surname>at gmail.com</surname>
+         <email>openmobster@gmail.com</email>
+      </author>
+   </chapterinfo>
+   <title>Programming Concepts</title>
+   <sect1>
+   		<title>Cloud Server</title>
+   		<para>
+   		 A <emphasis>Cloud Server</emphasis> is the server-side component of the infrastructure that is located in the 'Cloud'. The system provides mobile-oriented
+	features like offline synchronization, comet-style push, and mobile rpc. From an architecture standpoint it sits between the 
+	mobile device and the actual cloud data services being mobilized. The Cloud Server provides a Java based Developer API to expose your
+	data services. Here are its programming concepts:
+   		</para>
+   		<sect2>
+   			<title>Channel</title>
+   			<para>
+   			A <emphasis>Channel</emphasis> serves as a gateway for integrating on-device model/data objects with the
+ 		  server-side backend storage systems such as relational databases, content repositories, or 
+          Enterprise systems like CRMs, ERPs etc. It provides a simple CRUD (Create, Read, Update, and Delete)
+          interface to expose the backend data. The Channel is specifically designed such that the Developer does
+          not have to worry about any low-level state management, synchronization, or other mobile-oriented issues. The idea is to keep
+          a Channel a purely <emphasis>data-oriented component</emphasis>.
+   			</para>
+   		</sect2>
+   		<sect2>
+   			<title>MobileServiceBean</title>
+   			<para>
+   			A <emphasis>MobileServiceBean</emphasis> exposes some coarse grained business process to the on-device Mobile App. It provides a very simple
+          request/response based synchronous invocation mechanism. It frees up the developer from all low-level  (Remote Procedure Call) 
+          concerns like making network connections, security, marshalling/unmarshalling payloads etc.</para>
+          <para>
+          <emphasis role="bold">Note:</emphasis> This component is quite simple at the time of the
+          milestone M1 release. Eventually it will provide more robust REST-based functionality. In any case, the Developer will still be
+          shielded from the low-level programming details regardless of what higher-level services will be supported.
+   		   </para>
+   		</sect2>
+   </sect1>
+   <sect1>
+   		<title>Moblet and App Frameworks</title>
+   		<para>
+   		A <emphasis>Moblet</emphasis> is a <emphasis role="bold">managed App</emphasis> that executes along-side the on-device <emphasis>OpenMobster Runtime</emphasis> called the, <emphasis role='bold'><link linkend="/concepts/mobileCloud">Mobile Cloud</link></emphasis>. A moblet developer has the following on-device frameworks
+   		available to integrate with the Cloud.
+   		</para>
+   		<sect2>
+   			<title>Mobile Data Framework</title>
+   			<para>
+   			The <emphasis>Mobile Data Framework</emphasis> provides <emphasis>Cloud</emphasis> data-oriented services like seamless offline data synchronization, comet-style push
+   			notifications, and simple RPC (Remote Procedure Call) mechanism.
+   			</para>
+   			<sect3>
+   				<title>MobileBean</title>
+   				<para>
+   				MobileBean is a managed Mobile Component which carries the state of the domain object that it represents on the server. It is
+  		    	propagated from the Cloud Server to the mobile device via its corresponding "Channel" on the server. The Mobile Data Framework shields
+  		    	the App developer from state management issues like, offline access, receiving push notifications related to state changes on the server,
+            	synchronizing locally modified beans back with the server, etc.
+   				</para>
+   			</sect3>
+   			<sect3>
+   				<title>MobileService</title>
+   				<para>
+   				MobileService facilitates making synchronous RPC (Remote Procedure Call) invocations from the device to the server side 'MobileServiceBean' components.
+   				</para>
+   			</sect3>
+   		</sect2>
+   		<sect2>
+   			<title>Mobile MVC Framework</title>
+   			<para>
+   			This is a thick client MVC (Model-View-Controller) framework. It is based on a 
+           <ulink url="http://en.wikipedia.org/wiki/Rich_Internet_application">Rich Internet Application</ulink> design principle.
+           At this point in time of evolution of the mobile space, there isn't a commonly adopted GUI development standard across various
+           mobile platforms. This results in a lot of App porting activity across platforms. Although this framework
+           is not designed for (Write Once, Run Anywhere) approach, it abstracts out a lot of the UI Framework plumbing that would otherwise
+           need to be written, ported and maintained by the developer. The framework abstracts out some of the low level services into the container
+           such as App bootstrapping, screen navigation, graceful error handling, and internationalization. There are two types of components in this framework that
+           use a plugin mechanism and receive call backs to perform activities implemented using native platform API. These components are:
+   			</para>
+   			<sect3>
+   				<title>Screen</title>
+   				<para>
+   				Screen is an abstraction for an instance of the App screen that must be made visible to the user at a particular moment in time
+           	  The low level Navigation Manager keeps track of the various screens of an App and provides services such as navigating to a specified screen, 
+           	  going back to the previous screen, and going to the home screen. Besides the actual implementation of a "Screen" all services
+           	  related to a "Screen" are portable across mobile platforms.
+   				</para>
+   			</sect3>
+   			<sect3>
+   				<title>Command</title>
+   				<para>
+   				Command is an abstraction for an instance of a GUI Event Handler which receives various callbacks based on the screen's lifecycle
+             A command typically puts a business process into motion via accessing various other services like the Mobile Cloud Framework components
+             and/or native platform services.
+   				</para>
+   			</sect3>
+   			<para>
+   			The Mobile MVC Framework is extensible to support various GUI frameworks. This does open the door for integrating cross platform GUI 
+           frameworks like standard widgets, HTML5 based GUI, etc.
+   			</para>
+   		</sect2>
+   		<sect2 id="/concepts/mobileCloud">
+   			<title>Mobile Cloud</title>
+   			<para>
+   			Mobile Cloud is an on-device <emphasis>native system service</emphasis>. It hosts the runtime that is used by the <emphasis role="bold">Mobile Data Framework</emphasis> and the <emphasis role="bold">Mobile MVC Framework</emphasis>.
+  	On platforms that support inter-application communication such as <emphasis>Android</emphasis> and <emphasis>Blackberry</emphasis>, there is a single instance of a Mobile Cloud which is shared by all the Apps/Moblets
+  	installed on the device. This helps make better use of device resources like storage, network management, push sockets, background services, etc. On platforms
+  	that do not support inter-application communication, an instance of the Mobile Cloud runtime must be installed by bundling it with each 
+  	App/Moblet.
+   			</para>
+   		</sect2>
+   </sect1>
+</chapter>

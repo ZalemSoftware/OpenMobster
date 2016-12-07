@@ -1,0 +1,69 @@
+The build system is now upgraded to Maven 3.0.3. You must use this so that the maven-android-plugin works fine
+
+
+Generate a Binary Release (includes documents, source code, and deployable binaries)
+------------------------------------------------------------------------------------
+
+Step 1:
+-----------------
+Build the Console Project
+
+
+Step 2:
+---------------
+Skip Tests:
+mvn -DskipTests -Pbuild-all install
+
+With Tests:
+mvn -Pbuild-all install
+
+
+Step 3:
+----------------
+mvn -DskipTests -Pandroid-release javadoc:aggregate install
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------
+
+
+Modifying the project version for creating a new branch or tag:
+-----------------------------------------------------------------
+mvn release:update-versions -DautoVersionSubmodules=true -DdevelopmentVersion=2.0-CR1 -Pbuild-all
+
+
+Updating the Source/License Header:
+-----------------------------------------
+ mvn -Pbuild-all license:format
+ 
+ Deploy artifacts to the Openmobster Maven Repository located at: http://openmobster.googlecode.com/svn/maven2
+ --------------------------------------------------------------------------------------------------------------
+ mvn -DskipTests -Pdeploy-cloud deploy
+ 
+ cd dev-tools
+ mvn -Pdeploy-tools deploy
+ 
+ (Manually)
+ mvn deploy (wait till it fails)
+ All top-level modules (yikes!!!)
+ 
+ cd android
+ mvn -DskipTests deploy (wait till it fails)
+ 
+ Manually deploy: device-sdk and mobileCloud
+ 
+cd dev-tools
+mvn -Pdeploy-tools deploy (wait till it fails)
+
+Manually deploy: appCreator, dev-cloudServer, android-devcloud
+
+
+Some cleanup
+--------------------
+find . -type d -name ".svn" -print0 | xargs -0 rm -rf
+find . -type d -name "target" -print0 | xargs -0 rm -rf
+find . -type f -name ".DS_Store" -print0 | xargs -0 rm -rf
+
+Uploading a 3rd party artifact
+-----------------------------------
+mvn -e deploy:deploy-file -DgroupId=javapns -DartifactId=javapns -Dversion=2.2 -Dpackaging=jar -Dfile=JavaPNS_2.2.jar -Durl=svn:https://openmobster.googlecode.com/svn/maven2

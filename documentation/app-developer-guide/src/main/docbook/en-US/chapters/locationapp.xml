@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="locationapp">
+   <chapterinfo>
+      <author>
+         <firstname>openmobster</firstname>
+         <surname>at gmail.com</surname>
+         <email>openmobster@gmail.com</email>
+      </author>
+   </chapterinfo>
+   <title>Location Aware Apps</title>
+   <sect1>
+   		<title>Location Aware Apps</title>
+   		 <para>
+			This tutorial covers developing <emphasis role="bold">Location Aware Apps</emphasis> using the new <emphasis role="bold">Location Module</emphasis> of the OpenMobster platform. <emphasis role="bold">Location Awareness</emphasis> means writing your business logic by taking Location information into account.
+   		 </para>
+   		 <para>
+   		 	In OpenMobster, the business components are encapsulated with this Location information. The components then have easy access to the Location data and can easily integrate it with the business data. 
+   		 </para>
+   </sect1>
+   <sect1>
+   		<title>LocationServiceBean</title>
+   		<para>
+   		On the Cloud-side, <emphasis role="bold">LocationServiceBean</emphasis> components are encapsulated by Location Data carried inside an object called the <emphasis role="bold">LocationContext</emphasis>. Invocation of these components involves two paramaters. One is the <emphasis role="bold">LocationContext</emphasis> and the other is a <emphasis role="bold">Request</emphasis> object which carries the business data associated with the invocation. The following is a <emphasis role="bold">RestaurantBean</emphasis> which provides coupon data associated with restaurants that are close to a certain user provided location.
+   		</para>
+   		<para>
+   			<programlisting>
+   			<![CDATA[
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
+import org.openmobster.cloud.api.location.LocationContext;
+import org.openmobster.cloud.api.location.LocationServiceBean;
+import org.openmobster.cloud.api.location.BeanURI;
+import org.openmobster.cloud.api.location.Request;
+import org.openmobster.cloud.api.location.Response;
+import org.openmobster.cloud.api.location.Place;
+
+/**
+ *
+ * @author openmobster@gmail.com
+ */
+@BeanURI(uri="restaurants")
+public class RestaurantBean implements LocationServiceBean
+   			]]>
+   			</programlisting>
+   			<emphasis role="bold">BeanURI</emphasis> registers this component with the kernel.
+   		</para>
+   		<para>
+   			<programlisting>
+   			<![CDATA[
+   			@Override
+	public Response invoke(LocationContext locationContext, Request request)
+	{
+		Response response = new Response();
+		
+		//Get coupons associated with each place
+		List<Place> nearbyPlaces = locationContext.getNearbyPlaces();
+		if(nearbyPlaces != null && !nearbyPlaces.isEmpty())
+		{
+			Map<String,String> coupons = new HashMap<String,String>();
+			for(Place place:nearbyPlaces)
+			{
+				String placeId = place.getId();
+				
+				//In a real implementation, you can lookup the coupon in the database based on the Place object
+				int couponIndex = (this.random.nextInt())%7;
+				couponIndex = Math.abs(couponIndex);
+				String coupon = coupondb[couponIndex];
+				
+				coupons.put(placeId, coupon);
+			}
+			response.setMapAttribute("coupons", coupons);
+		}
+		
+		return response;
+	}
+   			]]>
+   			</programlisting>
+   			It takes a list of nearby restaurants from the <emphasis role="bold">LocationContext</emphasis> and then associates coupons from a database with each. This business data married with location data is then sent back as a <emphasis role="bold">Response</emphasis> object.
+   		</para>
+   </sect1>
+   <sect1>
+		<title>The App Side Logic</title>
+		<para>
+		In this app, the location data is provided by the user in terms of street, city, and zip code. Once this data is available, an invocation is made from the device to the cloud to get nearby restaurants to this location.
+		</para>
+		<para>
+		<programlisting>
+		<![CDATA[
+		String street = (String)commandContext.getAttribute("street");
+			String city = (String)commandContext.getAttribute("city");
+			String zip = (String)commandContext.getAttribute("zip");
+			
+			//Construct a request for the RestaurantBean
+			Request request = new Request("restaurants");
+			LocationContext locationContext = new LocationContext();
+			locationContext.setRequest(request);
+			
+			//Add the Address around which the restaurants must be looked up
+			Address address = new Address();
+			address.setStreet(street);
+			address.setCity(city);
+			address.setZipCode(zip);
+			locationContext.setAddress(address);
+			
+			//Narrow search to restaurants
+			List<String> placeTypes = new ArrayList<String>();
+			placeTypes.add("food");
+			locationContext.setPlaceTypes(placeTypes);
+			
+			//Set the search radius
+			locationContext.setRadius(1000); //1000 meters
+			
+			//Make the invocation to the Cloud to make a Location Aware search
+			LocationContext responseContext = LocationService.invoke(request, locationContext);
+			
+			commandContext.setAttribute("locationContext", responseContext);
+		]]>
+		</programlisting>
+		</para>
+		<para>
+			<programlisting>
+			<![CDATA[
+			//Construct a request for the RestaurantBean
+                        Request request = new Request("restaurants");
+                        LocationContext locationContext = new LocationContext();
+                        locationContext.setRequest(request);
+			]]>
+			</programlisting>
+			A <emphasis role="bold">Request</emphasis> object is created and its given the name of the component to invoke which is <emphasis role="bold">restaurants</emphasis> in this case. A <emphasis role="bold">LocationContext</emphasis> is also initialized which will carry the location data associated with the invocation
+		</para>
+		<para>
+			<programlisting>
+			<![CDATA[
+			//Add the Address around which the restaurants must be looked up
+        Address address = new Address();
+        address.setStreet(street);
+        address.setCity(city);
+        address.setZipCode(zip);
+        locationContext.setAddress(address);
+			]]>
+			</programlisting>
+			Create an <emphasis role="bold">Address</emphasis> object and assign it to the <emphasis role="bold">LocationContext</emphasis>.
+		</para>
+		<para>
+			<programlisting>
+			<![CDATA[
+						//Narrow search to restaurants
+                        List<String> placeTypes = new ArrayList<String>();
+                        placeTypes.add("food");
+                        locationContext.setPlaceTypes(placeTypes);
+
+						//Set the search radius
+                        locationContext.setRadius(1000); //1000 meters
+			]]>
+			</programlisting>
+			Narrow the search to only restaurants over a 1000 meter search radius.
+		</para>
+		<para>
+			<programlisting>
+			<![CDATA[
+			//Make the invocation to the Cloud to make a Location Aware search
+                        LocationContext responseContext = LocationService.invoke(request, locationContext);
+			]]>
+			</programlisting>
+			Invoke the <emphasis role="bold">RestaurantBean</emphasis> providing the location data in the <emphasis role="bold">LocationContext</emphasis> and business data inside the <emphasis role="bold">Request</emphasis> object.
+		</para>
+		<sect2>
+			<title>Processing the Response</title>
+			<para>
+				<programlisting>
+				<![CDATA[
+				Map<String,String> coupons = response.getMapAttribute("coupons");
+			List<Place> restaurants = locationContext.getNearbyPlaces();
+			
+			//Add restaurant markers and corresponding coupon information
+			MyItemizedOverlay restaurantMarkers = new MyItemizedOverlay(marker,map);
+			for(Place restaurant:restaurants)
+			{
+				double latitude = Double.parseDouble(restaurant.getLatitude());
+				double longitude = Double.parseDouble(restaurant.getLongitude());
+				GeoPoint point = new GeoPoint((int)(latitude * 1E6), (int)(longitude * 1E6));
+				OverlayItem item = new OverlayItem(point,restaurant.getName(),coupons.get(restaurant.getId()));
+				restaurantMarkers.addOverlay(item);
+			}
+				]]>
+				</programlisting>
+				The coupons being business data are read from the <emphasis role="bold">Response</emphasis> object as a <emphasis role="bold">Map&lt;String,String&gt;</emphasis>, while the nearby restaurants
+				being location data are read from the <emphasis role="bold">LocationContext</emphasis>.
+			</para>
+		</sect2>
+   </sect1>
+</chapter>

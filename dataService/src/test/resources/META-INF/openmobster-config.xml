@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<deployment xmlns="urn:jboss:bean-deployer:2.0">                 
+   <!-- Deploy the MockMobileService -->
+   <bean name="test://dataService/MockMobileService" 
+   class="test.openmobster.core.dataService.processor.MockMobileBeanService">
+   		<depends>services://MobileObjectMonitor</depends>
+   		<depends>services://MobileServiceMonitor</depends>
+   </bean>
+   
+   <bean name="coupons" 
+   class="test.openmobster.core.dataService.processor.CouponBean">
+   		<depends>services://MobileObjectMonitor</depends>
+   		<depends>services://MobileServiceMonitor</depends>
+   		<depends>org.openmobster.core.services.LocationServiceMonitor</depends>
+   </bean>                               
+</deployment>

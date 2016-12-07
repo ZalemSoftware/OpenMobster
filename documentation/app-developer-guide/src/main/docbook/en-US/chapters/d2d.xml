@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="d2d">
+   <chapterinfo>
+      <author>
+         <firstname>openmobster</firstname>
+         <surname>at gmail.com</surname>
+         <email>openmobster@gmail.com</email>
+      </author>
+   </chapterinfo>
+   <title>Device-To-Device Push Framework</title>
+   <sect1>
+   		<title>Introduction</title>
+   		<para>
+   		 	OpenMobster <emphasis role="bold">2.2-M7</emphasis>, introduces a new device to device push framework. Using this framework developers can write Apps which communicate with other devices in the cloud and vice versa. Some applications of this would be a Chat App or an Instant Messaging App.
+   		</para>
+   </sect1>
+   <sect1>
+   		<title>Integration</title>
+   		<sect2>
+   			<title>Step 1: Extend <emphasis role="bold">org.openmobster.android.api.d2d.D2DActivity</emphasis></title>
+   			<para>
+   				Override the <emphasis role="bold">onStart</emphasis> method to start the CloudService
+   				<programlisting>
+   				<![CDATA[
+   				@Override
+        protected void onStart()
+        {
+                super.onStart();
+                
+                CloudService.getInstance().start(this);
+        }		
+        		]]>
+   				</programlisting>
+   			</para>
+   			<para>
+   				Implement the <emphasis role="bold">callback</emphasis> method to handle the GUI aspects of receiving an incoming push message 
+   				<programlisting>
+   				<![CDATA[
+   				public void callback(D2DMessage message)
+        {
+                //Append a newly received message from the chat system
+                LinearLayout layout = (LinearLayout)ViewHelper.findViewById(MainActivity.this, "layout");
+                TextView chatView = new TextView(MainActivity.this);
+                chatView.setText(message.getMessage());
+                layout.addView(chatView);
+                
+                Toast.makeText(MainActivity.this, message.getMessage(), Toast.LENGTH_SHORT).show();
+                
+                TextView user = (TextView)ViewHelper.findViewById(this, "user");
+                user.setText(message.getFrom());
+                this.to = message.getFrom();
+        }
+   				]]>
+   				</programlisting>
+   			</para>
+   		</sect2>
+   		<sect2>
+   			<title>Step 2: Configuration</title>
+   			<para>In <emphasis role="bold">AndroidManifest.xml</emphasis>, register the <emphasis role="bold">org.openmobster.android.api.d2d.D2DReceiver</emphasis> broadcast receiver </para>
+   			<programlisting>
+   				<![CDATA[
+   				<receiver android:name="org.openmobster.android.api.d2d.D2DReceiver">
+                <intent-filter>
+                    <!-- action should be d2d://{packagename} of the App -->
+                    <action android:name="d2d://com.chat.android.app" />
+                </intent-filter>
+         </receiver>
+   				]]>
+   			</programlisting>
+   			<para>
+   			Also in <emphasis role="bold">AndroidManifest.xml</emphasis>, register the <emphasis role="bold">org.openmobster.core.mobileCloud.api.ui.framework.push.PushBroadcastReceiver</emphasis> to receive and notify arrival of Push messages 
+   			</para>
+   			<programlisting>
+   			<![CDATA[
+   			<receiver android:name="org.openmobster.core.mobileCloud.api.ui.framework.push.PushBroadcastReceiver">
+                <intent-filter>
+                        <!-- Action should be the {packagename} of the App-->
+                        <action android:name="com.chat.android.app"/>
+                </intent-filter>
+        </receiver>
+   			]]>
+   			</programlisting>
+   			<para>
+   				In <emphasis role="bold">openmobster-app.xml</emphasis>, configure the Push settings as follows: 
+   			</para>
+   			<programlisting>
+   			<![CDATA[
+   			<app-conf>
+        <encryption>false</encryption>
+        
+        <push>
+                <launch-activity-class>org.openmobster.app.MainActivity</launch-activity-class>
+                <icon-name>push</icon-name>
+        </push>
+</app-conf>
+   			]]>
+   			</programlisting>
+   			<para>
+   				<itemizedlist>
+   					<listitem><emphasis role="bold">launch-activity-class:</emphasis> Is the Activity that must be launched when a Push notification is clicked</listitem>
+   					<listitem><emphasis role="bold">icon-name:</emphasis> Is the icon to display with the Push notification</listitem> 
+   				</itemizedlist>
+   			</para>
+   		</sect2>
+   		<sect2>
+   			<title>Step 3: Sample App</title>
+   			<para>
+   			The OpenMobster, <emphasis role="bold">2.2-M7</emphasis> binary distribution comes packaged with a sample application for the <emphasis role="bold">Device-To-Device Push Framework</emphasis>. It is a simple Chat app and its goal is to show how the framework should be used to build more complex app. The app is located under <emphasis role="bold">AppCreator/sampleApps/chat</emphasis>
+   			</para>
+   		</sect2>
+   </sect1>
+</chapter>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<deployment xmlns="urn:jboss:bean-deployer:2.0">
+	<bean name="/testdrive/pull" class="org.openmobster.core.testdrive.server.PullTestDrive"> 
+        <property name="id">/testdrive/pull</property>
+        <depends>services://MobileObjectMonitor</depends>
+   		<depends>services://MobileServiceMonitor</depends>
+    </bean>
+    <bean name="/testdrive/push" class="org.openmobster.core.testdrive.server.PushTestDrive"> 
+        <property name="id">/testdrive/push</property>
+        <depends>services://MobileObjectMonitor</depends>
+   		<depends>services://MobileServiceMonitor</depends>
+    </bean>
+</deployment>

@@ -1,0 +1,35 @@
+This tutorial will cover writing a simple sync app integrated end-to-end with the Cloud.
+
+The tutorial is split into two aspects. First, writing the sync channel that integrates with the server side Cloud
+infrastructure, and next the actual Android native App that uses the information on the device side.
+
+Developing the HelloSyncChannel:
+
+	Step 1: Write the HelloSyncBean
+	
+	Step2:  Write the HelloSyncChannel
+	
+	Step3: Configuration
+	
+	
+Developing the Android HelloSyncApp:
+
+	Step 1: Write the HomeScreen
+	
+	Step 2: Configuration
+	
+	
+Running the App:
+
+	Step 1: Start the Cloud Server
+	
+	Step 2: Start the Android Emulator
+	
+	Step 3: Build and Install the HelloSyncApp
+	
+	Step 4: Activate the device
+	
+	Step 5: Start the HelloSyncApp
+	
+Download the entire AppCreator project for this App here: link
+

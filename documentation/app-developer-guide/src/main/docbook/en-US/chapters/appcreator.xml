@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter id="appcreator">
+	<chapterinfo>
+		<author>
+			<firstname>openmobster</firstname>
+			<surname>at gmail.com</surname>
+			<email>openmobster@gmail.com</email>
+		</author>
+	</chapterinfo>
+	<title>AppCreator</title>
+	<sect1>
+		<title>Start writing your own App</title>
+		<para>
+			Download an OpenMobster distribution from here:
+			<ulink url='http://code.google.com/p/openmobster/downloads/list'>Downloads</ulink>
+			.
+		</para>
+		<para>
+			In your distribution, go to the directory AppCreator. Inside the
+			directory, use a tool called the
+			'appcreator.bat' (Windows), 'appcreator.sh' (Linux and Mac) to generate a skeleton
+			project
+			<programlisting><![CDATA[
+				
+		appcreator.bat		
+		]]></programlisting>
+			This will generate a skeleton for the Mobile App. Each
+			generated project has the following modules:
+			<itemizedlist>
+   				<listitem>
+   					<emphasis role='bold'>cloud:</emphasis> Contains the src for the Cloud-side components. Java code is located under <emphasis>src/main/java</emphasis>, 
+   					and configuration is located under <emphasis>src/main/resources</emphasis>.
+   				</listitem>
+   				<listitem>
+   					<emphasis role='bold'>app-android:</emphasis> Contains the src for the Android App. Java code is located under <emphasis>src</emphasis>,
+   					Configuration is located under <emphasis>src/openmobster-app.xml</emphasis>. Besides the OpenMobster component setup, the Android SDK specific setup is located under
+   					<emphasis>AndroidManifest.xml</emphasis>. This is an Eclipse project and can be smoothly imported into your Eclipse Workspace.
+   				</listitem>
+   			</itemizedlist>
+		</para>
+	</sect1>
+	<sect1>
+	    <title>app-android</title>
+	    <para>
+	        <itemizedlist>
+	            <listitem>
+	                <emphasis role='bold'>Step 1: </emphasis>Import the Android Project stored under "app-android" into your Eclipse workspace.
+					Make sure you select, <emphasis role='bold'>Import > Existing Android Code into Workspace</emphasis>. Rest of the instructions should be self-explanatory
+	            </listitem>
+	            <listitem>
+	                <emphasis role='bold'>Step 2: </emphasis><emphasis role='bold'>Run As</emphasis> Android Application from Eclipse. This will compile and install the Android App on the connected device or simulator.
+	            </listitem>
+	        </itemizedlist>
+	    </para>
+	</sect1>
+	<sect1>
+	    <title>cloud</title>
+	    <para>
+	        On the Cloud-side of things, there is a fully functional Standalone "Development Mode" Cloud Server provided 
+			that you can run right inside your Maven environment. Here are some of the Maven commands that are used during development
+	        <itemizedlist>
+	            <listitem>
+	                Build All including testsuite execution
+	                <programlisting><![CDATA[
+mvn clean install
+	                ]]></programlisting>
+	            </listitem>
+	            <listitem>
+	                Command to run the standalone "Development Mode" Cloud Server
+	                <programlisting><![CDATA[
+mvn -PrunCloud integration-test
+	                ]]></programlisting>
+	            </listitem>
+	            <listitem>
+	                Command to run the standalone "Development Mode" Cloud Server in *debug mode*
+	                <programlisting><![CDATA[
+mvn -PdebugCloud integration-test
+	                ]]></programlisting>
+	            </listitem>
+	        </itemizedlist>
+	    </para>
+	    <para>
+	        Eclipse Project Setup
+	        <itemizedlist>
+	            <listitem>
+	                Import the Cloud project stored under "cloud" into your Eclipse workspace.
+					Make sure you select, <emphasis role='bold'>Import > Maven > Existing Maven Projects</emphasis>
+	            </listitem>
+	            <listitem>
+	                In case, you do not have the Eclipse Maven Plugin installed, you can open the "cloud" project as a regular Java Project.
+But, before you do that, you execute the following command from the commandline:
+					<programlisting><![CDATA[
+mvn eclipse:eclipse
+	                ]]></programlisting>
+	            </listitem>
+	        </itemizedlist>
+	    </para>
+	</sect1>
+	<sect1>
+	    <title>JBoss AS Deployment</title>
+	    <para>
+	        Once your "cloud" jar file is tested end-to-end in the Maven based Cloud Server, you must deploy the jar file into a JBoss 5.1.0.GA App Server.
+			The deployment is quite simple. You just copy the "cloud" jar file from the "cloud/target" folder into the <emphasis role='bold'>JBOSS_HOME/server/openmobster/deploy"</emphasis> folder.
+	    </para>
+	</sect1>
+</chapter>
