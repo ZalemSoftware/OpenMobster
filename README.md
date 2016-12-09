@@ -16,3 +16,14 @@ OpenMobster is an open source Enterprise Backend for Mobile Apps. The full descr
 - [Get started](https://web.archive.org/web/code.google.com/p/openmobster/wiki/GetStartedLatest)
 - [CRUD Sample App in Action](https://web.archive.org/web/code.google.com/p/openmobster/wiki/CRUDSampleApp)
 - [Other wiki pages](https://web.archive.org/web/code.google.com/p/openmobster/w/list)
+
+<br>
+## Releases
+
+#### Client
+```gradle
+compile 'org.openmobster.core.mobileCloud.android.2_0:device-sdk:2.4-M3.1'
+```
+  
+#### Server
+* [2.4-M3.1](https://github.com/ZalemSoftware/OpenMobster/releases/download/v2.4-M3.1/openmobster-2.4-M3.1-android.zip)
